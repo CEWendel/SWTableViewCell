@@ -1,5 +1,5 @@
 //
-//  ViewController.h
+//  SWTableViewCell.h
 //  SWTableViewCell
 //
 //  Created by Chris Wendel on 9/10/13.
@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface ViewController : UIViewController <UITableViewDelegate, UITableViewDataSource>
+@interface SWTableViewCell : UITableViewCell
 
 @end
