@@ -19,6 +19,7 @@
 		AF34B78217DEE2B800BD9082 /* MainStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AF34B78017DEE2B700BD9082 /* MainStoryboard.storyboard */; };
 		AF34B78517DEE2B800BD9082 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AF34B78417DEE2B800BD9082 /* ViewController.m */; };
 		AF34B78D17DEE83700BD9082 /* SWTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = AF34B78C17DEE83700BD9082 /* SWTableViewCell.m */; };
+		AF34B79017DFDBBE00BD9082 /* SWUtilityButton.m in Sources */ = {isa = PBXBuildFile; fileRef = AF34B78F17DFDBBE00BD9082 /* SWUtilityButton.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -40,6 +41,8 @@
 		AF34B78417DEE2B800BD9082 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		AF34B78B17DEE83700BD9082 /* SWTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWTableViewCell.h; sourceTree = "<group>"; };
 		AF34B78C17DEE83700BD9082 /* SWTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWTableViewCell.m; sourceTree = "<group>"; };
+		AF34B78E17DFDBBD00BD9082 /* SWUtilityButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWUtilityButton.h; sourceTree = "<group>"; };
+		AF34B78F17DFDBBE00BD9082 /* SWUtilityButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWUtilityButton.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -94,6 +97,8 @@
 				AF34B76F17DEE2B300BD9082 /* Supporting Files */,
 				AF34B78B17DEE83700BD9082 /* SWTableViewCell.h */,
 				AF34B78C17DEE83700BD9082 /* SWTableViewCell.m */,
+				AF34B78E17DFDBBD00BD9082 /* SWUtilityButton.h */,
+				AF34B78F17DFDBBE00BD9082 /* SWUtilityButton.m */,
 			);
 			path = SWTableViewCell;
 			sourceTree = "<group>";
@@ -182,6 +187,7 @@
 				AF34B77917DEE2B400BD9082 /* AppDelegate.m in Sources */,
 				AF34B78517DEE2B800BD9082 /* ViewController.m in Sources */,
 				AF34B78D17DEE83700BD9082 /* SWTableViewCell.m in Sources */,
+				AF34B79017DFDBBE00BD9082 /* SWUtilityButton.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

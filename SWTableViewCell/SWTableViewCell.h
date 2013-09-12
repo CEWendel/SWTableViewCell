@@ -10,4 +10,9 @@
 
 @interface SWTableViewCell : UITableViewCell
 
+@property (nonatomic, strong) NSArray *leftUtilityButtons;
+@property (nonatomic, strong) NSArray *rightUtilityButtons;
+
+- (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier leftUtilityButtons:(NSArray *)leftUtilityButtons rightUtilityButtons:(NSArray *)rightUtilityButtons;
+
 @end
