@@ -60,14 +60,15 @@ typedef enum {
 
 - (void)populateUtilityButtons {
     NSUInteger utilityButtonsCount = _utilityButtons.count;
-    NSUInteger utilityButtonsCounter = _utilityButtons.count;
+    NSUInteger utilityButtonsCounter = 1;
     for (SWUtilityButton *utilityButton in _utilityButtons) {
+        NSLog(@"utilityButtonsCounter is %d", utilityButtonsCounter);
         CGFloat utilityButtonXCord = 0;
-        if (utilityButtonsCounter > 0) utilityButtonXCord = [self utilityButtonsWidth] / utilityButtonsCounter;
+        if (utilityButtonsCounter > 1) utilityButtonXCord = [self utilityButtonsWidth] / utilityButtonsCounter;
         [utilityButton setFrame:CGRectMake(utilityButtonXCord, 0, [self utilityButtonsWidth] / utilityButtonsCount, CGRectGetHeight(self.bounds))];
         NSLog(@"utility button frame is %@", NSStringFromCGRect(utilityButton.frame));
         [self addSubview:utilityButton];
-        utilityButtonsCounter--;
+        utilityButtonsCounter++;
     }
 }
 
@@ -145,23 +146,22 @@ typedef enum {
     UIScrollView *cellScrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.bounds), _height)];
     cellScrollView.contentSize = CGSizeMake(CGRectGetWidth(self.bounds) + [self utilityButtonsPadding], _height);
     cellScrollView.contentOffset = [self scrollViewContentOffset];
+    NSLog(@"content offset is %@", NSStringFromCGPoint(cellScrollView.contentOffset));
     cellScrollView.delegate = self;
     cellScrollView.showsHorizontalScrollIndicator = NO;
     
     self.cellScrollView = cellScrollView;
     
-    //self.cellScrollView.alpha = 0.5;
+    self.cellScrollView.alpha = 0.5;
     
     // Set up the views that will hold the utility buttons
     SWUtilityButtonView *scrollViewButtonViewLeft = [[SWUtilityButtonView alloc] initWithUtilityButtons:_leftUtilityButtons];
     [scrollViewButtonViewLeft setFrame:CGRectMake([self leftUtilityButtonsWidth], 0, [self leftUtilityButtonsWidth], _height)];
-    NSLog(@"scrollViewButtonViewLeft frame is %@", NSStringFromCGRect(scrollViewButtonViewLeft.frame));
     self.scrollViewButtonViewLeft = scrollViewButtonViewLeft;
     [self.cellScrollView addSubview:scrollViewButtonViewLeft];
     
     SWUtilityButtonView *scrollViewButtonViewRight = [[SWUtilityButtonView alloc] initWithUtilityButtons:_rightUtilityButtons];
     [scrollViewButtonViewRight setFrame:CGRectMake(CGRectGetWidth(self.bounds), 0, [self rightUtilityButtonsWidth], _height)];
-    NSLog(@"scrollViewButtonViewRight frame is %@", NSStringFromCGRect(scrollViewButtonViewRight.frame));
     self.scrollViewButtonViewRight = scrollViewButtonViewRight;
     [self.cellScrollView addSubview:scrollViewButtonViewRight];
     
@@ -172,7 +172,6 @@ typedef enum {
     // Create the content view that will live in our scroll view
     UIView *scrollViewContentView = [[UIView alloc] initWithFrame:CGRectMake([self leftUtilityButtonsWidth], 0, CGRectGetWidth(self.bounds), _height)];
     scrollViewContentView.backgroundColor = [UIColor whiteColor];
-    NSLog(@"scrollViewContentView frame is %@", NSStringFromCGRect(scrollViewContentView.frame));
     [self.cellScrollView addSubview:scrollViewContentView];
     self.scrollViewContentView = scrollViewContentView;
     
