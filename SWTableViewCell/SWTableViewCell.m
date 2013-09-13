@@ -209,7 +209,58 @@ typedef enum {
     return CGPointMake([_scrollViewButtonViewLeft utilityButtonsWidth], 0);
 }
 
+#pragma mark UIScrollView helpers
+
+- (void)scrollToRight:(inout CGPoint *)targetContentOffset{
+    targetContentOffset->x = [self utilityButtonsPadding];
+    _cellState = kCellStateRight;
+}
+
+- (void)scrollToCenter:(inout CGPoint *)targetContentOffset {
+    targetContentOffset->x = [self leftUtilityButtonsWidth];
+    _cellState = kCellStateCenter;
+}
+
+- (void)scrollToLeft:(inout CGPoint *)targetContentOffset {
+    targetContentOffset->x = 0;
+    _cellState = kCellStateLeft;
+}
+
 #pragma mark UIScrollViewDelegate
+
+- (void)scrollViewWillEndDragging:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset {
+    switch (_cellState) {
+        case kCellStateCenter:
+            if (velocity.x >= 0.5f) {
+                [self scrollToRight:targetContentOffset];
+            } else if (velocity.x <= -0.5f) {
+                [self scrollToLeft:targetContentOffset];
+            } else {
+                [self scrollToCenter:targetContentOffset];
+            }
+            break;
+        case kCellStateLeft:
+            if (velocity.x >= 0.5f) {
+                [self scrollToCenter:targetContentOffset];
+            } else if (velocity.x <= -0.5f) {
+                // No-op
+            } else {
+                [self scrollToLeft:targetContentOffset];
+            }
+            break;
+        case kCellStateRight:
+            if (velocity.x >= 0.5f) {
+                // No-op
+            } else if (velocity.x <= -0.5f) {
+                [self scrollToCenter:targetContentOffset];
+            } else {
+                [self scrollToRight:targetContentOffset];
+            }
+            break;
+        default:
+            break;
+    }
+}
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     if (scrollView.contentOffset.x > [self leftUtilityButtonsWidth]) {
