@@ -53,7 +53,6 @@
     SWTableViewCell *cell = (SWTableViewCell *)[tableView dequeueReusableCellWithIdentifier:cellIdentifier];
     
     if (cell == nil) {
-        NSLog(@"cell initialized");
         NSMutableArray *leftUtilityButtons = [NSMutableArray new];
         NSMutableArray *rightUtilityButtons = [NSMutableArray new];
         
@@ -89,9 +88,6 @@
     NSDate *dateObject = _testArray[indexPath.row];
     cell.textLabel.text = [dateObject description];
     cell.detailTextLabel.text = @"Some detail text";
-    
-    NSLog(@"row height is %f", _tableView.rowHeight);
-    NSLog(@"cell height is %f", cell.frame.size.height);
     
     return cell;
 }

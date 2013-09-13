@@ -54,7 +54,6 @@ typedef enum {
 }
 
 - (CGFloat)utilityButtonsWidth {
-    NSLog(@"utility buttons count is %d", _utilityButtons.count);
     return (_utilityButtons.count * kUtilityButtonWidth);
 }
 
@@ -62,11 +61,9 @@ typedef enum {
     NSUInteger utilityButtonsCount = _utilityButtons.count;
     NSUInteger utilityButtonsCounter = 1;
     for (SWUtilityButton *utilityButton in _utilityButtons) {
-        NSLog(@"utilityButtonsCounter is %d", utilityButtonsCounter);
         CGFloat utilityButtonXCord = 0;
         if (utilityButtonsCounter > 1) utilityButtonXCord = [self utilityButtonsWidth] / utilityButtonsCounter;
         [utilityButton setFrame:CGRectMake(utilityButtonXCord, 0, [self utilityButtonsWidth] / utilityButtonsCount, CGRectGetHeight(self.bounds))];
-        NSLog(@"utility button frame is %@", NSStringFromCGRect(utilityButton.frame));
         [self addSubview:utilityButton];
         utilityButtonsCounter++;
     }
@@ -146,13 +143,10 @@ typedef enum {
     UIScrollView *cellScrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.bounds), _height)];
     cellScrollView.contentSize = CGSizeMake(CGRectGetWidth(self.bounds) + [self utilityButtonsPadding], _height);
     cellScrollView.contentOffset = [self scrollViewContentOffset];
-    NSLog(@"content offset is %@", NSStringFromCGPoint(cellScrollView.contentOffset));
     cellScrollView.delegate = self;
     cellScrollView.showsHorizontalScrollIndicator = NO;
     
     self.cellScrollView = cellScrollView;
-    
-    self.cellScrollView.alpha = 0.5;
     
     // Set up the views that will hold the utility buttons
     SWUtilityButtonView *scrollViewButtonViewLeft = [[SWUtilityButtonView alloc] initWithUtilityButtons:_leftUtilityButtons];
@@ -188,7 +182,6 @@ typedef enum {
 
 - (void)layoutSubviews {
     [super layoutSubviews];
-    NSLog(@"layout subviews!");
     
     self.cellScrollView.frame = CGRectMake(0, 0, CGRectGetWidth(self.bounds), _height);
     self.cellScrollView.contentSize = CGSizeMake(CGRectGetWidth(self.bounds) + [self utilityButtonsPadding], _height);
@@ -214,6 +207,18 @@ typedef enum {
 
 - (CGPoint)scrollViewContentOffset {
     return CGPointMake([_scrollViewButtonViewLeft utilityButtonsWidth], 0);
+}
+
+#pragma mark UIScrollViewDelegate
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    if (scrollView.contentOffset.x > [self leftUtilityButtonsWidth]) {
+        // Expose the right button view
+        self.scrollViewButtonViewRight.frame = CGRectMake(scrollView.contentOffset.x + (CGRectGetWidth(self.bounds) - [self rightUtilityButtonsWidth]), 0.0f, [self rightUtilityButtonsWidth], _height);
+    } else {
+        // Expose the left button view
+        self.scrollViewButtonViewLeft.frame = CGRectMake(scrollView.contentOffset.x, 0.0f, [self leftUtilityButtonsWidth], _height);
+    }
 }
 
 @end
