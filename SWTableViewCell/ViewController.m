@@ -8,6 +8,7 @@
 
 #import "ViewController.h"
 #import "SWTableViewCell.h"
+#import "NSMutableArray+SWUtilityButtons.h"
 
 @interface ViewController () {
     NSMutableArray *_testArray;
@@ -56,31 +57,11 @@
         NSMutableArray *leftUtilityButtons = [NSMutableArray new];
         NSMutableArray *rightUtilityButtons = [NSMutableArray new];
         
-        //cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:cellIdentifier];
+        [leftUtilityButtons addUtilityButtonWithColor:[UIColor colorWithRed:0.78f green:0.78f blue:0.8f alpha:1.0] title:@"More"];
+        [leftUtilityButtons addUtilityButtonWithColor:[UIColor colorWithRed:1.0f green:0.231f blue:0.188f alpha:1.0] title:@"Delete"];
         
-        UIButton *moreButtonRight = [UIButton buttonWithType:UIButtonTypeCustom];
-        moreButtonRight.backgroundColor = [UIColor colorWithRed:0.78f green:0.78f blue:0.8f alpha:1.0f];
-        [moreButtonRight setTitle:@"More" forState:UIControlStateNormal];
-        [moreButtonRight setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-        [rightUtilityButtons addObject:moreButtonRight];
-        
-        UIButton *moreButtonLeft = [UIButton buttonWithType:UIButtonTypeCustom];
-        moreButtonLeft.backgroundColor = [UIColor colorWithRed:0.78f green:0.78f blue:0.8f alpha:1.0f];
-        [moreButtonLeft setTitle:@"More" forState:UIControlStateNormal];
-        [moreButtonLeft setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-        [leftUtilityButtons addObject:moreButtonLeft];
-        
-        UIButton *deleteButtonRight = [UIButton buttonWithType:UIButtonTypeCustom];
-        deleteButtonRight.backgroundColor = [UIColor colorWithRed:1.0f green:0.231f blue:0.188f alpha:1.0f];
-        [deleteButtonRight setTitle:@"Delete" forState:UIControlStateNormal];
-        [deleteButtonRight setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-        [rightUtilityButtons addObject:deleteButtonRight];
-
-        UIButton *deleteButtonLeft = [UIButton buttonWithType:UIButtonTypeCustom];
-        deleteButtonLeft.backgroundColor = [UIColor colorWithRed:1.0f green:0.231f blue:0.188f alpha:1.0f];
-        [deleteButtonLeft setTitle:@"Delete" forState:UIControlStateNormal];
-        [deleteButtonLeft setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-        [leftUtilityButtons addObject:deleteButtonLeft];
+        [rightUtilityButtons addUtilityButtonWithColor:[UIColor colorWithRed:0.78f green:0.78f blue:0.8f alpha:1.0] title:@"More"];
+        [rightUtilityButtons addUtilityButtonWithColor:[UIColor colorWithRed:1.0f green:0.231f blue:0.188f alpha:1.0] title:@"Delete"];
         
         cell = [[SWTableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:cellIdentifier height:_tableView.rowHeight leftUtilityButtons:leftUtilityButtons rightUtilityButtons:rightUtilityButtons];
     }
