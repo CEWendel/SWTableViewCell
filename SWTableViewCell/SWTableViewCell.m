@@ -7,7 +7,6 @@
 //
 
 #import "SWTableViewCell.h"
-#import "SWUtilityButton.h"
 
 #define kUtilityButtonWidth 80
 
@@ -60,7 +59,7 @@ typedef enum {
 - (void)populateUtilityButtons {
     NSUInteger utilityButtonsCount = _utilityButtons.count;
     NSUInteger utilityButtonsCounter = 1;
-    for (SWUtilityButton *utilityButton in _utilityButtons) {
+    for (UIButton *utilityButton in _utilityButtons) {
         CGFloat utilityButtonXCord = 0;
         if (utilityButtonsCounter > 1) utilityButtonXCord = [self utilityButtonsWidth] / utilityButtonsCounter;
         [utilityButton setFrame:CGRectMake(utilityButtonXCord, 0, [self utilityButtonsWidth] / utilityButtonsCount, CGRectGetHeight(self.bounds))];
