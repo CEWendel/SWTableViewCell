@@ -8,6 +8,15 @@
 
 #import <UIKit/UIKit.h>
 
+@class SWTableViewCell;
+
+@protocol SWTableViewCellDelegate <NSObject>
+
+- (void)swippableTableViewCell:(SWTableViewCell *)cell didTriggerLeftUtilityButtonWithIndex:(NSInteger)index;
+- (void)swippableTableViewCell:(SWTableViewCell *)cell didTriggerRightUtilityButtonWithIndex:(NSInteger)index;
+
+@end
+
 @interface SWTableViewCell : UITableViewCell
 
 @property (nonatomic, strong) NSArray *leftUtilityButtons;

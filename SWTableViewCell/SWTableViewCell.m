@@ -292,8 +292,9 @@ typedef enum {
 
 @end
 
-@implementation NSMutableArray (SWUtilityButtons)
+#pragma mark NSMutableArray class extension helper
 
+@implementation NSMutableArray (SWUtilityButtons)
 
 - (void)addUtilityButtonWithColor:(UIColor *)color title:(NSString *)title {
     UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
