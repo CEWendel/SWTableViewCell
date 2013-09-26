@@ -8,7 +8,8 @@
 
 #import "SWTableViewCell.h"
 
-#define kUtilityButtonWidth 80
+#define kUtilityButtonsWidthMax 230
+#define kUtilityButtonWidthDefault 90
 
 typedef enum {
     kCellStateCenter,
@@ -21,6 +22,8 @@ typedef enum {
 @interface SWUtilityButtonView : UIView
 
 @property (nonatomic, strong) NSArray *utilityButtons;
+
+@property (nonatomic) CGFloat utilityButtonWidth;
 
 - (id)initWithFrame:(CGRect)frame utilityButtons:(NSArray *)utilityButtons;
 
@@ -39,6 +42,8 @@ typedef enum {
         self.utilityButtons = utilityButtons;
     }
     
+    self.utilityButtonWidth = [self calculateUtilityButtonWidth];
+    
     return self;
 }
 
@@ -49,20 +54,34 @@ typedef enum {
         self.utilityButtons = utilityButtons;
     }
     
+    self.utilityButtonWidth = [self calculateUtilityButtonWidth];
+    
     return self;
 }
 
+- (CGFloat)calculateUtilityButtonWidth {
+    CGFloat buttonWidth = kUtilityButtonWidthDefault;
+    if (buttonWidth * _utilityButtons.count > kUtilityButtonsWidthMax) {
+        CGFloat buffer = (buttonWidth * _utilityButtons.count) - kUtilityButtonsWidthMax;
+        buttonWidth -= (buffer / _utilityButtons.count);
+        NSLog(@"buffer is %f", buffer);
+        NSLog(@"utility buttons count is %d", _utilityButtons.count);
+        NSLog(@"button width is now %f", buttonWidth);
+    }
+    return buttonWidth;
+}
+
 - (CGFloat)utilityButtonsWidth {
-    return (_utilityButtons.count * kUtilityButtonWidth);
+    NSLog(@"utility button width is %f", _utilityButtonWidth);
+    return (_utilityButtons.count * _utilityButtonWidth);
 }
 
 - (void)populateUtilityButtons {
-    NSUInteger utilityButtonsCount = _utilityButtons.count;
-    NSUInteger utilityButtonsCounter = 1;
+    NSUInteger utilityButtonsCounter = 0;
     for (UIButton *utilityButton in _utilityButtons) {
         CGFloat utilityButtonXCord = 0;
-        if (utilityButtonsCounter > 1) utilityButtonXCord = [self utilityButtonsWidth] / utilityButtonsCounter;
-        [utilityButton setFrame:CGRectMake(utilityButtonXCord, 0, [self utilityButtonsWidth] / utilityButtonsCount, CGRectGetHeight(self.bounds))];
+        if (utilityButtonsCounter >= 1) utilityButtonXCord = _utilityButtonWidth * utilityButtonsCounter;
+        [utilityButton setFrame:CGRectMake(utilityButtonXCord, 0, _utilityButtonWidth, CGRectGetHeight(self.bounds))];
         [self addSubview:utilityButton];
         utilityButtonsCounter++;
     }
@@ -71,7 +90,7 @@ typedef enum {
 @end
 
 @interface SWTableViewCell () <UIScrollViewDelegate> {
-    SWCellState _cellState;
+    SWCellState _cellState; // The state of the cell within the scroll view, can be left, right or middle
 }
 
 // Scroll view to be added to UITableViewCell
