@@ -71,6 +71,7 @@
 //        [rightUtilityButtons addUtilityButtonWithColor:[UIColor colorWithRed:1.0f green:0.231f blue:0.188 alpha:1.0f] icon:[UIImage imageNamed:@"MI.png"]];
         
         cell = [[SWTableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:cellIdentifier height:_tableView.rowHeight leftUtilityButtons:leftUtilityButtons rightUtilityButtons:rightUtilityButtons];
+        cell.delegate = self;
     }
     
     NSDate *dateObject = _testArray[indexPath.row];
@@ -78,6 +79,45 @@
     cell.detailTextLabel.text = @"Some detail text";
     
     return cell;
+}
+
+#pragma mark - SWTableViewDelegate
+
+
+- (void)swippableTableViewCell:(SWTableViewCell *)cell didTriggerLeftUtilityButtonWithIndex:(NSInteger)index {
+    switch (index) {
+        case 0:
+            NSLog(@"left button 0 was pressed");
+            break;
+        case 1:
+            NSLog(@"left button 1 was pressed");
+            break;
+        case 2:
+            NSLog(@"left button 2 was pressed");
+            break;
+        case 3:
+            NSLog(@"left btton 3 was pressed");
+        default:
+            break;
+    }
+}
+
+- (void)swippableTableViewCell:(SWTableViewCell *)cell didTriggerRightUtilityButtonWithIndex:(NSInteger)index {
+    switch (index) {
+        case 0:
+            NSLog(@"left button 0 was pressed");
+            break;
+        case 1:
+            NSLog(@"left button 1 was pressed");
+            break;
+        case 2:
+            NSLog(@"left button 2 was pressed");
+            break;
+        case 3:
+            NSLog(@"left btton 3 was pressed");
+        default:
+            break;
+    }
 }
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {

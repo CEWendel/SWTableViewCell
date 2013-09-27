@@ -21,6 +21,7 @@
 
 @property (nonatomic, strong) NSArray *leftUtilityButtons;
 @property (nonatomic, strong) NSArray *rightUtilityButtons;
+@property (nonatomic) id <SWTableViewCellDelegate> delegate;
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier height:(CGFloat)height leftUtilityButtons:(NSArray *)leftUtilityButtons rightUtilityButtons:(NSArray *)rightUtilityButtons;
 
