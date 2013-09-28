@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AF28B0F117F77DA300A77ABB /* clock@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AF28B0F017F77DA300A77ABB /* clock@2x.png */; };
+		AF28B0F317F77DA600A77ABB /* cross@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AF28B0F217F77DA600A77ABB /* cross@2x.png */; };
+		AF28B0F517F77DB000A77ABB /* check@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AF28B0F417F77DB000A77ABB /* check@2x.png */; };
+		AF28B0F717F77F1100A77ABB /* list@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AF28B0F617F77F1100A77ABB /* list@2x.png */; };
 		AF34B76917DEE2B200BD9082 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AF34B76817DEE2B200BD9082 /* UIKit.framework */; };
 		AF34B76B17DEE2B200BD9082 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AF34B76A17DEE2B200BD9082 /* Foundation.framework */; };
 		AF34B76D17DEE2B200BD9082 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AF34B76C17DEE2B200BD9082 /* CoreGraphics.framework */; };
@@ -23,6 +27,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		AF28B0F017F77DA300A77ABB /* clock@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "clock@2x.png"; sourceTree = "<group>"; };
+		AF28B0F217F77DA600A77ABB /* cross@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "cross@2x.png"; sourceTree = "<group>"; };
+		AF28B0F417F77DB000A77ABB /* check@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "check@2x.png"; sourceTree = "<group>"; };
+		AF28B0F617F77F1100A77ABB /* list@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "list@2x.png"; sourceTree = "<group>"; };
 		AF34B76517DEE2B200BD9082 /* SWTableViewCell.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SWTableViewCell.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AF34B76817DEE2B200BD9082 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		AF34B76A17DEE2B200BD9082 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -103,6 +111,10 @@
 		AF34B76F17DEE2B300BD9082 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				AF28B0F617F77F1100A77ABB /* list@2x.png */,
+				AF28B0F417F77DB000A77ABB /* check@2x.png */,
+				AF28B0F217F77DA600A77ABB /* cross@2x.png */,
+				AF28B0F017F77DA300A77ABB /* clock@2x.png */,
 				AFF15D1617F35E46007F5746 /* MI.png */,
 				AF34B77017DEE2B300BD9082 /* SWTableViewCell-Info.plist */,
 				AF34B77117DEE2B400BD9082 /* InfoPlist.strings */,
@@ -168,8 +180,12 @@
 			files = (
 				AF34B77317DEE2B400BD9082 /* InfoPlist.strings in Resources */,
 				AF34B77B17DEE2B600BD9082 /* Default.png in Resources */,
+				AF28B0F517F77DB000A77ABB /* check@2x.png in Resources */,
 				AF34B77D17DEE2B600BD9082 /* Default@2x.png in Resources */,
+				AF28B0F317F77DA600A77ABB /* cross@2x.png in Resources */,
 				AF34B77F17DEE2B600BD9082 /* Default-568h@2x.png in Resources */,
+				AF28B0F717F77F1100A77ABB /* list@2x.png in Resources */,
+				AF28B0F117F77DA300A77ABB /* clock@2x.png in Resources */,
 				AF34B78217DEE2B800BD9082 /* MainStoryboard.storyboard in Resources */,
 				AFF15D1717F35E46007F5746 /* MI.png in Resources */,
 			);
@@ -273,7 +289,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "SWTableViewCell/SWTableViewCell-Prefix.pch";
 				INFOPLIST_FILE = "SWTableViewCell/SWTableViewCell-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -285,7 +301,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "SWTableViewCell/SWTableViewCell-Prefix.pch";
 				INFOPLIST_FILE = "SWTableViewCell/SWTableViewCell-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};

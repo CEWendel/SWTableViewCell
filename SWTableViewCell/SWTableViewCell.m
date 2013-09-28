@@ -11,6 +11,8 @@
 #define kUtilityButtonsWidthMax 260
 #define kUtilityButtonWidthDefault 90
 
+static NSString * const kTableViewCellContentView = @"UITableViewCellContentView";
+
 typedef enum {
     kCellStateCenter,
     kCellStateLeft,
@@ -190,8 +192,12 @@ typedef enum {
     self.scrollViewContentView = scrollViewContentView;
     
     // Add the cell scroll view to the cell
-    UIView *tableViewScrollView = [self.subviews objectAtIndex:0];
-    NSArray *cellSubviews = [tableViewScrollView subviews];
+    UIView *contentViewParent = self;
+    if (![NSStringFromClass([[self.subviews objectAtIndex:0] class]) isEqualToString:kTableViewCellContentView]) {
+        // iOS 7
+        contentViewParent = [self.subviews objectAtIndex:0];
+    }
+    NSArray *cellSubviews = [contentViewParent subviews];
     [self insertSubview:cellScrollView atIndex:0];
     for (UIView *subview in cellSubviews) {
         [self.scrollViewContentView addSubview:subview];
