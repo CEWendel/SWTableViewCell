@@ -8,7 +8,7 @@
 
 #import "SWTableViewCell.h"
 
-#define kUtilityButtonsWidthMax 230
+#define kUtilityButtonsWidthMax 260
 #define kUtilityButtonWidthDefault 90
 
 typedef enum {
@@ -60,6 +60,8 @@ typedef enum {
     
     return self;
 }
+
+#pragma mark Populating utility buttons
 
 - (CGFloat)calculateUtilityButtonWidth {
     CGFloat buttonWidth = kUtilityButtonWidthDefault;
@@ -188,7 +190,8 @@ typedef enum {
     self.scrollViewContentView = scrollViewContentView;
     
     // Add the cell scroll view to the cell
-    NSArray *cellSubviews = self.subviews;
+    UIView *tableViewScrollView = [self.subviews objectAtIndex:0];
+    NSArray *cellSubviews = [tableViewScrollView subviews];
     [self insertSubview:cellScrollView atIndex:0];
     for (UIView *subview in cellSubviews) {
         [self.scrollViewContentView addSubview:subview];
