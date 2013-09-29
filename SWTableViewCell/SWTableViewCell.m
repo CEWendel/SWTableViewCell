@@ -24,14 +24,13 @@ typedef enum {
 @interface SWUtilityButtonView : UIView
 
 @property (nonatomic, strong) NSArray *utilityButtons;
-
 @property (nonatomic) CGFloat utilityButtonWidth;
-
 @property (nonatomic, weak) SWTableViewCell *parentCell;
+@property (nonatomic) SEL utilityButtonSelector;
 
-- (id)initWithFrame:(CGRect)frame utilityButtons:(NSArray *)utilityButtons parentCell:(SWTableViewCell *)parentCell;
+- (id)initWithUtilityButtons:(NSArray *)utilityButtons parentCell:(SWTableViewCell *)parentCell utilityButtonSelector:(SEL)utilityButtonSelector;
 
-- (id)initWithUtilityButtons:(NSArray *)utilityButtons parentCell:(SWTableViewCell *)parentCell;
+- (id)initWithFrame:(CGRect)frame utilityButtons:(NSArray *)utilityButtons parentCell:(SWTableViewCell *)parentCell utilityButtonSelector:(SEL)utilityButtonSelector;
 
 @end
 
@@ -39,25 +38,27 @@ typedef enum {
 
 #pragma mark - SWUtilityButonView initializers
 
-- (id)initWithUtilityButtons:(NSArray *)utilityButtons parentCell:(SWTableViewCell *)parentCell{
+- (id)initWithUtilityButtons:(NSArray *)utilityButtons parentCell:(SWTableViewCell *)parentCell utilityButtonSelector:(SEL)utilityButtonSelector {
     self = [super init];
     
     if (self) {
         self.utilityButtons = utilityButtons;
         self.utilityButtonWidth = [self calculateUtilityButtonWidth];
         self.parentCell = parentCell;
+        self.utilityButtonSelector = utilityButtonSelector; // eh.
     }
     
     return self;
 }
 
-- (id)initWithFrame:(CGRect)frame utilityButtons:(NSArray *)utilityButtons parentCell:(SWTableViewCell *)parentCell {
+- (id)initWithFrame:(CGRect)frame utilityButtons:(NSArray *)utilityButtons parentCell:(SWTableViewCell *)parentCell utilityButtonSelector:(SEL)utilityButtonSelector {
     self = [super initWithFrame:frame];
     
     if (self) {
         self.utilityButtons = utilityButtons;
         self.utilityButtonWidth = [self calculateUtilityButtonWidth];
         self.parentCell = parentCell;
+        self.utilityButtonSelector = utilityButtonSelector; // eh.
     }
     
     return self;
@@ -85,7 +86,7 @@ typedef enum {
         if (utilityButtonsCounter >= 1) utilityButtonXCord = _utilityButtonWidth * utilityButtonsCounter;
         [utilityButton setFrame:CGRectMake(utilityButtonXCord, 0, _utilityButtonWidth, CGRectGetHeight(self.bounds))];
         [utilityButton setTag:utilityButtonsCounter];
-        [utilityButton addTarget:_parentCell action:@selector(utilityButtonHandler:) forControlEvents:UIControlEventTouchUpInside];
+        [utilityButton addTarget:_parentCell action:_utilityButtonSelector forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:utilityButton];
         utilityButtonsCounter++;
     }
@@ -171,12 +172,12 @@ typedef enum {
     self.cellScrollView = cellScrollView;
     
     // Set up the views that will hold the utility buttons
-    SWUtilityButtonView *scrollViewButtonViewLeft = [[SWUtilityButtonView alloc] initWithUtilityButtons:_leftUtilityButtons parentCell:self];
+    SWUtilityButtonView *scrollViewButtonViewLeft = [[SWUtilityButtonView alloc] initWithUtilityButtons:_leftUtilityButtons parentCell:self utilityButtonSelector:@selector(leftUtilityButtonHandler:)];
     [scrollViewButtonViewLeft setFrame:CGRectMake([self leftUtilityButtonsWidth], 0, [self leftUtilityButtonsWidth], _height)];
     self.scrollViewButtonViewLeft = scrollViewButtonViewLeft;
     [self.cellScrollView addSubview:scrollViewButtonViewLeft];
     
-    SWUtilityButtonView *scrollViewButtonViewRight = [[SWUtilityButtonView alloc] initWithUtilityButtons:_rightUtilityButtons parentCell:self];
+    SWUtilityButtonView *scrollViewButtonViewRight = [[SWUtilityButtonView alloc] initWithUtilityButtons:_rightUtilityButtons parentCell:self utilityButtonSelector:@selector(rightUtilityButtonHandler:)];
     [scrollViewButtonViewRight setFrame:CGRectMake(CGRectGetWidth(self.bounds), 0, [self rightUtilityButtonsWidth], _height)];
     self.scrollViewButtonViewRight = scrollViewButtonViewRight;
     [self.cellScrollView addSubview:scrollViewButtonViewRight];
@@ -206,7 +207,13 @@ typedef enum {
 
 #pragma mark - Utility buttons handling
 
-- (void)utilityButtonHandler:(id)sender {
+- (void)rightUtilityButtonHandler:(id)sender {
+    UIButton *utilityButton = (UIButton *)sender;
+    NSInteger utilityButtonTag = [utilityButton tag];
+    [_delegate swippableTableViewCell:self didTriggerRightUtilityButtonWithIndex:utilityButtonTag];
+}
+
+- (void)leftUtilityButtonHandler:(id)sender {
     UIButton *utilityButton = (UIButton *)sender;
     NSInteger utilityButtonTag = [utilityButton tag];
     [_delegate swippableTableViewCell:self didTriggerLeftUtilityButtonWithIndex:utilityButtonTag];

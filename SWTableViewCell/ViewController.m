@@ -26,6 +26,7 @@
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
     self.tableView.rowHeight = 90;
+    self.tableView.separatorInset = UIEdgeInsetsMake(0, 0, 0, 0); // Makes the horizontal row seperator stretch the entire length of the table view
     
     _testArray = [[NSMutableArray alloc] init];
     
@@ -57,8 +58,8 @@
         NSMutableArray *rightUtilityButtons = [NSMutableArray new];
         
         [leftUtilityButtons addUtilityButtonWithColor:[UIColor colorWithRed:0.07 green:0.75f blue:0.16f alpha:1.0] icon:[UIImage imageNamed:@"check.png"]];
-        [leftUtilityButtons addUtilityButtonWithColor:[UIColor colorWithRed:1.0f green:0.231f blue:0.188f alpha:1.0] icon:[UIImage imageNamed:@"cross.png"]];
         [leftUtilityButtons addUtilityButtonWithColor:[UIColor colorWithRed:1.0f green:1.0f blue:0.35f alpha:1.0] icon:[UIImage imageNamed:@"clock.png"]];
+        [leftUtilityButtons addUtilityButtonWithColor:[UIColor colorWithRed:1.0f green:0.231f blue:0.188f alpha:1.0] icon:[UIImage imageNamed:@"cross.png"]];
         [leftUtilityButtons addUtilityButtonWithColor:[UIColor colorWithRed:0.55f green:0.27f blue:0.07f alpha:1.0] icon:[UIImage imageNamed:@"list.png"]];
         
         [rightUtilityButtons addUtilityButtonWithColor:[UIColor colorWithRed:0.78f green:0.78f blue:0.8f alpha:1.0] title:@"More"];
@@ -98,16 +99,17 @@
 - (void)swippableTableViewCell:(SWTableViewCell *)cell didTriggerRightUtilityButtonWithIndex:(NSInteger)index {
     switch (index) {
         case 0:
-            NSLog(@"left button 0 was pressed");
+            NSLog(@"More button was pressed");
             break;
         case 1:
-            NSLog(@"left button 1 was pressed");
+        {
+            // Delete button was pressed
+            NSIndexPath *cellIndexPath = [self.tableView indexPathForCell:cell];
+            
+            [_testArray removeObjectAtIndex:cellIndexPath.row];
+            [self.tableView deleteRowsAtIndexPaths:@[cellIndexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
             break;
-        case 2:
-            NSLog(@"left button 2 was pressed");
-            break;
-        case 3:
-            NSLog(@"left btton 3 was pressed");
+        }
         default:
             break;
     }
