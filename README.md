@@ -7,12 +7,12 @@ An easy-to-use UITableViewCell subclass that implements a swipe-able content vie
 ###Right Utility Buttons
 Utility buttons that become visible on the right side of the Table View Cell when the user swipes left. This behavior is similar to that seen in the iOS apps Mail and Reminders.
 
-<p align="center"><img src="https://raw.github.com/cewendel/SWTableViewCell/master/example1.gif"/></p>
+<p align="center"><img src="http://i.imgur.com/gDZFRpr.gif"/></p>
 
 ###Left Utility Buttons
 Utility buttons that become visible on the left side of the Table View Cell when the user swipes right. 
 
-<p align="center"><img src="https://raw.github.com/cewendel/SWTableViewCell/master/example2.gif"/></p>
+<p align="center"><img src="http://i.imgur.com/qt6aISz.gif"/></p>
 
 ###Features
 1) Dynamic utility button scalling. As you add more buttons to a cell, the other buttons on that side get smaller to make room.
