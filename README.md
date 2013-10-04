@@ -23,7 +23,7 @@ Utility buttons that become visible on the left side of the Table View Cell when
 
 ##Usage
 
-In your <pre>tableView:cellForRowAtIndexPath:</pre> method you set up the SWTableView cell and add an arbitrary amount of utility buttons to it using the included <pre>NSMutableArray+SWUtilityButtons</pre> category.
+In your `tableView:cellForRowAtIndexPath:` method you set up the SWTableView cell and add an arbitrary amount of utility buttons to it using the included `NSMutableArray+SWUtilityButtons` category.
 
 ```objc
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -57,7 +57,7 @@ return cell;
 
 ###Delegate
 
-The delegate <pre>SWTableViewCellDelegate</pre> is used by the developer to find out which button was pressed. There are two methods:
+The delegate `SWTableViewCellDelegate` is used by the developer to find out which button was pressed. There are two methods:
 
 ```objc
 - (void)swippableTableViewCell:(SWTableViewCell *)cell didTriggerLeftUtilityButtonWithIndex:(NSInteger)index;
