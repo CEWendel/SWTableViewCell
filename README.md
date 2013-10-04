@@ -123,7 +123,7 @@ Use [Github issues](https://github.com/cewendel/tlog/issues) to track bugs and f
 
 Chris Wendel
 
-- http://twitter.com/cewendel
+- http://twitter.com/CEWendel
 
 ## Licence
 
