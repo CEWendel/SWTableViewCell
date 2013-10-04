@@ -113,9 +113,7 @@ The index signifies which utility button the user pressed, for each side the but
 
 ###Miscellaneous
 * If you have left utility button on iOS 7, I recommend changing your Table View's seperatorInset so the seperator stretches the length of the screen
-```objc
-tableView.separatorInset = UIEdgeInsetsMake(0, 0, 0, 0);
-```
+<pre> tableView.separatorInset = UIEdgeInsetsMake(0, 0, 0, 0); </pre>
 
 ##Contributing
 Use [Github issues](https://github.com/cewendel/tlog/issues) to track bugs and feature requests.
