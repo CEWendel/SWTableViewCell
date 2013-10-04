@@ -81,13 +81,13 @@ typedef enum {
 
 - (void)populateUtilityButtons {
     NSUInteger utilityButtonsCounter = 0;
-    for (UIButton *utilityButton in _utilityButtons) {
+    for (UIButton *utilityButton in self.utilityButtons) {
         CGFloat utilityButtonXCord = 0;
-        if (utilityButtonsCounter >= 1) utilityButtonXCord = _utilityButtonWidth * utilityButtonsCounter;
-        [utilityButton setFrame:CGRectMake(utilityButtonXCord, 0, _utilityButtonWidth, CGRectGetHeight(self.bounds))];
+        if (utilityButtonsCounter >= 1) utilityButtonXCord = self.utilityButtonWidth * utilityButtonsCounter;
+        [utilityButton setFrame:CGRectMake(utilityButtonXCord, 0, self.utilityButtonWidth, CGRectGetHeight(self.bounds))];
         [utilityButton setTag:utilityButtonsCounter];
-        [utilityButton addTarget:_parentCell action:_utilityButtonSelector forControlEvents:UIControlEventTouchUpInside];
-        [self addSubview:utilityButton];
+        [utilityButton addTarget:self.parentCell action:self.utilityButtonSelector forControlEvents:UIControlEventTouchDown];
+        [self addSubview: utilityButton];
         utilityButtonsCounter++;
     }
 }
@@ -263,7 +263,7 @@ typedef enum {
     _cellState = kCellStateCenter;
 }
 
-- (void)scrollToLeft:(inout CGPoint *)targetContentOffset {
+- (void)scrollToLeft:(inout CGPoint *)targetContentOffset{
     targetContentOffset->x = 0;
     _cellState = kCellStateLeft;
 }
@@ -278,7 +278,14 @@ typedef enum {
             } else if (velocity.x <= -0.5f) {
                 [self scrollToLeft:targetContentOffset];
             } else {
-                [self scrollToCenter:targetContentOffset];
+                CGFloat rightThreshold = [self utilityButtonsPadding] - ([self rightUtilityButtonsWidth] / 2);
+                CGFloat leftThreshold = [self leftUtilityButtonsWidth] / 2;
+                if (targetContentOffset->x > rightThreshold)
+                    [self scrollToRight:targetContentOffset];
+                else if (targetContentOffset->x < leftThreshold)
+                    [self scrollToLeft:targetContentOffset];
+                else
+                    [self scrollToCenter:targetContentOffset];
             }
             break;
         case kCellStateLeft:
@@ -287,7 +294,10 @@ typedef enum {
             } else if (velocity.x <= -0.5f) {
                 // No-op
             } else {
-                [self scrollToLeft:targetContentOffset];
+                if (targetContentOffset->x > [self leftUtilityButtonsWidth] / 2)
+                    [self scrollToCenter:targetContentOffset];
+                else
+                    [self scrollToLeft:targetContentOffset];
             }
             break;
         case kCellStateRight:
@@ -296,7 +306,10 @@ typedef enum {
             } else if (velocity.x <= -0.5f) {
                 [self scrollToCenter:targetContentOffset];
             } else {
-                [self scrollToRight:targetContentOffset];
+                if (targetContentOffset->x < ([self utilityButtonsPadding] - [self rightUtilityButtonsWidth] / 2))
+                    [self scrollToCenter:targetContentOffset];
+                else
+                    [self scrollToRight:targetContentOffset];
             }
             break;
         default:
