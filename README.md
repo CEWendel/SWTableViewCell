@@ -15,9 +15,9 @@ Utility buttons that become visible on the left side of the Table View Cell when
 <p align="center"><img src="http://i.imgur.com/qt6aISz.gif"/></p>
 
 ###Features
-1) Dynamic utility button scalling. As you add more buttons to a cell, the other buttons on that side get smaller to make room.
-2) Create utilty buttons with either a title or an icon along with a RGB color.
-3) Tested on iOS 6.1 and above, including iOS 7
+* Dynamic utility button scalling. As you add more buttons to a cell, the other buttons on that side get smaller to make room.
+* Create utilty buttons with either a title or an icon along with a RGB color.
+* Tested on iOS 6.1 and above, including iOS 7
 
 ##Usage
 
@@ -108,6 +108,27 @@ The index signifies which utility button the user pressed, for each side the but
 ```
 
 (This is all code from the included example project)
+
+###Miscellaneous
+* If you have left utility button on iOS 7, I recommend changing your Table View's seperatorInset so the seperator stretches the length of the screen
+```objc
+tableView.separatorInset = UIEdgeInsetsMake(0, 0, 0, 0);
+```
+
+##Contributing
+Use [Github issues](https://github.com/cewendel/tlog/issues) to track bugs and feature requests.
+
+
+##Contact
+
+Chris Wendel
+
+- http://twitter.com/cewendel
+
+## Licence
+
+MIT 
+
 
 
 
