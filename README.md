@@ -3,4 +3,112 @@ SWTableViewCell
 
 An easy-to-use UITableViewCell subclass that implements a swipe-able content view which exposes utility buttons (similar to iOS 7 Mail Application)
 
+##Functionality
+###Right Utility Buttons
+Utility buttons that become visible on the right side of the Table View Cell when the user swipes left. This behavior is similar to that seen in the iOS apps Mail and Reminders.
+
+<p align="center"><img src="https://raw.github.com/cewendel/SWTableViewCell/master/example1.gif"/></p>
+
+###Left Utility Buttons
+Utility buttons that become visible on the left side of the Table View Cell when the user swipes right. 
+
+<p align="center"><img src="https://raw.github.com/cewendel/SWTableViewCell/master/example2.gif"/></p>
+
+###Features
+1) Dynamic utility button scalling. As you add more buttons to a cell, the other buttons on that side get smaller to make room.
+2) Create utilty buttons with either a title or an icon along with a RGB color.
+3) Tested on iOS 6.1 and above, including iOS 7
+
+##Usage
+
+In your <pre>tableView:cellForRowAtIndexPath:</pre> method you set up the SWTableView cell and add an arbitrary amount of utility buttons to it using the included <pre>NSMutableArray+SWUtilityButtons</pre> category.
+
+```objc
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    static NSString *cellIdentifier = @"Cell";
+    
+    SWTableViewCell *cell = (SWTableViewCell *)[tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+    
+    if (cell == nil) {
+        NSMutableArray *leftUtilityButtons = [NSMutableArray new];
+        NSMutableArray *rightUtilityButtons = [NSMutableArray new];
+        
+        [leftUtilityButtons addUtilityButtonWithColor:[UIColor colorWithRed:0.07 green:0.75f blue:0.16f alpha:1.0] icon:[UIImage imageNamed:@"check.png"]];
+        [leftUtilityButtons addUtilityButtonWithColor:[UIColor colorWithRed:1.0f green:1.0f blue:0.35f alpha:1.0] icon:[UIImage imageNamed:@"clock.png"]];
+        [leftUtilityButtons addUtilityButtonWithColor:[UIColor colorWithRed:1.0f green:0.231f blue:0.188f alpha:1.0] icon:[UIImage imageNamed:@"cross.png"]];
+        [leftUtilityButtons addUtilityButtonWithColor:[UIColor colorWithRed:0.55f green:0.27f blue:0.07f alpha:1.0] icon:[UIImage imageNamed:@"list.png"]];
+        
+        [rightUtilityButtons addUtilityButtonWithColor:[UIColor colorWithRed:0.78f green:0.78f blue:0.8f alpha:1.0] title:@"More"];
+        [rightUtilityButtons addUtilityButtonWithColor:[UIColor colorWithRed:1.0f green:0.231f blue:0.188 alpha:1.0f] title:@"Delete"];
+        
+        cell = [[SWTableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:cellIdentifier height:_tableView.rowHeight leftUtilityButtons:leftUtilityButtons rightUtilityButtons:rightUtilityButtons];
+        cell.delegate = self;
+    }
+    
+    NSDate *dateObject = _testArray[indexPath.row];
+    cell.textLabel.text = [dateObject description];
+    cell.detailTextLabel.text = @"Some detail text";
+
+return cell;
+}
+```
+
+###Delegate
+
+The delegate <pre>SWTableViewCellDelegate</pre> is used by the developer to find out which button was pressed. There are two methods:
+
+```objc
+- (void)swippableTableViewCell:(SWTableViewCell *)cell didTriggerLeftUtilityButtonWithIndex:(NSInteger)index;
+- (void)swippableTableViewCell:(SWTableViewCell *)cell didTriggerRightUtilityButtonWithIndex:(NSInteger)index;
+```
+
+The index signifies which utility button the user pressed, for each side the button indices are ordered from right to left 0...n
+
+####Example
+
+```objc
+#pragma mark - SWTableViewDelegate
+
+- (void)swippableTableViewCell:(SWTableViewCell *)cell didTriggerLeftUtilityButtonWithIndex:(NSInteger)index {
+    switch (index) {
+        case 0:
+            NSLog(@"left button 0 was pressed");
+            break;
+        case 1:
+            NSLog(@"left button 1 was pressed");
+            break;
+        case 2:
+            NSLog(@"left button 2 was pressed");
+            break;
+        case 3:
+            NSLog(@"left btton 3 was pressed");
+        default:
+            break;
+    }
+}
+
+- (void)swippableTableViewCell:(SWTableViewCell *)cell didTriggerRightUtilityButtonWithIndex:(NSInteger)index {
+    switch (index) {
+        case 0:
+            NSLog(@"More button was pressed");
+            break;
+        case 1:
+        {
+            // Delete button was pressed
+            NSIndexPath *cellIndexPath = [self.tableView indexPathForCell:cell];
+            
+            [_testArray removeObjectAtIndex:cellIndexPath.row];
+            [self.tableView deleteRowsAtIndexPaths:@[cellIndexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+            break;
+        }
+        default:
+            break;
+    }
+}
+```
+
+(This is all code from the included example project)
+
+
+
 
