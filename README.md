@@ -74,16 +74,16 @@ The index signifies which utility button the user pressed, for each side the but
 - (void)swippableTableViewCell:(SWTableViewCell *)cell didTriggerLeftUtilityButtonWithIndex:(NSInteger)index {
     switch (index) {
         case 0:
-            NSLog(@"left button 0 was pressed");
+            NSLog(@"check button was pressed");
             break;
         case 1:
-            NSLog(@"left button 1 was pressed");
+            NSLog(@"clock button was pressed");
             break;
         case 2:
-            NSLog(@"left button 2 was pressed");
+            NSLog(@"cross button was pressed");
             break;
         case 3:
-            NSLog(@"left btton 3 was pressed");
+            NSLog(@"list button was pressed");
         default:
             break;
     }
