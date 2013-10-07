@@ -17,8 +17,8 @@ Utility buttons that become visible on the left side of the Table View Cell when
 <p align="center"><img src="http://i.imgur.com/qt6aISz.gif"/></p>
 
 ###Features
-* Dynamic utility button scalling. As you add more buttons to a cell, the other buttons on that side get smaller to make room.
-* Create utilty buttons with either a title or an icon along with a RGB color.
+* Dynamic utility button scalling. As you add more buttons to a cell, the other buttons on that side get smaller to make room
+* Create utilty buttons with either a title or an icon along with a RGB color
 * Tested on iOS 6.1 and above, including iOS 7
 
 ##Usage
