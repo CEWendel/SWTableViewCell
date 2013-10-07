@@ -81,10 +81,10 @@ typedef enum {
 
 - (void)populateUtilityButtons {
     NSUInteger utilityButtonsCounter = 0;
-    for (UIButton *utilityButton in self.utilityButtons) {
+    for (UIButton *utilityButton in _utilityButtons) {
         CGFloat utilityButtonXCord = 0;
-        if (utilityButtonsCounter >= 1) utilityButtonXCord = self.utilityButtonWidth * utilityButtonsCounter;
-        [utilityButton setFrame:CGRectMake(utilityButtonXCord, 0, self.utilityButtonWidth, CGRectGetHeight(self.bounds))];
+        if (utilityButtonsCounter >= 1) utilityButtonXCord = _utilityButtonWidth * utilityButtonsCounter;
+        [utilityButton setFrame:CGRectMake(utilityButtonXCord, 0, _utilityButtonWidth, CGRectGetHeight(self.bounds))];
         [utilityButton setTag:utilityButtonsCounter];
         [utilityButton addTarget:self.parentCell action:self.utilityButtonSelector forControlEvents:UIControlEventTouchDown];
         [self addSubview: utilityButton];
