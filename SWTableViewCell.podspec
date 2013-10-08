@@ -6,7 +6,7 @@ Pod::Spec.new do |s|
   s.summary  = 'UITableViewCell subclass that implements a swipeable content view which exposes utility buttons.'
   s.license  = 'MIT'
   s.source   = { :git => 'https://github.com/CEWendel/SWTableViewCell.git', :tag => '0.0.1' }
-  s.source_files = 'SWTableViewCell'
+  s.source_files = 'SWTableViewCell/SWTableViewCell.{h,m}'
   s.platform = :ios
   s.ios.deployment_target = '6.1'
   s.requires_arc = true
