@@ -3,7 +3,7 @@ SWTableViewCell
 
 <p align="center"><img src="http://i.imgur.com/njKCjK8.gif"/></p>
 
-An easy-to-use UITableViewCell subclass that implements a swippable content view which exposes utility buttons (similar to iOS 7 Mail Application)
+An easy-to-use UITableViewCell subclass that implements a swipeable content view which exposes utility buttons (similar to iOS 7 Mail Application)
 
 ##Functionality
 ###Right Utility Buttons
