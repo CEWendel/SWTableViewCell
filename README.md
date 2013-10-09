@@ -18,7 +18,8 @@ Utility buttons that become visible on the left side of the Table View Cell when
 
 ###Features
 * Dynamic utility button scalling. As you add more buttons to a cell, the other buttons on that side get smaller to make room
-* Smart selection: The cell will pick up touch events and either scroll the cell back to center or fire the delegate method `- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath`. So the cell will not be considered selected when the user touches the cell while utility buttons are visible (same as iOS 7 Mail App functionality).
+* Smart selection: The cell will pick up touch events and either scroll the cell back to center or fire the delegate method `- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath` 
+So the cell will not be considered selected when the user touches the cell while utility buttons are visible (same as iOS 7 Mail App functionality)
 * Create utilty buttons with either a title or an icon along with a RGB color
 * Tested on iOS 6.1 and above, including iOS 7
 
