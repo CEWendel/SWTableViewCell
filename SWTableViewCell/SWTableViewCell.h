@@ -11,10 +11,10 @@
 @class SWTableViewCell;
 
 @protocol SWTableViewCellDelegate <NSObject>
-
+@optional
 - (void) didSelectedCell:(SWTableViewCell *)cell;
-- (void)swippableTableViewCell:(SWTableViewCell *)cell didTriggerLeftUtilityButtonWithIndex:(NSInteger)index;
-- (void)swippableTableViewCell:(SWTableViewCell *)cell didTriggerRightUtilityButtonWithIndex:(NSInteger)index;
+- (void) swippableTableViewCell:(SWTableViewCell *)cell didTriggerLeftUtilityButtonWithIndex:(NSInteger)index;
+- (void) swippableTableViewCell:(SWTableViewCell *)cell didTriggerRightUtilityButtonWithIndex:(NSInteger)index;
 - (void) swipeTableViewCellDidFinish:(SWTableViewCell *)cell;
 @end
 
