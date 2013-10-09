@@ -111,9 +111,19 @@ The index signifies which utility button the user pressed, for each side the but
 
 (This is all code from the included example project)
 
-###Miscellaneous
+###Gotchas
+
+Remember `SWTableViewCell` doesn't work like any other `UITableViewCell`, read the following.
+
+#### Custom `UITableViewCell` content
+* Don't use Storyboards to create your custom `UITableViewCell` content. Simply add views to the cell's `contentView` in `- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath`
+* Accessing view of the cell object or managing the predefined content still works fine. So for example if you change the cell's `imageView` or `backgroundView`, `SWTableViewCell` will still work as expected
+* Don't use accessory views in your cell, because they live above the `contentView` and will stay in place when the cell scrolls.
+
+#### Seperator Insets
 * If you have left utility button on iOS 7, I recommend changing your Table View's seperatorInset so the seperator stretches the length of the screen
 <pre> tableView.separatorInset = UIEdgeInsetsMake(0, 0, 0, 0); </pre>
+
 
 ##Contributing
 Use [Github issues](https://github.com/cewendel/tlog/issues) to track bugs and feature requests.
