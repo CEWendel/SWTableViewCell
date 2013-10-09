@@ -113,8 +113,6 @@ The index signifies which utility button the user pressed, for each side the but
 
 ###Gotchas
 
-Remember `SWTableViewCell` doesn't work like any other `UITableViewCell`
-
 #### Custom `UITableViewCell` content
 * Don't use Storyboards to create your custom `UITableViewCell` content. Simply add views to the cell's `contentView` in `- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath`
 * Accessing view of the cell object or managing the predefined content still works fine. So for example if you change the cell's `imageView` or `backgroundView`, `SWTableViewCell` will still work as expected
