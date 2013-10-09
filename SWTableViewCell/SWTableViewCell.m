@@ -322,7 +322,13 @@ typedef enum {
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    if (scrollView.contentOffset.x > [self leftUtilityButtonsWidth]) {
+    NSLog(@"scrollView.contentOffset.x %f", scrollView.contentOffset.x);
+    
+    if ( scrollView.contentOffset.x < 0 && _leftUtilityButtons.count == 0 ) {
+        scrollView.contentOffset = CGPointZero;
+    } else if ( scrollView.contentOffset.x > [self leftUtilityButtonsWidth] && _rightUtilityButtons.count == 0 ) {
+        scrollView.contentOffset = (CGPoint){ [self leftUtilityButtonsWidth], 0 };
+    } else if (scrollView.contentOffset.x > [self leftUtilityButtonsWidth] ) {
         // Expose the right button view
         self.scrollViewButtonViewRight.frame = CGRectMake(scrollView.contentOffset.x + (CGRectGetWidth(self.bounds) - [self rightUtilityButtonsWidth]), 0.0f, [self rightUtilityButtonsWidth], _height);
     } else {
