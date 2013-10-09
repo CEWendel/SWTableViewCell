@@ -109,22 +109,24 @@ typedef enum {
 @property (nonatomic, strong) SWUtilityButtonView *scrollViewButtonViewLeft;
 @property (nonatomic, strong) SWUtilityButtonView *scrollViewButtonViewRight;
 
+@property (nonatomic, weak) UITableView *containingTableView;
+
+@property (nonatomic, strong) NSIndexPath *indexPath;
+
 @end
 
 @implementation SWTableViewCell
 
 #pragma mark Initializers
 
-- (id)initWithStyle:(UITableViewCellStyle)style
-    reuseIdentifier:(NSString *)reuseIdentifier
-    height:(CGFloat)height
-    leftUtilityButtons:(NSArray *)leftUtilityButtons
-    rightUtilityButtons:(NSArray *)rightUtilityButtons {
+- (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier height:(CGFloat)height containingTableView:(UITableView *)containingTableView indexPath:(NSIndexPath *)indexPath leftUtilityButtons:(NSArray *)leftUtilityButtons rightUtilityButtons:(NSArray *)rightUtilityButtons {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
         self.rightUtilityButtons = rightUtilityButtons;
         self.leftUtilityButtons = leftUtilityButtons;
         self.height = height;
+        self.containingTableView = containingTableView;
+        self.indexPath = indexPath;
         [self initializer];
     }
     
@@ -169,6 +171,9 @@ typedef enum {
     cellScrollView.delegate = self;
     cellScrollView.showsHorizontalScrollIndicator = NO;
     
+    UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(scrollViewPressed:)];
+    [cellScrollView addGestureRecognizer:tapGestureRecognizer];
+    
     self.cellScrollView = cellScrollView;
     
     // Set up the views that will hold the utility buttons
@@ -204,6 +209,21 @@ typedef enum {
         [self.scrollViewContentView addSubview:subview];
     }
 }
+
+- (void)scrollViewPressed:(id)sender {
+    if(_cellState == kCellStateCenter) {
+        // Actually select the row
+        if ([self.containingTableView.delegate respondsToSelector:@selector(tableView:didSelectRowAtIndexPath:)]){
+            [self.containingTableView.delegate tableView:_containingTableView didSelectRowAtIndexPath:_indexPath];
+        }
+    } else {
+        // Scroll back to center
+        [self.cellScrollView setContentOffset:CGPointMake([self leftUtilityButtonsWidth], 0) animated:YES];
+        _cellState = kCellStateCenter;
+    }
+}
+
+#pragma mark UITableViewCell overrides
 
 - (void)setBackgroundColor:(UIColor *)backgroundColor {
     self.scrollViewContentView.backgroundColor = backgroundColor;
