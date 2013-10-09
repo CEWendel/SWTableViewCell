@@ -37,15 +37,32 @@ In your `tableView:cellForRowAtIndexPath:` method you set up the SWTableView cel
         NSMutableArray *leftUtilityButtons = [NSMutableArray new];
         NSMutableArray *rightUtilityButtons = [NSMutableArray new];
         
-        [leftUtilityButtons addUtilityButtonWithColor:[UIColor colorWithRed:0.07 green:0.75f blue:0.16f alpha:1.0] icon:[UIImage imageNamed:@"check.png"]];
-        [leftUtilityButtons addUtilityButtonWithColor:[UIColor colorWithRed:1.0f green:1.0f blue:0.35f alpha:1.0] icon:[UIImage imageNamed:@"clock.png"]];
-        [leftUtilityButtons addUtilityButtonWithColor:[UIColor colorWithRed:1.0f green:0.231f blue:0.188f alpha:1.0] icon:[UIImage imageNamed:@"cross.png"]];
-        [leftUtilityButtons addUtilityButtonWithColor:[UIColor colorWithRed:0.55f green:0.27f blue:0.07f alpha:1.0] icon:[UIImage imageNamed:@"list.png"]];
+        [leftUtilityButtons addUtilityButtonWithColor:
+                            [UIColor colorWithRed:0.07 green:0.75f blue:0.16f alpha:1.0] 
+                            icon:[UIImage imageNamed:@"check.png"]];
+        [leftUtilityButtons addUtilityButtonWithColor:
+                            [UIColor colorWithRed:1.0f green:1.0f blue:0.35f alpha:1.0] 
+                            icon:[UIImage imageNamed:@"clock.png"]];
+        [leftUtilityButtons addUtilityButtonWithColor:
+                            [UIColor colorWithRed:1.0f green:0.231f blue:0.188f alpha:1.0] 
+                            icon:[UIImage imageNamed:@"cross.png"]];
+        [leftUtilityButtons addUtilityButtonWithColor:
+                            [UIColor colorWithRed:0.55f green:0.27f blue:0.07f alpha:1.0] 
+                            icon:[UIImage imageNamed:@"list.png"]];
         
-        [rightUtilityButtons addUtilityButtonWithColor:[UIColor colorWithRed:0.78f green:0.78f blue:0.8f alpha:1.0] title:@"More"];
-        [rightUtilityButtons addUtilityButtonWithColor:[UIColor colorWithRed:1.0f green:0.231f blue:0.188 alpha:1.0f] title:@"Delete"];
+        [rightUtilityButtons addUtilityButtonWithColor:
+                            [UIColor colorWithRed:0.78f green:0.78f blue:0.8f alpha:1.0]
+                            title:@"More"];
+        [rightUtilityButtons addUtilityButtonWithColor:
+                            [UIColor colorWithRed:1.0f green:0.231f blue:0.188 alpha:1.0f] 
+                            title:@"Delete"];
         
-        cell = [[SWTableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:cellIdentifier height:_tableView.rowHeight containingTableView:_tableView indexPath:indexPath leftUtilityButtons:leftUtilityButtons rightUtilityButtons:rightUtilityButtons];
+        cell = [[SWTableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle 
+                                reuseIdentifier:cellIdentifier 
+                                containingTableView:_tableView 
+                                indexPath:indexPath 
+                                leftUtilityButtons:leftUtilityButtons 
+                                rightUtilityButtons:rightUtilityButtons];
         cell.delegate = self;
     }
     
@@ -102,7 +119,8 @@ The index signifies which utility button the user pressed, for each side the but
             NSIndexPath *cellIndexPath = [self.tableView indexPathForCell:cell];
             
             [_testArray removeObjectAtIndex:cellIndexPath.row];
-            [self.tableView deleteRowsAtIndexPaths:@[cellIndexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+            [self.tableView deleteRowsAtIndexPaths:@[cellIndexPath] 
+                    withRowAnimation:UITableViewRowAnimationAutomatic];
             break;
         }
         default:
