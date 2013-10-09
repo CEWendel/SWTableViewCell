@@ -25,6 +25,8 @@
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier height:(CGFloat)height leftUtilityButtons:(NSArray *)leftUtilityButtons rightUtilityButtons:(NSArray *)rightUtilityButtons;
 
+- (void)setBackgroundColor:(UIColor *)backgroundColor;
+
 @end
 
 @interface NSMutableArray (SWUtilityButtons)

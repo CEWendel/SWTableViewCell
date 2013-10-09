@@ -205,6 +205,10 @@ typedef enum {
     }
 }
 
+- (void)setBackgroundColor:(UIColor *)backgroundColor {
+    self.scrollViewContentView.backgroundColor = backgroundColor;
+}
+
 #pragma mark - Utility buttons handling
 
 - (void)rightUtilityButtonHandler:(id)sender {
