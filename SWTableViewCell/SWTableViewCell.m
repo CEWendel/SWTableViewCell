@@ -210,6 +210,8 @@ typedef enum {
     }
 }
 
+#pragma mark Selection
+
 - (void)scrollViewPressed:(id)sender {
     if(_cellState == kCellStateCenter) {
         // Actually select the row
