@@ -109,9 +109,9 @@ typedef enum {
 @property (nonatomic, strong) SWUtilityButtonView *scrollViewButtonViewLeft;
 @property (nonatomic, strong) SWUtilityButtonView *scrollViewButtonViewRight;
 
-@property (nonatomic, weak) UITableView *containingTableView;
+@property (nonatomic, weak) UITableView *containingTableView; // Used for row height and selection
 
-@property (nonatomic, strong) NSIndexPath *indexPath;
+@property (nonatomic, strong) NSIndexPath *indexPath; // The index path of this cell
 
 @end
 
