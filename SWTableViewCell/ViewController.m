@@ -11,6 +11,7 @@
 
 @interface ViewController () {
     NSMutableArray *_testArray;
+    NSIndexPath *_selectedIndexPath;
 }
 
 @property (nonatomic, weak) IBOutlet UITableView *tableView;
@@ -40,6 +41,13 @@
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (void) resetSelectedCell
+{
+    SWTableViewCell *cell = (SWTableViewCell*)[self.tableView cellForRowAtIndexPath:_selectedIndexPath];
+    [cell resetCellPosition];
+    _selectedIndexPath = nil;
 }
 
 #pragma mark UITableViewDataSource
@@ -80,7 +88,23 @@
     // Set background color of cell here if you don't want white
 }
 
+#pragma mark - ScrollViewDelegate
+
+- (void) scrollViewDidScroll:(UIScrollView *)scrollView
+{
+    [self resetSelectedCell];
+}
+
 #pragma mark - SWTableViewDelegate
+
+- (void) swipeTableViewCellDidFinish:(SWTableViewCell *)cell
+{
+    NSIndexPath *indexPathForCell = [self.tableView indexPathForCell:cell];
+    if (_selectedIndexPath.row != indexPathForCell.row)
+        [self resetSelectedCell];
+    
+    _selectedIndexPath = indexPathForCell;
+}
 
 - (void)swippableTableViewCell:(SWTableViewCell *)cell didTriggerLeftUtilityButtonWithIndex:(NSInteger)index {
     switch (index) {
@@ -111,12 +135,17 @@
             NSIndexPath *cellIndexPath = [self.tableView indexPathForCell:cell];
             
             [_testArray removeObjectAtIndex:cellIndexPath.row];
-            [self.tableView deleteRowsAtIndexPaths:@[cellIndexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+            [self.tableView deleteRowsAtIndexPaths:@[cellIndexPath] withRowAnimation:UITableViewRowAnimationLeft];
             break;
         }
         default:
             break;
     }
+}
+
+- (void) didSelectedCell:(SWTableViewCell *)cell
+{
+    [self resetSelectedCell];
 }
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {

@@ -12,9 +12,10 @@
 
 @protocol SWTableViewCellDelegate <NSObject>
 
+- (void) didSelectedCell:(SWTableViewCell *)cell;
 - (void)swippableTableViewCell:(SWTableViewCell *)cell didTriggerLeftUtilityButtonWithIndex:(NSInteger)index;
 - (void)swippableTableViewCell:(SWTableViewCell *)cell didTriggerRightUtilityButtonWithIndex:(NSInteger)index;
-
+- (void) swipeTableViewCellDidFinish:(SWTableViewCell *)cell;
 @end
 
 @interface SWTableViewCell : UITableViewCell
@@ -26,6 +27,8 @@
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier height:(CGFloat)height leftUtilityButtons:(NSArray *)leftUtilityButtons rightUtilityButtons:(NSArray *)rightUtilityButtons;
 
 - (void)setBackgroundColor:(UIColor *)backgroundColor;
+
+- (void) resetCellPosition;
 
 @end
 

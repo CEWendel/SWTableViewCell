@@ -9,6 +9,6 @@
 #import <UIKit/UIKit.h>
 #import "SWTableViewCell.h"
 
-@interface ViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, SWTableViewCellDelegate>
+@interface ViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, UIScrollViewDelegate, SWTableViewCellDelegate>
 
 @end

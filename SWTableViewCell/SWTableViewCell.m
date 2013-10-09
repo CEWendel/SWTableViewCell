@@ -94,7 +94,7 @@ typedef enum {
 
 @end
 
-@interface SWTableViewCell () <UIScrollViewDelegate> {
+@interface SWTableViewCell () <UIScrollViewDelegate, UIGestureRecognizerDelegate> {
     SWCellState _cellState; // The state of the cell within the scroll view, can be left, right or middle
 }
 
@@ -163,6 +163,11 @@ typedef enum {
 
 - (void)initializer {
     // Set up scroll view that will host our cell content
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapedInsideCell)];
+    [tap setCancelsTouchesInView:NO];
+    [tap setDelegate:self];
+    [self addGestureRecognizer:tap];
+    
     UIScrollView *cellScrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.bounds), _height)];
     cellScrollView.contentSize = CGSizeMake(CGRectGetWidth(self.bounds) + [self utilityButtonsPadding], _height);
     cellScrollView.contentOffset = [self scrollViewContentOffset];
@@ -208,6 +213,31 @@ typedef enum {
 - (void)setBackgroundColor:(UIColor *)backgroundColor {
     self.scrollViewContentView.backgroundColor = backgroundColor;
 }
+
+#pragma mark - Gesture tap
+
+- (BOOL) gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
+{
+    if ( [NSStringFromClass(touch.view.class) isEqualToString:@"UIButton"] )
+        return NO;
+    
+    return YES;
+}
+
+- (void) tapedInsideCell
+{
+    if ( _cellState == kCellStateCenter)
+        [_delegate didSelectedCell:self];
+    else
+        [self resetCellPosition];
+}
+
+- (void) resetCellPosition
+{
+    [self.cellScrollView setContentOffset:[self scrollViewContentOffset] animated:YES];
+    _cellState = kCellStateCenter;
+}
+
 
 #pragma mark - Utility buttons handling
 
@@ -260,6 +290,7 @@ typedef enum {
 - (void)scrollToRight:(inout CGPoint *)targetContentOffset{
     targetContentOffset->x = [self utilityButtonsPadding];
     _cellState = kCellStateRight;
+    [_delegate swipeTableViewCellDidFinish:self];
 }
 
 - (void)scrollToCenter:(inout CGPoint *)targetContentOffset {
@@ -270,6 +301,7 @@ typedef enum {
 - (void)scrollToLeft:(inout CGPoint *)targetContentOffset{
     targetContentOffset->x = 0;
     _cellState = kCellStateLeft;
+    [_delegate swipeTableViewCellDidFinish:self];
 }
 
 #pragma mark UIScrollViewDelegate
@@ -328,7 +360,7 @@ typedef enum {
         scrollView.contentOffset = CGPointZero;
     } else if ( scrollView.contentOffset.x > [self leftUtilityButtonsWidth] && _rightUtilityButtons.count == 0 ) {
         // Block scroll to left if _rightUtilityButtons.count is 0
-        scrollView.contentOffset = (CGPoint){ [self leftUtilityButtonsWidth], 0 };
+        scrollView.contentOffset = [self scrollViewContentOffset];
     } else if (scrollView.contentOffset.x > [self leftUtilityButtonsWidth] ) {
         // Expose the right button view
         self.scrollViewButtonViewRight.frame = CGRectMake(scrollView.contentOffset.x + (CGRectGetWidth(self.bounds) - [self rightUtilityButtonsWidth]), 0.0f, [self rightUtilityButtonsWidth], _height);
