@@ -73,15 +73,11 @@
     cell.textLabel.text = [dateObject description];
     cell.detailTextLabel.text = @"Some detail text";
     
-    //cell.backgroundColor = [UIColor greenColor];
-    
-    //[cell setBackgroundColor:[UIColor greenColor]];
-    
     return cell;
 }
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
-    cell.backgroundColor = [UIColor greenColor];
+    // Set background color of cell here if you don't want white
 }
 
 #pragma mark - SWTableViewDelegate
