@@ -225,6 +225,12 @@ typedef enum {
     }
 }
 
+- (void)hideUtilityButtonsAnimated:(BOOL)animated {
+    // Scroll back to center
+    [self.cellScrollView setContentOffset:CGPointMake([self leftUtilityButtonsWidth], 0) animated:animated];
+    _cellState = kCellStateCenter;
+}
+
 #pragma mark UITableViewCell overrides
 
 - (void)setBackgroundColor:(UIColor *)backgroundColor {
