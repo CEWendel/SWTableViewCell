@@ -58,11 +58,11 @@ In your `tableView:cellForRowAtIndexPath:` method you set up the SWTableView cel
                             title:@"Delete"];
         
         cell = [[SWTableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle 
-                                reuseIdentifier:cellIdentifier 
-                                containingTableView:_tableView // For row height and selection
-                                indexPath:indexPath 
-                                leftUtilityButtons:leftUtilityButtons 
-                                rightUtilityButtons:rightUtilityButtons];
+                        reuseIdentifier:cellIdentifier 
+                        containingTableView:_tableView // For row height and selection
+                        indexPath:indexPath 
+                        leftUtilityButtons:leftUtilityButtons 
+                        rightUtilityButtons:rightUtilityButtons];
         cell.delegate = self;
     }
     
