@@ -220,15 +220,8 @@ typedef enum {
         }
     } else {
         // Scroll back to center
-        [self.cellScrollView setContentOffset:CGPointMake([self leftUtilityButtonsWidth], 0) animated:YES];
-        _cellState = kCellStateCenter;
+        [self hideUtilityButtonsAnimated:YES];
     }
-}
-
-- (void)hideUtilityButtonsAnimated:(BOOL)animated {
-    // Scroll back to center
-    [self.cellScrollView setContentOffset:CGPointMake([self leftUtilityButtonsWidth], 0) animated:animated];
-    _cellState = kCellStateCenter;
 }
 
 #pragma mark UITableViewCell overrides
@@ -249,6 +242,12 @@ typedef enum {
     UIButton *utilityButton = (UIButton *)sender;
     NSInteger utilityButtonTag = [utilityButton tag];
     [_delegate swippableTableViewCell:self didTriggerLeftUtilityButtonWithIndex:utilityButtonTag];
+}
+
+- (void)hideUtilityButtonsAnimated:(BOOL)animated {
+    // Scroll back to center
+    [self.cellScrollView setContentOffset:CGPointMake([self leftUtilityButtonsWidth], 0) animated:animated];
+    _cellState = kCellStateCenter;
 }
 
 

@@ -124,8 +124,14 @@
 - (void)swippableTableViewCell:(SWTableViewCell *)cell didTriggerRightUtilityButtonWithIndex:(NSInteger)index {
     switch (index) {
         case 0:
+        {
             NSLog(@"More button was pressed");
+            UIAlertView *alertTest = [[UIAlertView alloc] initWithTitle:@"Hello" message:@"More more more" delegate:nil cancelButtonTitle:@"cancel" otherButtonTitles: nil];
+            [alertTest show];
+            
+            [cell hideUtilityButtonsAnimated:YES];
             break;
+        }
         case 1:
         {
             // Delete button was pressed
