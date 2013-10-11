@@ -111,22 +111,19 @@ typedef enum {
 
 @property (nonatomic, weak) UITableView *containingTableView; // Used for row height and selection
 
-@property (nonatomic, strong) NSIndexPath *indexPath; // The index path of this cell
-
 @end
 
 @implementation SWTableViewCell
 
 #pragma mark Initializers
 
-- (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier containingTableView:(UITableView *)containingTableView indexPath:(NSIndexPath *)indexPath leftUtilityButtons:(NSArray *)leftUtilityButtons rightUtilityButtons:(NSArray *)rightUtilityButtons {
+- (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier containingTableView:(UITableView *)containingTableView leftUtilityButtons:(NSArray *)leftUtilityButtons rightUtilityButtons:(NSArray *)rightUtilityButtons {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
         self.rightUtilityButtons = rightUtilityButtons;
         self.leftUtilityButtons = leftUtilityButtons;
         self.height = containingTableView.rowHeight;
         self.containingTableView = containingTableView;
-        self.indexPath = indexPath;
         [self initializer];
     }
     
@@ -216,7 +213,8 @@ typedef enum {
     if(_cellState == kCellStateCenter) {
         // Actually select the row
         if ([self.containingTableView.delegate respondsToSelector:@selector(tableView:didSelectRowAtIndexPath:)]){
-            [self.containingTableView.delegate tableView:_containingTableView didSelectRowAtIndexPath:_indexPath];
+            NSIndexPath *cellIndexPath = [_containingTableView indexPathForCell:self];
+            [self.containingTableView.delegate tableView:_containingTableView didSelectRowAtIndexPath:cellIndexPath];
         }
     } else {
         // Scroll back to center

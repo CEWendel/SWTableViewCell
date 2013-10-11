@@ -23,7 +23,7 @@
 @property (nonatomic, strong) NSArray *rightUtilityButtons;
 @property (nonatomic) id <SWTableViewCellDelegate> delegate;
 
-- (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier containingTableView:(UITableView *)containingTableView indexPath:(NSIndexPath *)indexPath leftUtilityButtons:(NSArray *)leftUtilityButtons rightUtilityButtons:(NSArray *)rightUtilityButtons;
+- (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier containingTableView:(UITableView *)containingTableView leftUtilityButtons:(NSArray *)leftUtilityButtons rightUtilityButtons:(NSArray *)rightUtilityButtons;
 
 - (void)setBackgroundColor:(UIColor *)backgroundColor;
 - (void)hideUtilityButtonsAnimated:(BOOL)animated;

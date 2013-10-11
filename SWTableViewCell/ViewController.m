@@ -49,7 +49,7 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    NSLog(@"cell selected");
+    NSLog(@"cell selected at index path %d", indexPath.row);
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -84,7 +84,6 @@
         cell = [[SWTableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle
                                       reuseIdentifier:cellIdentifier
                                   containingTableView:_tableView // Used for row height and selection
-                                            indexPath:indexPath
                                    leftUtilityButtons:leftUtilityButtons
                                   rightUtilityButtons:rightUtilityButtons];
         cell.delegate = self;
