@@ -233,13 +233,17 @@ typedef enum {
 - (void)rightUtilityButtonHandler:(id)sender {
     UIButton *utilityButton = (UIButton *)sender;
     NSInteger utilityButtonTag = [utilityButton tag];
-    [_delegate swippableTableViewCell:self didTriggerRightUtilityButtonWithIndex:utilityButtonTag];
+    if ([_delegate respondsToSelector:@selector(swippableTableViewCell:didTriggerRightUtilityButtonWithIndex:)]) {
+        [_delegate swippableTableViewCell:self didTriggerRightUtilityButtonWithIndex:utilityButtonTag];
+    }
 }
 
 - (void)leftUtilityButtonHandler:(id)sender {
     UIButton *utilityButton = (UIButton *)sender;
     NSInteger utilityButtonTag = [utilityButton tag];
-    [_delegate swippableTableViewCell:self didTriggerLeftUtilityButtonWithIndex:utilityButtonTag];
+    if ([_delegate respondsToSelector:@selector(swippableTableViewCell:didTriggerLeftUtilityButtonWithIndex:)]) {
+        [_delegate swippableTableViewCell:self didTriggerLeftUtilityButtonWithIndex:utilityButtonTag];
+    }
 }
 
 - (void)hideUtilityButtonsAnimated:(BOOL)animated {
