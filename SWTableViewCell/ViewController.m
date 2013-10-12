@@ -26,6 +26,7 @@
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
     self.tableView.rowHeight = 90;
+    self.tableView.allowsSelection = NO; // We essentially implement our own selection
     self.tableView.separatorInset = UIEdgeInsetsMake(0, 0, 0, 0); // Makes the horizontal row seperator stretch the entire length of the table view
     
     _testArray = [[NSMutableArray alloc] init];
@@ -96,6 +97,10 @@
     return cell;
 }
 
+-(void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
+    NSLog(@"scroll view did begin dragging");
+}
+
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
     // Set background color of cell here if you don't want white
 }
@@ -137,7 +142,7 @@
             NSIndexPath *cellIndexPath = [self.tableView indexPathForCell:cell];
             
             [_testArray removeObjectAtIndex:cellIndexPath.row];
-            [self.tableView deleteRowsAtIndexPaths:@[cellIndexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+            [self.tableView deleteRowsAtIndexPaths:@[cellIndexPath] withRowAnimation:UITableViewRowAnimationLeft];
             break;
         }
         default:

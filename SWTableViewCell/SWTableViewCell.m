@@ -19,6 +19,7 @@ typedef enum {
     kCellStateRight
 } SWCellState;
 
+
 #pragma mark - SWUtilityButtonView
 
 @interface SWUtilityButtonView : UIView
@@ -45,7 +46,7 @@ typedef enum {
         self.utilityButtons = utilityButtons;
         self.utilityButtonWidth = [self calculateUtilityButtonWidth];
         self.parentCell = parentCell;
-        self.utilityButtonSelector = utilityButtonSelector; // eh.
+        self.utilityButtonSelector = utilityButtonSelector;
     }
     
     return self;
@@ -58,7 +59,7 @@ typedef enum {
         self.utilityButtons = utilityButtons;
         self.utilityButtonWidth = [self calculateUtilityButtonWidth];
         self.parentCell = parentCell;
-        self.utilityButtonSelector = utilityButtonSelector; // eh.
+        self.utilityButtonSelector = utilityButtonSelector;
     }
     
     return self;
@@ -86,7 +87,7 @@ typedef enum {
         if (utilityButtonsCounter >= 1) utilityButtonXCord = _utilityButtonWidth * utilityButtonsCounter;
         [utilityButton setFrame:CGRectMake(utilityButtonXCord, 0, _utilityButtonWidth, CGRectGetHeight(self.bounds))];
         [utilityButton setTag:utilityButtonsCounter];
-        [utilityButton addTarget:self.parentCell action:self.utilityButtonSelector forControlEvents:UIControlEventTouchDown];
+        [utilityButton addTarget:_parentCell action:_utilityButtonSelector forControlEvents:UIControlEventTouchDown];
         [self addSubview: utilityButton];
         utilityButtonsCounter++;
     }
@@ -109,7 +110,8 @@ typedef enum {
 @property (nonatomic, strong) SWUtilityButtonView *scrollViewButtonViewLeft;
 @property (nonatomic, strong) SWUtilityButtonView *scrollViewButtonViewRight;
 
-@property (nonatomic, weak) UITableView *containingTableView; // Used for row height and selection
+// Used for row height and selection
+@property (nonatomic, weak) UITableView *containingTableView;
 
 @end
 
@@ -124,6 +126,7 @@ typedef enum {
         self.leftUtilityButtons = leftUtilityButtons;
         self.height = containingTableView.rowHeight;
         self.containingTableView = containingTableView;
+        self.highlighted = NO;
         [self initializer];
     }
     
@@ -211,14 +214,30 @@ typedef enum {
 
 - (void)scrollViewPressed:(id)sender {
     if(_cellState == kCellStateCenter) {
-        // Actually select the row
+        // Selection hack
         if ([self.containingTableView.delegate respondsToSelector:@selector(tableView:didSelectRowAtIndexPath:)]){
             NSIndexPath *cellIndexPath = [_containingTableView indexPathForCell:self];
             [self.containingTableView.delegate tableView:_containingTableView didSelectRowAtIndexPath:cellIndexPath];
         }
+        // Highlight hack
+        if (!self.highlighted) {
+            self.scrollViewButtonViewLeft.hidden = YES;
+            self.scrollViewButtonViewRight.hidden = YES;
+            NSTimer *endHighlightTimer = [NSTimer scheduledTimerWithTimeInterval:0.15 target:self selector:@selector(timerEndCellHighlight:) userInfo:nil repeats:NO];
+            [[NSRunLoop currentRunLoop] addTimer:endHighlightTimer forMode:NSRunLoopCommonModes];
+            [self setHighlighted:YES];
+        }
     } else {
         // Scroll back to center
         [self hideUtilityButtonsAnimated:YES];
+    }
+}
+
+- (void)timerEndCellHighlight:(id)sender {
+    if (self.highlighted) {
+        self.scrollViewButtonViewLeft.hidden = NO;
+        self.scrollViewButtonViewRight.hidden = NO;
+        [self setHighlighted:NO];
     }
 }
 
@@ -361,6 +380,7 @@ typedef enum {
 }
 
 @end
+
 
 #pragma mark NSMutableArray class extension helper
 
