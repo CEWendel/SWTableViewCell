@@ -346,7 +346,9 @@ typedef enum {
             } else if (velocity.x <= -0.5f) {
                 // No-op
             } else {
-                if (targetContentOffset->x > [self leftUtilityButtonsWidth] / 2)
+                if (targetContentOffset->x >= ([self utilityButtonsPadding] - [self rightUtilityButtonsWidth] / 2))
+                    [self scrollToRight:targetContentOffset];
+                else if (targetContentOffset->x > [self leftUtilityButtonsWidth] / 2)
                     [self scrollToCenter:targetContentOffset];
                 else
                     [self scrollToLeft:targetContentOffset];
@@ -358,7 +360,9 @@ typedef enum {
             } else if (velocity.x <= -0.5f) {
                 [self scrollToCenter:targetContentOffset];
             } else {
-                if (targetContentOffset->x < ([self utilityButtonsPadding] - [self rightUtilityButtonsWidth] / 2))
+                if (targetContentOffset->x <= [self leftUtilityButtonsWidth] / 2)
+                    [self scrollToLeft:targetContentOffset];
+                else if (targetContentOffset->x < ([self utilityButtonsPadding] - [self rightUtilityButtonsWidth] / 2))
                     [self scrollToCenter:targetContentOffset];
                 else
                     [self scrollToRight:targetContentOffset];
