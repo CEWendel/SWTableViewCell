@@ -11,11 +11,18 @@
 
 @class SWTableViewCell;
 
+typedef enum {
+    kCellStateCenter,
+    kCellStateLeft,
+    kCellStateRight
+} SWCellState;
+
 @protocol SWTableViewCellDelegate <NSObject>
 
 @optional
 - (void)swippableTableViewCell:(SWTableViewCell *)cell didTriggerLeftUtilityButtonWithIndex:(NSInteger)index;
 - (void)swippableTableViewCell:(SWTableViewCell *)cell didTriggerRightUtilityButtonWithIndex:(NSInteger)index;
+- (void)swippableTableViewCell:(SWTableViewCell *)cell scrollingToState:(SWCellState)state;
 
 @end
 

@@ -13,12 +13,6 @@
 
 static NSString * const kTableViewCellContentView = @"UITableViewCellContentView";
 
-typedef enum {
-    kCellStateCenter,
-    kCellStateLeft,
-    kCellStateRight
-} SWCellState;
-
 
 #pragma mark - SWUtilityButtonView
 
@@ -269,6 +263,10 @@ typedef enum {
     // Scroll back to center
     [self.cellScrollView setContentOffset:CGPointMake([self leftUtilityButtonsWidth], 0) animated:animated];
     _cellState = kCellStateCenter;
+    
+    if ([_delegate respondsToSelector:@selector(swippableTableViewCell:scrollingToState:)]) {
+        [_delegate swippableTableViewCell:self scrollingToState:kCellStateCenter];
+    }
 }
 
 
@@ -308,16 +306,28 @@ typedef enum {
 - (void)scrollToRight:(inout CGPoint *)targetContentOffset{
     targetContentOffset->x = [self utilityButtonsPadding];
     _cellState = kCellStateRight;
+    
+    if ([_delegate respondsToSelector:@selector(swippableTableViewCell:scrollingToState:)]) {
+        [_delegate swippableTableViewCell:self scrollingToState:kCellStateRight];
+    }
 }
 
 - (void)scrollToCenter:(inout CGPoint *)targetContentOffset {
     targetContentOffset->x = [self leftUtilityButtonsWidth];
     _cellState = kCellStateCenter;
+
+    if ([_delegate respondsToSelector:@selector(swippableTableViewCell:scrollingToState:)]) {
+        [_delegate swippableTableViewCell:self scrollingToState:kCellStateCenter];
+    }
 }
 
 - (void)scrollToLeft:(inout CGPoint *)targetContentOffset{
     targetContentOffset->x = 0;
     _cellState = kCellStateLeft;
+    
+    if ([_delegate respondsToSelector:@selector(swippableTableViewCell:scrollingToState:)]) {
+        [_delegate swippableTableViewCell:self scrollingToState:kCellStateLeft];
+    }
 }
 
 #pragma mark UIScrollViewDelegate
