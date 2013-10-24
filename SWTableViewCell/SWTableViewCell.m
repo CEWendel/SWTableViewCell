@@ -10,6 +10,7 @@
 
 #define kUtilityButtonsWidthMax 260
 #define kUtilityButtonWidthDefault 90
+#define kSectionIndexWidth 15
 
 static NSString * const kTableViewCellContentView = @"UITableViewCellContentView";
 
@@ -91,6 +92,7 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
 
 @interface SWTableViewCell () <UIScrollViewDelegate> {
     SWCellState _cellState; // The state of the cell within the scroll view, can be left, right or middle
+    CGFloat additionalRightPadding;
 }
 
 // Scroll view to be added to UITableViewCell
@@ -158,6 +160,12 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
 }
 
 - (void)initializer {
+    // Check if the UITableView will display Indices on the right. If that's the case, add a padding
+    if([self.containingTableView.dataSource respondsToSelector:@selector(sectionIndexTitlesForTableView:)]) {
+        NSArray *indices = [self.containingTableView.dataSource sectionIndexTitlesForTableView:self.containingTableView];
+        additionalRightPadding = indices == nil ? 0 : kSectionIndexWidth;
+    }
+    
     // Set up scroll view that will host our cell content
     UIScrollView *cellScrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.bounds), _height)];
     cellScrollView.contentSize = CGSizeMake(CGRectGetWidth(self.bounds) + [self utilityButtonsPadding], _height);
@@ -290,11 +298,11 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
 }
 
 - (CGFloat)rightUtilityButtonsWidth {
-    return [_scrollViewButtonViewRight utilityButtonsWidth];
+    return [_scrollViewButtonViewRight utilityButtonsWidth] + additionalRightPadding;
 }
 
 - (CGFloat)utilityButtonsPadding {
-    return ([_scrollViewButtonViewLeft utilityButtonsWidth] + [_scrollViewButtonViewRight utilityButtonsWidth]);
+    return [self leftUtilityButtonsWidth] + [self rightUtilityButtonsWidth];
 }
 
 - (CGPoint)scrollViewContentOffset {
