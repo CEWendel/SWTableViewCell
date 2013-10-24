@@ -10,6 +10,7 @@
 #import "SWTableViewCell.h"
 
 @interface ViewController () {
+    NSArray *_sections;
     NSMutableArray *_testArray;
 }
 
@@ -29,28 +30,44 @@
     self.tableView.allowsSelection = NO; // We essentially implement our own selection
     self.tableView.separatorInset = UIEdgeInsetsMake(0, 0, 0, 0); // Makes the horizontal row seperator stretch the entire length of the table view
     
+    _sections =[[UILocalizedIndexedCollation currentCollation] sectionIndexTitles];
+    
     _testArray = [[NSMutableArray alloc] init];
     
-    // Add test data to our test array
-    [_testArray addObject:[NSDate date]];
-    [_testArray addObject:[NSDate date]];
-    [_testArray addObject:[NSDate date]];
-}
-
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+    for (int i = 0; i < _sections.count; ++i) {
+        [_testArray addObject:[NSMutableArray array]];
+    }
+    
+    for (int i = 0; i < 100; ++i) {
+        NSString *string = [NSString stringWithFormat:@"%d", i];
+        [_testArray[i % _sections.count] addObject:string];
+    }
 }
 
 #pragma mark UITableViewDataSource
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     return _testArray.count;
 }
 
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    return [_testArray[section] count];
+}
+
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    NSLog(@"cell selected at index path %d", indexPath.row);
+    NSLog(@"cell selected at index path %d:%d", indexPath.section, indexPath.row);
+}
+
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
+    return _sections[section];
+}
+
+- (NSArray *)sectionIndexTitlesForTableView:(UITableView *)tableView {
+    return [[UILocalizedIndexedCollation currentCollation] sectionIndexTitles];
+}
+
+- (NSInteger)tableView:(UITableView *)tableView sectionForSectionIndexTitle:(NSString *)title atIndex:(NSInteger)index {
+    return [[UILocalizedIndexedCollation currentCollation] sectionForSectionIndexTitleAtIndex:index];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -90,7 +107,7 @@
         cell.delegate = self;
     }
     
-    NSDate *dateObject = _testArray[indexPath.row];
+    NSDate *dateObject = _testArray[indexPath.section][indexPath.row];
     cell.textLabel.text = [dateObject description];
     cell.detailTextLabel.text = @"Some detail text";
     
