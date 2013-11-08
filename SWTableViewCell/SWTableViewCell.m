@@ -408,7 +408,7 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
 
 @implementation NSMutableArray (SWUtilityButtons)
 
-- (void)addUtilityButtonWithColor:(UIColor *)color title:(NSString *)title {
+- (void)sw_addUtilityButtonWithColor:(UIColor *)color title:(NSString *)title {
     UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
     button.backgroundColor = color;
     [button setTitle:title forState:UIControlStateNormal];
@@ -416,7 +416,7 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
     [self addObject:button];
 }
 
-- (void)addUtilityButtonWithColor:(UIColor *)color icon:(UIImage *)icon {
+- (void)sw_addUtilityButtonWithColor:(UIColor *)color icon:(UIImage *)icon {
     UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
     button.backgroundColor = color;
     [button setImage:icon forState:UIControlStateNormal];
