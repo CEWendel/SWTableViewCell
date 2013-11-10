@@ -88,6 +88,15 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
     }
 }
 
+- (void)setHeight:(CGFloat)height {
+    for (NSUInteger utilityButtonsCounter = 0; utilityButtonsCounter < _utilityButtons.count; utilityButtonsCounter++) {
+        UIButton *utilityButton = (UIButton *)_utilityButtons[utilityButtonsCounter];
+        CGFloat utilityButtonXCord = 0;
+        if (utilityButtonsCounter >= 1) utilityButtonXCord = _utilityButtonWidth * utilityButtonsCounter;
+        [utilityButton setFrame:CGRectMake(utilityButtonXCord, 0, _utilityButtonWidth, height)];
+    }
+}
+
 @end
 
 @interface SWTableViewCell () <UIScrollViewDelegate> {
@@ -248,6 +257,18 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
 
 - (void)setBackgroundColor:(UIColor *)backgroundColor {
     self.scrollViewContentView.backgroundColor = backgroundColor;
+}
+
+#pragma mark Height methods
+
+- (void)setCellHeight:(CGFloat)height {
+    _height = height;
+    
+    // update the utility button height
+    [_scrollViewButtonViewLeft setHeight:height];
+    [_scrollViewButtonViewRight setHeight:height];
+    
+    [self layoutSubviews];
 }
 
 #pragma mark - Utility buttons handling
