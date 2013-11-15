@@ -62,7 +62,7 @@
     return _sections[section];
 }
 
-// Uncomment to show index titles
+// Show index titles
 
 //- (NSArray *)sectionIndexTitlesForTableView:(UITableView *)tableView {
 //    return [[UILocalizedIndexedCollation currentCollation] sectionIndexTitles];
@@ -76,6 +76,8 @@
     static NSString *cellIdentifier = @"Cell";
     
     SWTableViewCell *cell = (SWTableViewCell *)[tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+    
+    //[_tableView setRowHeight:40];
     
     if (cell == nil) {
         NSMutableArray *leftUtilityButtons = [NSMutableArray new];
@@ -113,8 +115,22 @@
     cell.textLabel.text = [dateObject description];
     cell.detailTextLabel.text = @"Some detail text";
     
+//     If you are setting the row height on an individual basis:
+//     e.g: With tableView:heightForRowAtIndexPath:
+//    [cell setCellHeight:[self rowHeightForIndexPath:indexPath]];
+    
     return cell;
 }
+
+// Set row height on an individual basis
+
+//- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
+//    return [self rowHeightForIndexPath:indexPath];
+//}
+//
+//- (CGFloat)rowHeightForIndexPath:(NSIndexPath *)indexPath {
+//    return ([indexPath row] * 10) + 60;
+//}
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
     // Set background color of cell here if you don't want white
