@@ -7,6 +7,7 @@
 //
 
 #import "SWTableViewCell.h"
+#import <UIKit/UIGestureRecognizerSubclass.h>
 
 #define kUtilityButtonsWidthMax 260
 #define kUtilityButtonWidthDefault 90
@@ -99,6 +100,37 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
 
 @end
 
+@implementation SWCellScrollView
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
+    return YES;
+}
+
+@end
+
+@implementation SWLongTapGestureRecognizer
+
+-(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
+    [super touchesBegan:touches withEvent:event];
+    
+}
+
+-(void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event{
+    [super touchesMoved:touches withEvent:event];
+    
+    self.state = UIGestureRecognizerStateFailed;
+}
+
+-(void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event{
+    [super touchesEnded:touches withEvent:event];
+    
+    NSLog(@"touches ended");
+
+    self.state = UIGestureRecognizerStateFailed;
+}
+
+@end
+
 @interface SWTableViewCell () <UIScrollViewDelegate> {
     SWCellState _cellState; // The state of the cell within the scroll view, can be left, right or middle
     CGFloat additionalRightPadding;
@@ -176,15 +208,19 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
     }
     
     // Set up scroll view that will host our cell content
-    UIScrollView *cellScrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.bounds), _height)];
+    SWCellScrollView *cellScrollView = [[SWCellScrollView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.bounds), _height)];
     cellScrollView.contentSize = CGSizeMake(CGRectGetWidth(self.bounds) + [self utilityButtonsPadding], _height);
     cellScrollView.contentOffset = [self scrollViewContentOffset];
     cellScrollView.delegate = self;
     cellScrollView.showsHorizontalScrollIndicator = NO;
     cellScrollView.scrollsToTop = NO;
     
-    UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(scrollViewPressed:)];
-    [cellScrollView addGestureRecognizer:tapGestureRecognizer];
+    UITapGestureRecognizer *tapGesutreRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(scrollViewUp:)];
+    [cellScrollView addGestureRecognizer:tapGesutreRecognizer];
+    
+    SWLongTapGestureRecognizer *longTapGestureRecognizer = [[SWLongTapGestureRecognizer alloc] initWithTarget:self action:@selector(scrollViewPressed:)];
+    longTapGestureRecognizer.minimumPressDuration = 0.1;
+    [cellScrollView addGestureRecognizer:longTapGestureRecognizer];
     
     self.cellScrollView = cellScrollView;
     
@@ -225,31 +261,35 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
 #pragma mark Selection
 
 - (void)scrollViewPressed:(id)sender {
+    NSLog(@"scroll view pressed");
+    [self selectCell];
+}
+
+- (void)scrollViewUp:(id)sender {
+    NSLog(@"scroll view up");
+    [self selectCell];
+}
+
+- (void)selectCell {
     if(_cellState == kCellStateCenter) {
-        // Selection hack
+        // Selection
         if ([self.containingTableView.delegate respondsToSelector:@selector(tableView:didSelectRowAtIndexPath:)]){
             NSIndexPath *cellIndexPath = [_containingTableView indexPathForCell:self];
             [self.containingTableView.delegate tableView:_containingTableView didSelectRowAtIndexPath:cellIndexPath];
         }
-        // Highlight hack
-        if (!self.highlighted) {
+        // Highlight
+        if (self.highlighted) {
+            self.scrollViewButtonViewLeft.hidden = NO;
+            self.scrollViewButtonViewRight.hidden = NO;
+            [self setHighlighted:NO];
+        } else {
             self.scrollViewButtonViewLeft.hidden = YES;
             self.scrollViewButtonViewRight.hidden = YES;
-            NSTimer *endHighlightTimer = [NSTimer scheduledTimerWithTimeInterval:0.15 target:self selector:@selector(timerEndCellHighlight:) userInfo:nil repeats:NO];
-            [[NSRunLoop currentRunLoop] addTimer:endHighlightTimer forMode:NSRunLoopCommonModes];
             [self setHighlighted:YES];
         }
     } else {
         // Scroll back to center
         [self hideUtilityButtonsAnimated:YES];
-    }
-}
-
-- (void)timerEndCellHighlight:(id)sender {
-    if (self.highlighted) {
-        self.scrollViewButtonViewLeft.hidden = NO;
-        self.scrollViewButtonViewRight.hidden = NO;
-        [self setHighlighted:NO];
     }
 }
 

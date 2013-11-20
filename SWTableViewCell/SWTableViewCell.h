@@ -26,6 +26,14 @@ typedef enum {
 
 @end
 
+@interface SWCellScrollView : UIScrollView <UIGestureRecognizerDelegate>
+
+@end
+
+@interface SWLongTapGestureRecognizer : UILongPressGestureRecognizer
+
+@end
+
 @interface SWTableViewCell : UITableViewCell
 
 @property (nonatomic, strong) NSArray *leftUtilityButtons;

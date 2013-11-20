@@ -30,7 +30,7 @@
     self.tableView.allowsSelection = NO; // We essentially implement our own selection
     self.tableView.separatorInset = UIEdgeInsetsMake(0, 0, 0, 0); // Makes the horizontal row seperator stretch the entire length of the table view
     
-    _sections =[[UILocalizedIndexedCollation currentCollation] sectionIndexTitles];
+    _sections = [[UILocalizedIndexedCollation currentCollation] sectionIndexTitles];
     
     _testArray = [[NSMutableArray alloc] init];
     
@@ -56,6 +56,9 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     NSLog(@"cell selected at index path %d:%d", indexPath.section, indexPath.row);
+    
+    
+//    [_tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
@@ -76,8 +79,6 @@
     static NSString *cellIdentifier = @"Cell";
     
     SWTableViewCell *cell = (SWTableViewCell *)[tableView dequeueReusableCellWithIdentifier:cellIdentifier];
-    
-    //[_tableView setRowHeight:40];
     
     if (cell == nil) {
         NSMutableArray *leftUtilityButtons = [NSMutableArray new];
@@ -133,7 +134,7 @@
 //}
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
-    // Set background color of cell here if you don't want white
+    // Set background color of cell here if you don't want default white
 }
 
 #pragma mark - SWTableViewDelegate
