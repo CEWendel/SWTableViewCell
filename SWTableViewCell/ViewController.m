@@ -30,6 +30,8 @@
     self.tableView.allowsSelection = NO; // We essentially implement our own selection
     self.tableView.separatorInset = UIEdgeInsetsMake(0, 0, 0, 0); // Makes the horizontal row seperator stretch the entire length of the table view
     
+    self.tableView.scrollEnabled = NO;
+    
     _sections = [[UILocalizedIndexedCollation currentCollation] sectionIndexTitles];
     
     _testArray = [[NSMutableArray alloc] init];

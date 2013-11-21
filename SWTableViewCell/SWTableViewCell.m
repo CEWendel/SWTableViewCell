@@ -123,8 +123,6 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
 
 -(void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event{
     [super touchesEnded:touches withEvent:event];
-    
-    NSLog(@"touches ended");
 
     self.state = UIGestureRecognizerStateFailed;
 }
@@ -146,6 +144,10 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
 @property (nonatomic, weak) UIView *scrollViewContentView;
 @property (nonatomic, strong) SWUtilityButtonView *scrollViewButtonViewLeft;
 @property (nonatomic, strong) SWUtilityButtonView *scrollViewButtonViewRight;
+
+// Gesture recognizers
+@property (nonatomic, strong) SWLongTapGestureRecognizer *longTapGestureRecognizer;
+@property (nonatomic, strong) UITapGestureRecognizer *tapGestureRecognizer;
 
 // Used for row height and selection
 @property (nonatomic, weak) UITableView *containingTableView;
@@ -218,9 +220,13 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
     UITapGestureRecognizer *tapGesutreRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(scrollViewUp:)];
     [cellScrollView addGestureRecognizer:tapGesutreRecognizer];
     
+    self.tapGestureRecognizer = tapGesutreRecognizer;
+    
     SWLongTapGestureRecognizer *longTapGestureRecognizer = [[SWLongTapGestureRecognizer alloc] initWithTarget:self action:@selector(scrollViewPressed:)];
     longTapGestureRecognizer.minimumPressDuration = 0.1;
     [cellScrollView addGestureRecognizer:longTapGestureRecognizer];
+    
+    self.longTapGestureRecognizer = longTapGestureRecognizer;
     
     self.cellScrollView = cellScrollView;
     
@@ -344,13 +350,14 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
 
 - (void)layoutSubviews {
     [super layoutSubviews];
-    
+
     self.cellScrollView.frame = CGRectMake(0, 0, CGRectGetWidth(self.bounds), _height);
     self.cellScrollView.contentSize = CGSizeMake(CGRectGetWidth(self.bounds) + [self utilityButtonsPadding], _height);
     self.cellScrollView.contentOffset = CGPointMake([self leftUtilityButtonsWidth], 0);
     self.scrollViewButtonViewLeft.frame = CGRectMake([self leftUtilityButtonsWidth], 0, [self leftUtilityButtonsWidth], _height);
     self.scrollViewButtonViewRight.frame = CGRectMake(CGRectGetWidth(self.bounds), 0, [self rightUtilityButtonsWidth], _height);
     self.scrollViewContentView.frame = CGRectMake([self leftUtilityButtonsWidth], 0, CGRectGetWidth(self.bounds), _height);
+    self.containingTableView.scrollEnabled = YES;
 }
 
 #pragma mark - Setup helpers
@@ -377,6 +384,9 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
     targetContentOffset->x = [self utilityButtonsPadding];
     _cellState = kCellStateRight;
     
+    self.longTapGestureRecognizer.enabled = NO;
+    self.tapGestureRecognizer.enabled = NO;
+    
     if ([_delegate respondsToSelector:@selector(swippableTableViewCell:scrollingToState:)]) {
         [_delegate swippableTableViewCell:self scrollingToState:kCellStateRight];
     }
@@ -385,6 +395,9 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
 - (void)scrollToCenter:(inout CGPoint *)targetContentOffset {
     targetContentOffset->x = [self leftUtilityButtonsWidth];
     _cellState = kCellStateCenter;
+    
+    self.longTapGestureRecognizer.enabled = YES;
+    self.tapGestureRecognizer.enabled = NO;
 
     if ([_delegate respondsToSelector:@selector(swippableTableViewCell:scrollingToState:)]) {
         [_delegate swippableTableViewCell:self scrollingToState:kCellStateCenter];
@@ -394,6 +407,9 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
 - (void)scrollToLeft:(inout CGPoint *)targetContentOffset{
     targetContentOffset->x = 0;
     _cellState = kCellStateLeft;
+    
+    self.longTapGestureRecognizer.enabled = NO;
+    self.tapGestureRecognizer.enabled = NO;
     
     if ([_delegate respondsToSelector:@selector(swippableTableViewCell:scrollingToState:)]) {
         [_delegate swippableTableViewCell:self scrollingToState:kCellStateLeft];
@@ -454,6 +470,11 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+//    NSLog(@"scroll view did scroll");
+    self.containingTableView.scrollEnabled = NO;
+    CGPoint velocity = [_containingTableView.panGestureRecognizer velocityInView:_containingTableView];
+//    NSLog(@"velocity x is %f", velocity.x);
+//    NSLog(@"velocity y is %f", velocity.y);
     if (scrollView.contentOffset.x > [self leftUtilityButtonsWidth]) {
         // Expose the right button view
         self.scrollViewButtonViewRight.frame = CGRectMake(scrollView.contentOffset.x + (CGRectGetWidth(self.bounds) - [self rightUtilityButtonsWidth]), 0.0f, [self rightUtilityButtonsWidth], _height);
@@ -461,6 +482,11 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
         // Expose the left button view
         self.scrollViewButtonViewLeft.frame = CGRectMake(scrollView.contentOffset.x, 0.0f, [self leftUtilityButtonsWidth], _height);
     }
+}
+
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
+    self.tapGestureRecognizer.enabled = YES;
+    self.containingTableView.scrollEnabled = YES;
 }
 
 @end
