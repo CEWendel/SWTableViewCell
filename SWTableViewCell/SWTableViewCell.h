@@ -30,7 +30,7 @@ typedef enum {
 
 @end
 
-@interface SWLongTapGestureRecognizer : UILongPressGestureRecognizer
+@interface SWLongPressGestureRecognizer : UILongPressGestureRecognizer
 
 @end
 
