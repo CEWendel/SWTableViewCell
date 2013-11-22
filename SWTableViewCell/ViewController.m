@@ -28,7 +28,11 @@
     self.tableView.dataSource = self;
     self.tableView.rowHeight = 90;
     self.tableView.allowsSelection = NO; // We essentially implement our own selection
-    self.tableView.separatorInset = UIEdgeInsetsMake(0, 0, 0, 0); // Makes the horizontal row seperator stretch the entire length of the table view
+    
+    // If you set the seperator inset on iOS 6 you get a NSInvalidArgumentException...weird
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 7) {
+       self.tableView.separatorInset = UIEdgeInsetsMake(0, 0, 0, 0); // Makes the horizontal row seperator stretch the entire length of the table view
+    }
     
     _sections = [[UILocalizedIndexedCollation currentCollation] sectionIndexTitles];
     
@@ -78,7 +82,6 @@
 
 /*
  This makes it so cells will not scroll sideways when the table view is scrolling.
- Makes scrolling the containing table view much smoother
  */
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
@@ -128,6 +131,8 @@
     
     NSDate *dateObject = _testArray[indexPath.section][indexPath.row];
     cell.textLabel.text = [dateObject description];
+    cell.textLabel.backgroundColor = [UIColor whiteColor];
+    cell.detailTextLabel.backgroundColor = [UIColor whiteColor];
     cell.detailTextLabel.text = @"Some detail text";
     
 //     If you are setting the row height on an individual basis:
@@ -178,7 +183,7 @@
             NSLog(@"More button was pressed");
             UIAlertView *alertTest = [[UIAlertView alloc] initWithTitle:@"Hello" message:@"More more more" delegate:nil cancelButtonTitle:@"cancel" otherButtonTitles: nil];
             [alertTest show];
-            
+        
             [cell hideUtilityButtonsAnimated:YES];
             break;
         }

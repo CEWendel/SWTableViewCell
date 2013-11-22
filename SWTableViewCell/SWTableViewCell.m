@@ -138,11 +138,12 @@ static BOOL containingScrollViewIsScrolling = false;
 
 @interface SWTableViewCell () <UIScrollViewDelegate> {
     SWCellState _cellState; // The state of the cell within the scroll view, can be left, right or middle
+    BOOL _isHidingUtilityButtons;
     CGFloat additionalRightPadding;
 }
 
 // Scroll view to be added to UITableViewCell
-@property (nonatomic, weak) UIScrollView *cellScrollView;
+@property (nonatomic, strong) SWCellScrollView *cellScrollView;
 
 // The cell's height
 @property (nonatomic) CGFloat height;
@@ -223,6 +224,7 @@ static BOOL containingScrollViewIsScrolling = false;
     cellScrollView.delegate = self;
     cellScrollView.showsHorizontalScrollIndicator = NO;
     cellScrollView.scrollsToTop = NO;
+    cellScrollView.scrollEnabled = YES;
     
     UITapGestureRecognizer *tapGesutreRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(scrollViewUp:)];
     [cellScrollView addGestureRecognizer:tapGesutreRecognizer];
@@ -407,7 +409,11 @@ static BOOL containingScrollViewIsScrolling = false;
 
 - (void)hideUtilityButtonsAnimated:(BOOL)animated {
     // Scroll back to center
-    [self.cellScrollView setContentOffset:CGPointMake([self leftUtilityButtonsWidth], 0) animated:animated];
+    
+    // Force the scroll back to run on the main thread because of weird scroll view bugs
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.cellScrollView setContentOffset:CGPointMake([self leftUtilityButtonsWidth], 0) animated:YES];
+    });
     _cellState = kCellStateCenter;
     
     if ([_delegate respondsToSelector:@selector(swippableTableViewCell:scrollingToState:)]) {
@@ -427,6 +433,7 @@ static BOOL containingScrollViewIsScrolling = false;
     self.scrollViewButtonViewLeft.frame = CGRectMake([self leftUtilityButtonsWidth], 0, [self leftUtilityButtonsWidth], _height);
     self.scrollViewButtonViewRight.frame = CGRectMake(CGRectGetWidth(self.bounds), 0, [self rightUtilityButtonsWidth], _height);
     self.scrollViewContentView.frame = CGRectMake([self leftUtilityButtonsWidth], 0, CGRectGetWidth(self.bounds), _height);
+    self.cellScrollView.scrollEnabled = YES;
     self.containingTableView.scrollEnabled = YES;
     self.tapGestureRecognizer.enabled = YES;
 }
@@ -552,6 +559,7 @@ static BOOL containingScrollViewIsScrolling = false;
             self.scrollViewButtonViewLeft.frame = CGRectMake(scrollView.contentOffset.x, 0.0f, [self leftUtilityButtonsWidth], _height);
         }
     } else {
+        self.containingTableView.scrollEnabled = YES;
         [scrollView setContentOffset:CGPointMake([self leftUtilityButtonsWidth], 0) animated:NO];
     }
 }
@@ -565,6 +573,7 @@ static BOOL containingScrollViewIsScrolling = false;
     // Called when setContentOffset in hideUtilityButtonsAnimated: is done
     self.tapGestureRecognizer.enabled = YES;
     if (_cellState == kCellStateCenter) {
+        self.containingTableView.scrollEnabled = YES;
         self.longPressGestureRecognizer.enabled = YES;
     }
 }
