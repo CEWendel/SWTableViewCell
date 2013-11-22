@@ -34,6 +34,12 @@ typedef enum {
 
 @end
 
+@interface SWUtilityButtonTapGestureRecognizer : UITapGestureRecognizer
+
+@property (nonatomic) NSUInteger buttonIndex;
+
+@end
+
 @interface SWTableViewCell : UITableViewCell
 
 @property (nonatomic, strong) NSArray *leftUtilityButtons;

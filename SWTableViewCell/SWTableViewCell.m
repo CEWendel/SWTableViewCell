@@ -83,7 +83,9 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
         if (utilityButtonsCounter >= 1) utilityButtonXCord = _utilityButtonWidth * utilityButtonsCounter;
         [utilityButton setFrame:CGRectMake(utilityButtonXCord, 0, _utilityButtonWidth, CGRectGetHeight(self.bounds))];
         [utilityButton setTag:utilityButtonsCounter];
-        [utilityButton addTarget:_parentCell action:_utilityButtonSelector forControlEvents:UIControlEventTouchDown];
+        SWUtilityButtonTapGestureRecognizer *utilityButtonTapGestureRecognizer = [[SWUtilityButtonTapGestureRecognizer alloc] initWithTarget:_parentCell action:_utilityButtonSelector];
+        utilityButtonTapGestureRecognizer.buttonIndex = utilityButtonsCounter;
+        [utilityButton addGestureRecognizer:utilityButtonTapGestureRecognizer];
         [self addSubview: utilityButton];
         utilityButtonsCounter++;
     }
@@ -112,7 +114,6 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
 
 -(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
     [super touchesBegan:touches withEvent:event];
-    
 }
 
 -(void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event{
@@ -126,6 +127,10 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
 
     self.state = UIGestureRecognizerStateFailed;
 }
+
+@end
+
+@implementation SWUtilityButtonTapGestureRecognizer
 
 @end
 
@@ -288,14 +293,24 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
             self.scrollViewButtonViewLeft.hidden = NO;
             self.scrollViewButtonViewRight.hidden = NO;
             [self setHighlighted:NO];
+//            self.cellScrollView.scrollEnabled = YES;
         } else {
             self.scrollViewButtonViewLeft.hidden = YES;
             self.scrollViewButtonViewRight.hidden = YES;
             [self setHighlighted:YES];
+//            self.cellScrollView.scrollEnabled = NO;
         }
     } else {
         // Scroll back to center
         [self hideUtilityButtonsAnimated:YES];
+    }
+}
+
+- (void)dehighlightCell {
+    if (self.highlighted) {
+        self.scrollViewButtonViewLeft.hidden = NO;
+        self.scrollViewButtonViewRight.hidden = NO;
+        [self setHighlighted:NO];
     }
 }
 
@@ -320,18 +335,18 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
 #pragma mark - Utility buttons handling
 
 - (void)rightUtilityButtonHandler:(id)sender {
-    UIButton *utilityButton = (UIButton *)sender;
-    NSInteger utilityButtonTag = [utilityButton tag];
+    SWUtilityButtonTapGestureRecognizer *utilityButtonTapGestureRecognizer = (SWUtilityButtonTapGestureRecognizer *)sender;
+    NSUInteger utilityButtonIndex = utilityButtonTapGestureRecognizer.buttonIndex;
     if ([_delegate respondsToSelector:@selector(swippableTableViewCell:didTriggerRightUtilityButtonWithIndex:)]) {
-        [_delegate swippableTableViewCell:self didTriggerRightUtilityButtonWithIndex:utilityButtonTag];
+        [_delegate swippableTableViewCell:self didTriggerRightUtilityButtonWithIndex:utilityButtonIndex];
     }
 }
 
 - (void)leftUtilityButtonHandler:(id)sender {
-    UIButton *utilityButton = (UIButton *)sender;
-    NSInteger utilityButtonTag = [utilityButton tag];
+    SWUtilityButtonTapGestureRecognizer *utilityButtonTapGestureRecognizer = (SWUtilityButtonTapGestureRecognizer *)sender;
+    NSUInteger utilityButtonIndex = utilityButtonTapGestureRecognizer.buttonIndex;
     if ([_delegate respondsToSelector:@selector(swippableTableViewCell:didTriggerLeftUtilityButtonWithIndex:)]) {
-        [_delegate swippableTableViewCell:self didTriggerLeftUtilityButtonWithIndex:utilityButtonTag];
+        [_delegate swippableTableViewCell:self didTriggerLeftUtilityButtonWithIndex:utilityButtonIndex];
     }
 }
 
@@ -358,6 +373,7 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
     self.scrollViewButtonViewRight.frame = CGRectMake(CGRectGetWidth(self.bounds), 0, [self rightUtilityButtonsWidth], _height);
     self.scrollViewContentView.frame = CGRectMake([self leftUtilityButtonsWidth], 0, CGRectGetWidth(self.bounds), _height);
     self.containingTableView.scrollEnabled = YES;
+    self.tapGestureRecognizer.enabled = YES;
 }
 
 #pragma mark - Setup helpers
@@ -470,14 +486,11 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-//    NSLog(@"scroll view did scroll");
     self.containingTableView.scrollEnabled = NO;
-    CGPoint velocity = [_containingTableView.panGestureRecognizer velocityInView:_containingTableView];
-//    NSLog(@"velocity x is %f", velocity.x);
-//    NSLog(@"velocity y is %f", velocity.y);
+    self.tapGestureRecognizer.enabled = NO;
     if (scrollView.contentOffset.x > [self leftUtilityButtonsWidth]) {
         // Expose the right button view
-        self.scrollViewButtonViewRight.frame = CGRectMake(scrollView.contentOffset.x + (CGRectGetWidth(self.bounds) - [self rightUtilityButtonsWidth]), 0.0f, [self rightUtilityButtonsWidth], _height);
+        self.scrollViewButtonViewRight.frame = CGRectMake(scrollView.contentOffset.x + (CGRectGetWidth(self.bounds) - [self rightUtilityButtonsWidth]), 0.0f, [self    rightUtilityButtonsWidth], _height);
     } else {
         // Expose the left button view
         self.scrollViewButtonViewLeft.frame = CGRectMake(scrollView.contentOffset.x, 0.0f, [self leftUtilityButtonsWidth], _height);
@@ -487,6 +500,14 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
     self.tapGestureRecognizer.enabled = YES;
     self.containingTableView.scrollEnabled = YES;
+}
+
+- (void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView {
+    // Called when setContentOffset in hideUtilityButtonsAnimated: is done
+    self.tapGestureRecognizer.enabled = YES;
+    if (_cellState == kCellStateCenter) {
+        self.longTapGestureRecognizer.enabled = YES;
+    }
 }
 
 @end
