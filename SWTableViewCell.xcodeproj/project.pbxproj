@@ -31,6 +31,7 @@
 		AF28B0F217F77DA600A77ABB /* cross@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "cross@2x.png"; sourceTree = "<group>"; };
 		AF28B0F417F77DB000A77ABB /* check@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "check@2x.png"; sourceTree = "<group>"; };
 		AF28B0F617F77F1100A77ABB /* list@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "list@2x.png"; sourceTree = "<group>"; };
+		AF2B0DA7183F029000334859 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		AF34B76517DEE2B200BD9082 /* SWTableViewCell.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SWTableViewCell.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AF34B76817DEE2B200BD9082 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		AF34B76A17DEE2B200BD9082 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -86,6 +87,7 @@
 		AF34B76717DEE2B200BD9082 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				AF2B0DA7183F029000334859 /* QuartzCore.framework */,
 				AF34B76817DEE2B200BD9082 /* UIKit.framework */,
 				AF34B76A17DEE2B200BD9082 /* Foundation.framework */,
 				AF34B76C17DEE2B200BD9082 /* CoreGraphics.framework */,

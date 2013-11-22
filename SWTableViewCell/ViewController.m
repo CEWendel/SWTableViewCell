@@ -58,9 +58,8 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     NSLog(@"cell selected at index path %d:%d", indexPath.section, indexPath.row);
-    
-    
-//    [_tableView deselectRowAtIndexPath:indexPath animated:YES];
+
+    [_tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
@@ -76,6 +75,21 @@
 //- (NSInteger)tableView:(UITableView *)tableView sectionForSectionIndexTitle:(NSString *)title atIndex:(NSInteger)index {
 //    return [[UILocalizedIndexedCollation currentCollation] sectionForSectionIndexTitleAtIndex:index];
 //}
+
+#pragma mark - UIScrollViewDelegate
+
+/*
+ This makes it so cells will not scroll sideways when the table view is scrolling.
+ Makes scrolling the containing table view much smoother
+ */
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    [SWTableViewCell setContainingTableViewIsScrolling:YES];
+}
+
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
+    [SWTableViewCell setContainingTableViewIsScrolling:NO];
+}
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     static NSString *cellIdentifier = @"Cell";

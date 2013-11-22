@@ -134,8 +134,11 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
 
 @end
 
+static BOOL containingScrollViewIsScrolling = false;
+
 @interface SWTableViewCell () <UIScrollViewDelegate> {
     SWCellState _cellState; // The state of the cell within the scroll view, can be left, right or middle
+    BOOL _wasDown;
     CGFloat additionalRightPadding;
 }
 
@@ -171,6 +174,7 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
         self.height = containingTableView.rowHeight;
         self.containingTableView = containingTableView;
         self.highlighted = NO;
+        _wasDown = NO;
         [self initializer];
     }
     
@@ -272,12 +276,14 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
 #pragma mark Selection
 
 - (void)scrollViewPressed:(id)sender {
-    NSLog(@"scroll view pressed");
-    [self selectCell];
+    if (self.isHighlighted) {
+        [self setHighlighted:NO];
+    } else {
+        [self highlightCell];
+    }
 }
 
 - (void)scrollViewUp:(id)sender {
-    NSLog(@"scroll view up");
     [self selectCell];
 }
 
@@ -286,19 +292,11 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
         // Selection
         if ([self.containingTableView.delegate respondsToSelector:@selector(tableView:didSelectRowAtIndexPath:)]){
             NSIndexPath *cellIndexPath = [_containingTableView indexPathForCell:self];
+            [self setSelected:YES];
             [self.containingTableView.delegate tableView:_containingTableView didSelectRowAtIndexPath:cellIndexPath];
-        }
-        // Highlight
-        if (self.highlighted) {
-            self.scrollViewButtonViewLeft.hidden = NO;
-            self.scrollViewButtonViewRight.hidden = NO;
-            [self setHighlighted:NO];
-//            self.cellScrollView.scrollEnabled = YES;
-        } else {
-            self.scrollViewButtonViewLeft.hidden = YES;
-            self.scrollViewButtonViewRight.hidden = YES;
-            [self setHighlighted:YES];
-//            self.cellScrollView.scrollEnabled = NO;
+            // Make the selection visible
+            NSTimer *endHighlightTimer = [NSTimer scheduledTimerWithTimeInterval:0.20 target:self selector:@selector(timerEndCellHighlight:) userInfo:nil repeats:NO];
+            [[NSRunLoop currentRunLoop] addTimer:endHighlightTimer forMode:NSRunLoopCommonModes];
         }
     } else {
         // Scroll back to center
@@ -306,18 +304,57 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
     }
 }
 
-- (void)dehighlightCell {
-    if (self.highlighted) {
-        self.scrollViewButtonViewLeft.hidden = NO;
-        self.scrollViewButtonViewRight.hidden = NO;
-        [self setHighlighted:NO];
+- (void)highlightCell {
+    if (_cellState == kCellStateCenter) {
+        [self setHighlighted:YES];
     }
+}
+
+- (void)timerEndCellHighlight:(id)sender {
+    [self setSelected:NO];
 }
 
 #pragma mark UITableViewCell overrides
 
 - (void)setBackgroundColor:(UIColor *)backgroundColor {
     self.scrollViewContentView.backgroundColor = backgroundColor;
+}
+
+- (void)setHighlighted:(BOOL)highlighted {
+    [super setHighlighted:highlighted animated:NO];
+    if (highlighted) {
+        self.scrollViewButtonViewLeft.hidden = YES;
+        self.scrollViewButtonViewRight.hidden = YES;
+    } else {
+        self.scrollViewButtonViewLeft.hidden = NO;
+        self.scrollViewButtonViewRight.hidden = NO;
+    }
+}
+
+- (void)setHighlighted:(BOOL)highlighted animated:(BOOL)animated {
+    if (highlighted) {
+        self.scrollViewButtonViewLeft.hidden = YES;
+        self.scrollViewButtonViewRight.hidden = YES;
+    } else {
+        self.scrollViewButtonViewLeft.hidden = NO;
+        self.scrollViewButtonViewRight.hidden = NO;
+    }
+}
+
+- (void)setSelected:(BOOL)selected {
+    if (selected) {
+        [self setHighlighted:YES];
+    } else {
+        [self setHighlighted:NO];
+    }
+}
+
+- (void)setSelected:(BOOL)selected animated:(BOOL)animated  {
+    if (selected) {
+        [self setHighlighted:YES];
+    } else {
+        [self setHighlighted:NO];
+    }
 }
 
 #pragma mark Height methods
@@ -486,14 +523,18 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    self.containingTableView.scrollEnabled = NO;
-    self.tapGestureRecognizer.enabled = NO;
-    if (scrollView.contentOffset.x > [self leftUtilityButtonsWidth]) {
-        // Expose the right button view
-        self.scrollViewButtonViewRight.frame = CGRectMake(scrollView.contentOffset.x + (CGRectGetWidth(self.bounds) - [self rightUtilityButtonsWidth]), 0.0f, [self    rightUtilityButtonsWidth], _height);
+    if (!containingScrollViewIsScrolling) {
+        self.containingTableView.scrollEnabled = NO;
+        self.tapGestureRecognizer.enabled = NO;
+        if (scrollView.contentOffset.x > [self leftUtilityButtonsWidth]) {
+            // Expose the right button view
+            self.scrollViewButtonViewRight.frame = CGRectMake(scrollView.contentOffset.x + (CGRectGetWidth(self.bounds) - [self rightUtilityButtonsWidth]), 0.0f, [self    rightUtilityButtonsWidth], _height);
+        } else {
+            // Expose the left button view
+            self.scrollViewButtonViewLeft.frame = CGRectMake(scrollView.contentOffset.x, 0.0f, [self leftUtilityButtonsWidth], _height);
+        }
     } else {
-        // Expose the left button view
-        self.scrollViewButtonViewLeft.frame = CGRectMake(scrollView.contentOffset.x, 0.0f, [self leftUtilityButtonsWidth], _height);
+        [scrollView setContentOffset:CGPointMake([self leftUtilityButtonsWidth], 0) animated:NO];
     }
 }
 
@@ -510,8 +551,13 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
     }
 }
 
-@end
+#pragma mark - Class Methods
 
++ (void)setContainingTableViewIsScrolling:(BOOL)isScrolling {
+    containingScrollViewIsScrolling = isScrolling;
+}
+
+@end
 
 #pragma mark NSMutableArray class extension helper
 
