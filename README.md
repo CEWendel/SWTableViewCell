@@ -3,7 +3,7 @@ SWTableViewCell
 
 <p align="center"><img src="http://i.imgur.com/njKCjK8.gif"/></p>
 
-An easy-to-use UITableViewCell subclass that implements a swippable content view which exposes utility buttons (similar to iOS 7 Mail Application)
+An easy-to-use UITableViewCell subclass that implements a swipeable content view which exposes utility buttons (similar to iOS 7 Mail Application)
 
 ##Functionality
 ###Right Utility Buttons
@@ -79,8 +79,8 @@ return cell;
 The delegate `SWTableViewCellDelegate` is used by the developer to find out which button was pressed. There are two methods:
 
 ```objc
-- (void)swippableTableViewCell:(SWTableViewCell *)cell didTriggerLeftUtilityButtonWithIndex:(NSInteger)index;
-- (void)swippableTableViewCell:(SWTableViewCell *)cell didTriggerRightUtilityButtonWithIndex:(NSInteger)index;
+- (void)swipeableTableViewCell:(SWTableViewCell *)cell didTriggerLeftUtilityButtonWithIndex:(NSInteger)index;
+- (void)swipeableTableViewCell:(SWTableViewCell *)cell didTriggerRightUtilityButtonWithIndex:(NSInteger)index;
 ```
 
 The index signifies which utility button the user pressed, for each side the button indices are ordered from right to left 0...n
@@ -90,7 +90,7 @@ The index signifies which utility button the user pressed, for each side the but
 ```objc
 #pragma mark - SWTableViewDelegate
 
-- (void)swippableTableViewCell:(SWTableViewCell *)cell didTriggerLeftUtilityButtonWithIndex:(NSInteger)index {
+- (void)swipeableTableViewCell:(SWTableViewCell *)cell didTriggerLeftUtilityButtonWithIndex:(NSInteger)index {
     switch (index) {
         case 0:
             NSLog(@"check button was pressed");
@@ -108,7 +108,7 @@ The index signifies which utility button the user pressed, for each side the but
     }
 }
 
-- (void)swippableTableViewCell:(SWTableViewCell *)cell didTriggerRightUtilityButtonWithIndex:(NSInteger)index {
+- (void)swipeableTableViewCell:(SWTableViewCell *)cell didTriggerRightUtilityButtonWithIndex:(NSInteger)index {
     switch (index) {
         case 0:
             NSLog(@"More button was pressed");
