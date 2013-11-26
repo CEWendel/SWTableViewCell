@@ -394,16 +394,16 @@ static BOOL containingScrollViewIsScrolling = false;
 - (void)rightUtilityButtonHandler:(id)sender {
     SWUtilityButtonTapGestureRecognizer *utilityButtonTapGestureRecognizer = (SWUtilityButtonTapGestureRecognizer *)sender;
     NSUInteger utilityButtonIndex = utilityButtonTapGestureRecognizer.buttonIndex;
-    if ([_delegate respondsToSelector:@selector(swippableTableViewCell:didTriggerRightUtilityButtonWithIndex:)]) {
-        [_delegate swippableTableViewCell:self didTriggerRightUtilityButtonWithIndex:utilityButtonIndex];
+    if ([_delegate respondsToSelector:@selector(swipeableTableViewCell:didTriggerRightUtilityButtonWithIndex:)]) {
+        [_delegate swipeableTableViewCell:self didTriggerRightUtilityButtonWithIndex:utilityButtonIndex];
     }
 }
 
 - (void)leftUtilityButtonHandler:(id)sender {
     SWUtilityButtonTapGestureRecognizer *utilityButtonTapGestureRecognizer = (SWUtilityButtonTapGestureRecognizer *)sender;
     NSUInteger utilityButtonIndex = utilityButtonTapGestureRecognizer.buttonIndex;
-    if ([_delegate respondsToSelector:@selector(swippableTableViewCell:didTriggerLeftUtilityButtonWithIndex:)]) {
-        [_delegate swippableTableViewCell:self didTriggerLeftUtilityButtonWithIndex:utilityButtonIndex];
+    if ([_delegate respondsToSelector:@selector(swipeableTableViewCell:didTriggerLeftUtilityButtonWithIndex:)]) {
+        [_delegate swipeableTableViewCell:self didTriggerLeftUtilityButtonWithIndex:utilityButtonIndex];
     }
 }
 
@@ -416,8 +416,8 @@ static BOOL containingScrollViewIsScrolling = false;
     });
     _cellState = kCellStateCenter;
     
-    if ([_delegate respondsToSelector:@selector(swippableTableViewCell:scrollingToState:)]) {
-        [_delegate swippableTableViewCell:self scrollingToState:kCellStateCenter];
+    if ([_delegate respondsToSelector:@selector(swipeableTableViewCell:scrollingToState:)]) {
+        [_delegate swipeableTableViewCell:self scrollingToState:kCellStateCenter];
     }
 }
 
@@ -465,8 +465,8 @@ static BOOL containingScrollViewIsScrolling = false;
     self.longPressGestureRecognizer.enabled = NO;
     self.tapGestureRecognizer.enabled = NO;
     
-    if ([_delegate respondsToSelector:@selector(swippableTableViewCell:scrollingToState:)]) {
-        [_delegate swippableTableViewCell:self scrollingToState:kCellStateRight];
+    if ([_delegate respondsToSelector:@selector(swipeableTableViewCell:scrollingToState:)]) {
+        [_delegate swipeableTableViewCell:self scrollingToState:kCellStateRight];
     }
 }
 
@@ -477,8 +477,8 @@ static BOOL containingScrollViewIsScrolling = false;
     self.longPressGestureRecognizer.enabled = YES;
     self.tapGestureRecognizer.enabled = NO;
 
-    if ([_delegate respondsToSelector:@selector(swippableTableViewCell:scrollingToState:)]) {
-        [_delegate swippableTableViewCell:self scrollingToState:kCellStateCenter];
+    if ([_delegate respondsToSelector:@selector(swipeableTableViewCell:scrollingToState:)]) {
+        [_delegate swipeableTableViewCell:self scrollingToState:kCellStateCenter];
     }
 }
 
@@ -489,8 +489,8 @@ static BOOL containingScrollViewIsScrolling = false;
     self.longPressGestureRecognizer.enabled = NO;
     self.tapGestureRecognizer.enabled = NO;
     
-    if ([_delegate respondsToSelector:@selector(swippableTableViewCell:scrollingToState:)]) {
-        [_delegate swippableTableViewCell:self scrollingToState:kCellStateLeft];
+    if ([_delegate respondsToSelector:@selector(swipeableTableViewCell:scrollingToState:)]) {
+        [_delegate swipeableTableViewCell:self scrollingToState:kCellStateLeft];
     }
 }
 
