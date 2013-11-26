@@ -158,7 +158,7 @@
 
 #pragma mark - SWTableViewDelegate
 
-- (void)swippableTableViewCell:(SWTableViewCell *)cell didTriggerLeftUtilityButtonWithIndex:(NSInteger)index {
+- (void)swipeableTableViewCell:(SWTableViewCell *)cell didTriggerLeftUtilityButtonWithIndex:(NSInteger)index {
     switch (index) {
         case 0:
             NSLog(@"left button 0 was pressed");
@@ -176,7 +176,7 @@
     }
 }
 
-- (void)swippableTableViewCell:(SWTableViewCell *)cell didTriggerRightUtilityButtonWithIndex:(NSInteger)index {
+- (void)swipeableTableViewCell:(SWTableViewCell *)cell didTriggerRightUtilityButtonWithIndex:(NSInteger)index {
     switch (index) {
         case 0:
         {
