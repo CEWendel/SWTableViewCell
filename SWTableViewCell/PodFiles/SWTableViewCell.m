@@ -44,12 +44,12 @@ static BOOL containingScrollViewIsScrolling = false;
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier containingTableView:(UITableView *)containingTableView leftUtilityButtons:(NSArray *)leftUtilityButtons rightUtilityButtons:(NSArray *)rightUtilityButtons {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
-        self.rightUtilityButtons = rightUtilityButtons;
-        self.leftUtilityButtons = leftUtilityButtons;
         self.height = containingTableView.rowHeight;
         self.containingTableView = containingTableView;
         self.highlighted = NO;
         [self initializer];
+        self.rightUtilityButtons = rightUtilityButtons;
+        self.leftUtilityButtons = leftUtilityButtons;
     }
     
     return self;
@@ -95,17 +95,15 @@ static BOOL containingScrollViewIsScrolling = false;
     
     // Set up scroll view that will host our cell content
     SWCellScrollView *cellScrollView = [[SWCellScrollView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.bounds), _height)];
-    cellScrollView.contentSize = CGSizeMake(CGRectGetWidth(self.bounds) + [self utilityButtonsPadding], _height);
-    cellScrollView.contentOffset = [self scrollViewContentOffset];
     cellScrollView.delegate = self;
     cellScrollView.showsHorizontalScrollIndicator = NO;
     cellScrollView.scrollsToTop = NO;
     cellScrollView.scrollEnabled = YES;
     
-    UITapGestureRecognizer *tapGesutreRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(scrollViewUp:)];
-    [cellScrollView addGestureRecognizer:tapGesutreRecognizer];
+    UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(scrollViewUp:)];
+    [cellScrollView addGestureRecognizer:tapGestureRecognizer];
     
-    self.tapGestureRecognizer = tapGesutreRecognizer;
+    self.tapGestureRecognizer = tapGestureRecognizer;
     
     SWLongPressGestureRecognizer *longPressGestureRecognizer = [[SWLongPressGestureRecognizer alloc] initWithTarget:self action:@selector(scrollViewPressed:)];
     longPressGestureRecognizer.minimumPressDuration = 0.1;
@@ -114,21 +112,6 @@ static BOOL containingScrollViewIsScrolling = false;
     self.longPressGestureRecognizer = longPressGestureRecognizer;
     
     self.cellScrollView = cellScrollView;
-    
-    // Set up the views that will hold the utility buttons
-    SWUtilityButtonView *scrollViewButtonViewLeft = [[SWUtilityButtonView alloc] initWithUtilityButtons:_leftUtilityButtons parentCell:self utilityButtonSelector:@selector(leftUtilityButtonHandler:)];
-    [scrollViewButtonViewLeft setFrame:CGRectMake([self leftUtilityButtonsWidth], 0, [self leftUtilityButtonsWidth], _height)];
-    self.scrollViewButtonViewLeft = scrollViewButtonViewLeft;
-    [self.cellScrollView addSubview:scrollViewButtonViewLeft];
-    
-    SWUtilityButtonView *scrollViewButtonViewRight = [[SWUtilityButtonView alloc] initWithUtilityButtons:_rightUtilityButtons parentCell:self utilityButtonSelector:@selector(rightUtilityButtonHandler:)];
-    [scrollViewButtonViewRight setFrame:CGRectMake(CGRectGetWidth(self.bounds), 0, [self rightUtilityButtonsWidth], _height)];
-    self.scrollViewButtonViewRight = scrollViewButtonViewRight;
-    [self.cellScrollView addSubview:scrollViewButtonViewRight];
-    
-    // Populate the button views with utility buttons
-    [scrollViewButtonViewLeft populateUtilityButtons];
-    [scrollViewButtonViewRight populateUtilityButtons];
     
     // Create the content view that will live in our scroll view
     UIView *scrollViewContentView = [[UIView alloc] initWithFrame:CGRectMake([self leftUtilityButtonsWidth], 0, CGRectGetWidth(self.bounds), _height)];
@@ -147,10 +130,66 @@ static BOOL containingScrollViewIsScrolling = false;
     for (UIView *subview in cellSubviews) {
         [self.scrollViewContentView addSubview:subview];
     }
-    
-    [self addSubview:self.contentView];
-    [self.scrollViewContentView addSubview:self.contentView];
 }
+
+- (void)layoutSubviews
+{
+    [super layoutSubviews];
+    
+    self.scrollViewContentView.frame = CGRectMake([self leftUtilityButtonsWidth], 0, CGRectGetWidth(self.bounds), _height);
+
+    self.cellScrollView.frame = CGRectMake(0, 0, CGRectGetWidth(self.bounds), _height);
+    self.cellScrollView.contentSize = CGSizeMake(CGRectGetWidth(self.bounds) + [self utilityButtonsPadding], _height);
+    self.cellScrollView.contentOffset = CGPointMake([self leftUtilityButtonsWidth], 0);
+    self.scrollViewButtonViewLeft.frame = CGRectMake([self leftUtilityButtonsWidth], 0, [self leftUtilityButtonsWidth], _height);
+    self.scrollViewButtonViewRight.frame = CGRectMake(CGRectGetWidth(self.bounds), 0, [self rightUtilityButtonsWidth], _height);
+    self.scrollViewContentView.frame = CGRectMake([self leftUtilityButtonsWidth], 0, CGRectGetWidth(self.bounds), _height);
+    self.cellScrollView.scrollEnabled = YES;
+    self.containingTableView.scrollEnabled = YES;
+    self.tapGestureRecognizer.enabled = YES;
+
+}
+
+#pragma mark - Properties
+
+- (void)setLeftUtilityButtons:(NSArray *)leftUtilityButtons
+{
+    _leftUtilityButtons = leftUtilityButtons;
+    SWUtilityButtonView *departingLeftButtons = self.scrollViewButtonViewLeft;
+    SWUtilityButtonView *scrollViewButtonViewLeft = [[SWUtilityButtonView alloc] initWithUtilityButtons:leftUtilityButtons
+                                                                                             parentCell:self
+                                                                                  utilityButtonSelector:@selector(leftUtilityButtonHandler:)];
+    
+    self.scrollViewButtonViewLeft = scrollViewButtonViewLeft;
+    [scrollViewButtonViewLeft setFrame:CGRectMake([self leftUtilityButtonsWidth], 0, [self leftUtilityButtonsWidth], _height)];
+    
+    [self.cellScrollView insertSubview:scrollViewButtonViewLeft belowSubview:self.scrollViewContentView];
+
+    [departingLeftButtons removeFromSuperview];
+    [scrollViewButtonViewLeft populateUtilityButtons];
+    
+    [self setNeedsLayout];
+}
+
+- (void)setRightUtilityButtons:(NSArray *)rightUtilityButtons
+{
+    _rightUtilityButtons = rightUtilityButtons;
+    SWUtilityButtonView *departingLeftButtons = self.scrollViewButtonViewRight;
+    SWUtilityButtonView *scrollViewButtonViewRight = [[SWUtilityButtonView alloc] initWithUtilityButtons:rightUtilityButtons
+                                                                                              parentCell:self
+                                                                                   utilityButtonSelector:@selector(rightUtilityButtonHandler:)];
+
+    self.scrollViewButtonViewRight = scrollViewButtonViewRight;
+    [scrollViewButtonViewRight setFrame:CGRectMake(CGRectGetWidth(self.bounds), 0, [self rightUtilityButtonsWidth], _height)];
+    
+    [self.cellScrollView insertSubview:scrollViewButtonViewRight belowSubview:self.scrollViewContentView];
+    
+    [departingLeftButtons removeFromSuperview];
+    [scrollViewButtonViewRight populateUtilityButtons];
+    
+    [self setNeedsLayout];
+}
+
 
 #pragma mark Selection
 
@@ -301,30 +340,14 @@ static BOOL containingScrollViewIsScrolling = false;
 }
 
 
-#pragma mark - Overriden methods
-
-- (void)layoutSubviews {
-    [super layoutSubviews];
-
-    self.cellScrollView.frame = CGRectMake(0, 0, CGRectGetWidth(self.bounds), _height);
-    self.cellScrollView.contentSize = CGSizeMake(CGRectGetWidth(self.bounds) + [self utilityButtonsPadding], _height);
-    self.cellScrollView.contentOffset = CGPointMake([self leftUtilityButtonsWidth], 0);
-    self.scrollViewButtonViewLeft.frame = CGRectMake([self leftUtilityButtonsWidth], 0, [self leftUtilityButtonsWidth], _height);
-    self.scrollViewButtonViewRight.frame = CGRectMake(CGRectGetWidth(self.bounds), 0, [self rightUtilityButtonsWidth], _height);
-    self.scrollViewContentView.frame = CGRectMake([self leftUtilityButtonsWidth], 0, CGRectGetWidth(self.bounds), _height);
-    self.cellScrollView.scrollEnabled = YES;
-    self.containingTableView.scrollEnabled = YES;
-    self.tapGestureRecognizer.enabled = YES;
-}
-
 #pragma mark - Setup helpers
 
 - (CGFloat)leftUtilityButtonsWidth {
-    return [_scrollViewButtonViewLeft utilityButtonsWidth];
+    return [self.scrollViewButtonViewLeft utilityButtonsWidth];
 }
 
 - (CGFloat)rightUtilityButtonsWidth {
-    return [_scrollViewButtonViewRight utilityButtonsWidth] + additionalRightPadding;
+    return [self.scrollViewButtonViewRight utilityButtonsWidth] + additionalRightPadding;
 }
 
 - (CGFloat)utilityButtonsPadding {
