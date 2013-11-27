@@ -8,6 +8,11 @@
 
 #import <UIKit/UIKit.h>
 #import <UIKit/UIGestureRecognizerSubclass.h>
+#import "SWCellScrollView.h"
+#import "SWLongPressGestureRecognizer.h"
+#import "SWUtilityButtonTapGestureRecognizer.h"
+#import "NSMutableArray+SWUtilityButtons.h"
+#import "Constants.h"
 
 @class SWTableViewCell;
 
@@ -26,20 +31,6 @@ typedef enum {
 
 @end
 
-@interface SWCellScrollView : UIScrollView <UIGestureRecognizerDelegate>
-
-@end
-
-@interface SWLongPressGestureRecognizer : UILongPressGestureRecognizer
-
-@end
-
-@interface SWUtilityButtonTapGestureRecognizer : UITapGestureRecognizer
-
-@property (nonatomic) NSUInteger buttonIndex;
-
-@end
-
 @interface SWTableViewCell : UITableViewCell
 
 @property (nonatomic, strong) NSArray *leftUtilityButtons;
@@ -53,12 +44,5 @@ typedef enum {
 - (void)hideUtilityButtonsAnimated:(BOOL)animated;
 
 + (void)setContainingTableViewIsScrolling:(BOOL)isScrolling;
-
-@end
-
-@interface NSMutableArray (SWUtilityButtons)
-
-- (void)sw_addUtilityButtonWithColor:(UIColor *)color title:(NSString *)title;
-- (void)sw_addUtilityButtonWithColor:(UIColor *)color icon:(UIImage *)icon;
 
 @end

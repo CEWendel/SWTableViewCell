@@ -8,131 +8,11 @@
 
 #import "SWTableViewCell.h"
 #import <UIKit/UIGestureRecognizerSubclass.h>
-
-#define kUtilityButtonsWidthMax 260
-#define kUtilityButtonWidthDefault 90
-#define kSectionIndexWidth 15
+#import "SWUtilityButtonView.h"
 
 static NSString * const kTableViewCellContentView = @"UITableViewCellContentView";
 
-
 #pragma mark - SWUtilityButtonView
-
-@interface SWUtilityButtonView : UIView
-
-@property (nonatomic, strong) NSArray *utilityButtons;
-@property (nonatomic) CGFloat utilityButtonWidth;
-@property (nonatomic, weak) SWTableViewCell *parentCell;
-@property (nonatomic) SEL utilityButtonSelector;
-
-- (id)initWithUtilityButtons:(NSArray *)utilityButtons parentCell:(SWTableViewCell *)parentCell utilityButtonSelector:(SEL)utilityButtonSelector;
-
-- (id)initWithFrame:(CGRect)frame utilityButtons:(NSArray *)utilityButtons parentCell:(SWTableViewCell *)parentCell utilityButtonSelector:(SEL)utilityButtonSelector;
-
-@end
-
-@implementation SWUtilityButtonView
-
-#pragma mark - SWUtilityButonView initializers
-
-- (id)initWithUtilityButtons:(NSArray *)utilityButtons parentCell:(SWTableViewCell *)parentCell utilityButtonSelector:(SEL)utilityButtonSelector {
-    self = [super init];
-    
-    if (self) {
-        self.utilityButtons = utilityButtons;
-        self.utilityButtonWidth = [self calculateUtilityButtonWidth];
-        self.parentCell = parentCell;
-        self.utilityButtonSelector = utilityButtonSelector;
-    }
-    
-    return self;
-}
-
-- (id)initWithFrame:(CGRect)frame utilityButtons:(NSArray *)utilityButtons parentCell:(SWTableViewCell *)parentCell utilityButtonSelector:(SEL)utilityButtonSelector {
-    self = [super initWithFrame:frame];
-    
-    if (self) {
-        self.utilityButtons = utilityButtons;
-        self.utilityButtonWidth = [self calculateUtilityButtonWidth];
-        self.parentCell = parentCell;
-        self.utilityButtonSelector = utilityButtonSelector;
-    }
-    
-    return self;
-}
-
-#pragma mark Populating utility buttons
-
-- (CGFloat)calculateUtilityButtonWidth {
-    CGFloat buttonWidth = kUtilityButtonWidthDefault;
-    if (buttonWidth * _utilityButtons.count > kUtilityButtonsWidthMax) {
-        CGFloat buffer = (buttonWidth * _utilityButtons.count) - kUtilityButtonsWidthMax;
-        buttonWidth -= (buffer / _utilityButtons.count);
-    }
-    return buttonWidth;
-}
-
-- (CGFloat)utilityButtonsWidth {
-    return (_utilityButtons.count * _utilityButtonWidth);
-}
-
-- (void)populateUtilityButtons {
-    NSUInteger utilityButtonsCounter = 0;
-    for (UIButton *utilityButton in _utilityButtons) {
-        CGFloat utilityButtonXCord = 0;
-        if (utilityButtonsCounter >= 1) utilityButtonXCord = _utilityButtonWidth * utilityButtonsCounter;
-        [utilityButton setFrame:CGRectMake(utilityButtonXCord, 0, _utilityButtonWidth, CGRectGetHeight(self.bounds))];
-        [utilityButton setTag:utilityButtonsCounter];
-        SWUtilityButtonTapGestureRecognizer *utilityButtonTapGestureRecognizer = [[SWUtilityButtonTapGestureRecognizer alloc] initWithTarget:_parentCell action:_utilityButtonSelector];
-        utilityButtonTapGestureRecognizer.buttonIndex = utilityButtonsCounter;
-        [utilityButton addGestureRecognizer:utilityButtonTapGestureRecognizer];
-        [self addSubview: utilityButton];
-        utilityButtonsCounter++;
-    }
-}
-
-- (void)setHeight:(CGFloat)height {
-    for (NSUInteger utilityButtonsCounter = 0; utilityButtonsCounter < _utilityButtons.count; utilityButtonsCounter++) {
-        UIButton *utilityButton = (UIButton *)_utilityButtons[utilityButtonsCounter];
-        CGFloat utilityButtonXCord = 0;
-        if (utilityButtonsCounter >= 1) utilityButtonXCord = _utilityButtonWidth * utilityButtonsCounter;
-        [utilityButton setFrame:CGRectMake(utilityButtonXCord, 0, _utilityButtonWidth, height)];
-    }
-}
-
-@end
-
-@implementation SWCellScrollView
-
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
-    return YES;
-}
-
-@end
-
-@implementation SWLongPressGestureRecognizer
-
--(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
-    [super touchesBegan:touches withEvent:event];
-}
-
--(void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event{
-    [super touchesMoved:touches withEvent:event];
-    
-    self.state = UIGestureRecognizerStateFailed;
-}
-
--(void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event{
-    [super touchesEnded:touches withEvent:event];
-
-    self.state = UIGestureRecognizerStateFailed;
-}
-
-@end
-
-@implementation SWUtilityButtonTapGestureRecognizer
-
-@end
 
 static BOOL containingScrollViewIsScrolling = false;
 
@@ -142,14 +22,9 @@ static BOOL containingScrollViewIsScrolling = false;
     CGFloat additionalRightPadding;
 }
 
-// Scroll view to be added to UITableViewCell
-@property (nonatomic, strong) SWCellScrollView *cellScrollView;
-
-// The cell's height
-@property (nonatomic) CGFloat height;
-
-// Views that live in the scroll view
-@property (nonatomic, weak) UIView *scrollViewContentView;
+@property (nonatomic, strong) SWCellScrollView *cellScrollView; // Scroll view to be added to UITableViewCell
+@property (nonatomic) CGFloat height; // The cell's height
+@property (nonatomic, weak) UIView *scrollViewContentView; // Views that live in the scroll view
 @property (nonatomic, strong) SWUtilityButtonView *scrollViewButtonViewLeft;
 @property (nonatomic, strong) SWUtilityButtonView *scrollViewButtonViewRight;
 
@@ -212,7 +87,8 @@ static BOOL containingScrollViewIsScrolling = false;
 
 - (void)initializer {
     // Check if the UITableView will display Indices on the right. If that's the case, add a padding
-    if([self.containingTableView.dataSource respondsToSelector:@selector(sectionIndexTitlesForTableView:)]) {
+    if([self.containingTableView.dataSource respondsToSelector:@selector(sectionIndexTitlesForTableView:)])
+    {
         NSArray *indices = [self.containingTableView.dataSource sectionIndexTitlesForTableView:self.containingTableView];
         additionalRightPadding = indices == nil ? 0 : kSectionIndexWidth;
     }
@@ -271,6 +147,9 @@ static BOOL containingScrollViewIsScrolling = false;
     for (UIView *subview in cellSubviews) {
         [self.scrollViewContentView addSubview:subview];
     }
+    
+    [self addSubview:self.contentView];
+    [self.scrollViewContentView addSubview:self.contentView];
 }
 
 #pragma mark Selection
@@ -585,25 +464,3 @@ static BOOL containingScrollViewIsScrolling = false;
 }
 
 @end
-
-#pragma mark NSMutableArray class extension helper
-
-@implementation NSMutableArray (SWUtilityButtons)
-
-- (void)sw_addUtilityButtonWithColor:(UIColor *)color title:(NSString *)title {
-    UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
-    button.backgroundColor = color;
-    [button setTitle:title forState:UIControlStateNormal];
-    [button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    [self addObject:button];
-}
-
-- (void)sw_addUtilityButtonWithColor:(UIColor *)color icon:(UIImage *)icon {
-    UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
-    button.backgroundColor = color;
-    [button setImage:icon forState:UIControlStateNormal];
-    [self addObject:button];
-}
-
-@end
-
