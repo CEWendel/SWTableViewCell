@@ -385,7 +385,7 @@ static BOOL containingScrollViewIsScrolling = false;
     dispatch_async(dispatch_get_main_queue(), ^{
         [self.cellScrollView setContentOffset:CGPointMake([self leftUtilityButtonsWidth], 0) animated:YES];
     });
-    self.cellState = kCellStateCenter;
+    _cellState = kCellStateCenter;
     
     if ([self.delegate respondsToSelector:@selector(swipeableTableViewCell:scrollingToState:)])
     {
