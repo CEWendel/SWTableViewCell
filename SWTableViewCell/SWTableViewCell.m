@@ -112,18 +112,12 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
     // scroll the cell sideways when that is their true intent.
     if ([gestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]]) {
         
-        // Grab the tableView to which this scrollView is added by iterating through its superviews.
-        UIView *viewToCheck = self;
-        
-        while (![viewToCheck isKindOfClass:[UITableView class]]) {
-            viewToCheck = viewToCheck.superview;
-        }
-        
         // Find the current scrolling velocity in that view, in the Y direction.
-        CGFloat yVelocity = [(UIPanGestureRecognizer*)gestureRecognizer velocityInView:viewToCheck].y;
+        CGFloat yVelocity = [(UIPanGestureRecognizer*)gestureRecognizer velocityInView:gestureRecognizer.view].y;
         
         // Return YES if and only iff the user is not actively scrolling up.
         return fabs(yVelocity) <= 0.25;
+        
     }
     return YES;
 }
