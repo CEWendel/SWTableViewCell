@@ -19,7 +19,6 @@ static BOOL containingScrollViewIsScrolling = false;
 @interface SWTableViewCell () <UIScrollViewDelegate>
 {
     SWCellState _cellState; // The state of the cell within the scroll view, can be left, right or middle
-    BOOL _isHidingUtilityButtons;
     CGFloat additionalRightPadding;
 }
 
@@ -90,7 +89,8 @@ static BOOL containingScrollViewIsScrolling = false;
     return self;
 }
 
-- (void)initializer {
+- (void)initializer
+{
     // Check if the UITableView will display Indices on the right. If that's the case, add a padding
     if([self.containingTableView.dataSource respondsToSelector:@selector(sectionIndexTitlesForTableView:)])
     {

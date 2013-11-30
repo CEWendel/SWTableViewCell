@@ -10,7 +10,8 @@
 
 @implementation NSMutableArray (SWUtilityButtons)
 
-- (void)sw_addUtilityButtonWithColor:(UIColor *)color title:(NSString *)title {
+- (void)sw_addUtilityButtonWithColor:(UIColor *)color title:(NSString *)title
+{
     UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
     button.backgroundColor = color;
     [button setTitle:title forState:UIControlStateNormal];
@@ -18,7 +19,8 @@
     [self addObject:button];
 }
 
-- (void)sw_addUtilityButtonWithColor:(UIColor *)color icon:(UIImage *)icon {
+- (void)sw_addUtilityButtonWithColor:(UIColor *)color icon:(UIImage *)icon
+{
     UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
     button.backgroundColor = color;
     [button setImage:icon forState:UIControlStateNormal];

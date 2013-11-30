@@ -14,7 +14,8 @@
 
 #pragma mark - SWUtilityButonView initializers
 
-- (id)initWithUtilityButtons:(NSArray *)utilityButtons parentCell:(SWTableViewCell *)parentCell utilityButtonSelector:(SEL)utilityButtonSelector {
+- (id)initWithUtilityButtons:(NSArray *)utilityButtons parentCell:(SWTableViewCell *)parentCell utilityButtonSelector:(SEL)utilityButtonSelector
+{
     self = [super init];
     
     if (self) {
@@ -27,7 +28,8 @@
     return self;
 }
 
-- (id)initWithFrame:(CGRect)frame utilityButtons:(NSArray *)utilityButtons parentCell:(SWTableViewCell *)parentCell utilityButtonSelector:(SEL)utilityButtonSelector {
+- (id)initWithFrame:(CGRect)frame utilityButtons:(NSArray *)utilityButtons parentCell:(SWTableViewCell *)parentCell utilityButtonSelector:(SEL)utilityButtonSelector
+{
     self = [super initWithFrame:frame];
     
     if (self) {
@@ -42,7 +44,8 @@
 
 #pragma mark Populating utility buttons
 
-- (CGFloat)calculateUtilityButtonWidth {
+- (CGFloat)calculateUtilityButtonWidth
+{
     CGFloat buttonWidth = kUtilityButtonWidthDefault;
     if (buttonWidth * _utilityButtons.count > kUtilityButtonsWidthMax)
     {
