@@ -78,20 +78,6 @@
 //    return [[UILocalizedIndexedCollation currentCollation] sectionForSectionIndexTitleAtIndex:index];
 //}
 
-#pragma mark - UIScrollViewDelegate
-
-/*
- This makes it so cells will not scroll sideways when the table view is scrolling.
- */
-
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    [SWTableViewCell setContainingTableViewIsScrolling:YES];
-}
-
-- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
-    [SWTableViewCell setContainingTableViewIsScrolling:NO];
-}
-
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     static NSString *cellIdentifier = @"Cell";
     

@@ -52,8 +52,6 @@ typedef enum {
 - (void)setBackgroundColor:(UIColor *)backgroundColor;
 - (void)hideUtilityButtonsAnimated:(BOOL)animated;
 
-+ (void)setContainingTableViewIsScrolling:(BOOL)isScrolling;
-
 @end
 
 @interface NSMutableArray (SWUtilityButtons)

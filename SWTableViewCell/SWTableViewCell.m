@@ -115,7 +115,7 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
         // Find the current scrolling velocity in that view, in the Y direction.
         CGFloat yVelocity = [(UIPanGestureRecognizer*)gestureRecognizer velocityInView:gestureRecognizer.view].y;
         
-        // Return YES if and only iff the user is not actively scrolling up.
+        // Return YES iff the user is not actively scrolling up.
         return fabs(yVelocity) <= 0.25;
         
     }
@@ -148,11 +148,8 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
 
 @end
 
-static BOOL containingScrollViewIsScrolling = false;
-
 @interface SWTableViewCell () <UIScrollViewDelegate> {
     SWCellState _cellState; // The state of the cell within the scroll view, can be left, right or middle
-    BOOL _isHidingUtilityButtons;
     CGFloat additionalRightPadding;
 }
 
@@ -562,19 +559,14 @@ static BOOL containingScrollViewIsScrolling = false;
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    if (!containingScrollViewIsScrolling) {
-        self.containingTableView.scrollEnabled = NO;
-        self.tapGestureRecognizer.enabled = NO;
-        if (scrollView.contentOffset.x > [self leftUtilityButtonsWidth]) {
-            // Expose the right button view
-            self.scrollViewButtonViewRight.frame = CGRectMake(scrollView.contentOffset.x + (CGRectGetWidth(self.bounds) - [self rightUtilityButtonsWidth]), 0.0f, [self    rightUtilityButtonsWidth], _height);
-        } else {
-            // Expose the left button view
-            self.scrollViewButtonViewLeft.frame = CGRectMake(scrollView.contentOffset.x, 0.0f, [self leftUtilityButtonsWidth], _height);
-        }
+    self.containingTableView.scrollEnabled = NO;
+    self.tapGestureRecognizer.enabled = NO;
+    if (scrollView.contentOffset.x > [self leftUtilityButtonsWidth]) {
+        // Expose the right button view
+        self.scrollViewButtonViewRight.frame = CGRectMake(scrollView.contentOffset.x + (CGRectGetWidth(self.bounds) - [self rightUtilityButtonsWidth]), 0.0f, [self    rightUtilityButtonsWidth], _height);
     } else {
-        self.containingTableView.scrollEnabled = YES;
-        [scrollView setContentOffset:CGPointMake([self leftUtilityButtonsWidth], 0) animated:NO];
+        // Expose the left button view
+        self.scrollViewButtonViewLeft.frame = CGRectMake(scrollView.contentOffset.x, 0.0f, [self leftUtilityButtonsWidth], _height);
     }
 }
 
@@ -590,12 +582,6 @@ static BOOL containingScrollViewIsScrolling = false;
         self.containingTableView.scrollEnabled = YES;
         self.longPressGestureRecognizer.enabled = YES;
     }
-}
-
-#pragma mark - Class Methods
-
-+ (void)setContainingTableViewIsScrolling:(BOOL)isScrolling {
-    containingScrollViewIsScrolling = isScrolling;
 }
 
 @end
