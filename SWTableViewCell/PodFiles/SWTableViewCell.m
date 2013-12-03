@@ -540,7 +540,7 @@ static BOOL containingScrollViewIsScrolling = false;
         self.tapGestureRecognizer.enabled = NO;
         if (scrollView.contentOffset.x > [self leftUtilityButtonsWidth])
         {
-            CGFloat scrollViewWidth = MIN(scrollView.contentOffset.x - [self rightUtilityButtonsWidth], [self rightUtilityButtonsWidth]);
+            CGFloat scrollViewWidth = MIN(scrollView.contentOffset.x - [self leftUtilityButtonsWidth], [self rightUtilityButtonsWidth]);
             
             // Expose the right button view
             self.scrollViewButtonViewRight.frame = CGRectMake(scrollView.contentOffset.x + (CGRectGetWidth(self.bounds) - scrollViewWidth), 0.0f, scrollViewWidth,self.height);
