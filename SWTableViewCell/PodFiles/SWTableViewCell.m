@@ -148,8 +148,10 @@ static BOOL containingScrollViewIsScrolling = false;
     self.cellScrollView.frame = CGRectMake(0, 0, CGRectGetWidth(self.bounds), self.height);
     self.cellScrollView.contentSize = CGSizeMake(CGRectGetWidth(self.bounds) + [self utilityButtonsPadding], self.height);
     self.cellScrollView.contentOffset = CGPointMake([self leftUtilityButtonsWidth], 0);
-    self.scrollViewButtonViewLeft.frame = CGRectMake([self leftUtilityButtonsWidth], 0, [self leftUtilityButtonsWidth], self.height);
-    self.scrollViewButtonViewRight.frame = CGRectMake(CGRectGetWidth(self.bounds), 0, [self rightUtilityButtonsWidth], self.height);
+    self.scrollViewButtonViewLeft.frame = CGRectMake([self leftUtilityButtonsWidth], 0, 0, self.height);
+    self.scrollViewButtonViewLeft.layer.masksToBounds = YES;
+    self.scrollViewButtonViewRight.frame = CGRectMake(CGRectGetWidth(self.bounds), 0, 0, self.height);
+    self.scrollViewButtonViewRight.layer.masksToBounds = YES;
     self.scrollViewContentView.frame = CGRectMake([self leftUtilityButtonsWidth], 0, CGRectGetWidth(self.bounds), self.height);
     self.cellScrollView.scrollEnabled = YES;
     self.containingTableView.scrollEnabled = YES;
@@ -538,13 +540,27 @@ static BOOL containingScrollViewIsScrolling = false;
         self.tapGestureRecognizer.enabled = NO;
         if (scrollView.contentOffset.x > [self leftUtilityButtonsWidth])
         {
+            CGFloat scrollViewWidth = MIN(scrollView.contentOffset.x - [self leftUtilityButtonsWidth], [self rightUtilityButtonsWidth]);
+            
             // Expose the right button view
-            self.scrollViewButtonViewRight.frame = CGRectMake(scrollView.contentOffset.x + (CGRectGetWidth(self.bounds) - [self rightUtilityButtonsWidth]), 0.0f, [self    rightUtilityButtonsWidth], self.height);
+            self.scrollViewButtonViewRight.frame = CGRectMake(scrollView.contentOffset.x + (CGRectGetWidth(self.bounds) - scrollViewWidth), 0.0f, scrollViewWidth,self.height);
+            
+            CGRect scrollViewBounds = self.scrollViewButtonViewRight.bounds;
+            scrollViewBounds.origin.x = MAX([self rightUtilityButtonsWidth] - scrollViewWidth, [self rightUtilityButtonsWidth] - scrollView.contentOffset.x);
+            self.scrollViewButtonViewRight.bounds = scrollViewBounds;
+            
         }
         else
         {
+            CGFloat scrollViewWidth = MIN(scrollView.contentOffset.x - [self leftUtilityButtonsWidth], [self leftUtilityButtonsWidth]);
+            
             // Expose the left button view
-            self.scrollViewButtonViewLeft.frame = CGRectMake(scrollView.contentOffset.x, 0.0f, [self leftUtilityButtonsWidth], self.height);
+            self.scrollViewButtonViewLeft.frame = CGRectMake([self leftUtilityButtonsWidth], 0.0f, scrollViewWidth, self.height);
+            
+            CGPoint offset = scrollView.contentOffset;
+            offset.x = MAX(0, scrollView.contentOffset.x);
+            
+            scrollView.contentOffset = offset;
         }
     }
     else
