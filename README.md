@@ -26,6 +26,8 @@ So the cell will not be considered selected when the user touches the cell while
 
 ##Usage
 
+###Standard Table View Cells
+
 In your `tableView:cellForRowAtIndexPath:` method you set up the SWTableView cell and add an arbitrary amount of utility buttons to it using the included `NSMutableArray+SWUtilityButtons` category.
 
 ```objc
@@ -71,6 +73,94 @@ In your `tableView:cellForRowAtIndexPath:` method you set up the SWTableView cel
     cell.detailTextLabel.text = @"Some detail text";
 
 return cell;
+}
+```
+
+###Custom Table View Cells
+
+The first step is to design your cell either in a standalone nib or inside of a
+table view using prototype cells. Make sure to set the custom class on the 
+cell in interface builder to the subclass you made for it:
+
+<p align="center"><img src="http://i.imgur.com/mfrT1Ex.png"/></p>
+
+Then set the cell reuse identifier:
+
+<p align="center"><img src="http://i.imgur.com/dlmArZ1.png"/></p>
+
+When writing your custom table view cell's code, make sure your cell is a
+subclass of SWTableViewCell:
+
+```objc
+
+#import <SWTableViewCell.h>
+
+@interface MyCustomTableViewCell : SWTableViewCell
+
+@property (weak, nonatomic) UILabel *customLabel;
+@property (weak, nonatomic) UIImageView *customImageView;
+
+@end
+
+```
+
+If you are using a separate nib and not a prototype cell, you'll need to be sure to register the nib in your table view:
+
+```objc
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+
+    [self.tableView registerNib:[UINib nibWithNibName:@"MyCustomTableViewCellNibFileName" bundle:nil] forCellReuseIdentifier:@"MyCustomCell"];
+}
+
+```
+
+Then, in the `tableView:cellForRowAtIndexPath:` method of your `UITableViewDelegate` (usually your view controller), initialize your custom cell:
+
+```objc
+- (UITableViewCell*)tableView:(UITableView*)tableView cellForRowAtIndexPath:(NSIndexPath*)indexPath
+{
+    static NSString *cellIdentifier = @"MyCustomCell";
+    
+    MyCustomTableViewCell *cell = (MyCustomTableViewCell *)[tableView dequeueReusableCellWithIdentifier:cellIdentifier 
+                                                                                           forIndexPath:indexPath];
+    
+    cell.customLabel.text = @"Some Text";
+    cell.customImageView.image = [UIImage imageNamed:@"MyAwesomeTableCellImage"];
+    cell.containingTableView = tableView;
+    [cell setCellHeight:cell.frame.size.height];
+
+    NSMutableArray *leftUtilityButtons = [NSMutableArray new];
+    NSMutableArray *rightUtilityButtons = [NSMutableArray new];
+    
+    [leftUtilityButtons sw_addUtilityButtonWithColor:
+                    [UIColor colorWithRed:0.07 green:0.75f blue:0.16f alpha:1.0] 
+                    icon:[UIImage imageNamed:@"check.png"]];
+    [leftUtilityButtons sw_addUtilityButtonWithColor:
+                    [UIColor colorWithRed:1.0f green:1.0f blue:0.35f alpha:1.0] 
+                    icon:[UIImage imageNamed:@"clock.png"]];
+    [leftUtilityButtons sw_addUtilityButtonWithColor:
+                    [UIColor colorWithRed:1.0f green:0.231f blue:0.188f alpha:1.0] 
+                    icon:[UIImage imageNamed:@"cross.png"]];
+    [leftUtilityButtons sw_addUtilityButtonWithColor:
+                    [UIColor colorWithRed:0.55f green:0.27f blue:0.07f alpha:1.0] 
+                    icon:[UIImage imageNamed:@"list.png"]];
+    
+    [rightUtilityButtons sw_addUtilityButtonWithColor:
+                    [UIColor colorWithRed:0.78f green:0.78f blue:0.8f alpha:1.0]
+                    title:@"More"];
+    [rightUtilityButtons sw_addUtilityButtonWithColor:
+                    [UIColor colorWithRed:1.0f green:0.231f blue:0.188 alpha:1.0f] 
+                        title:@"Delete"];
+
+    cell.leftUtilityButtons = leftUtilityButtons;
+    cell.rightUtilityButtons = rightUtilityButtons;
+    
+    cell.delegate = self;
+
+    return cell;
 }
 ```
 
@@ -134,7 +224,6 @@ The index signifies which utility button the user pressed, for each side the but
 ###Gotchas
 
 #### Custom `UITableViewCell` content
-* Don't use Storyboards to create your custom `UITableViewCell` content. Simply add views to the cell's `contentView` in `- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath`
 * Accessing view of the cell object or managing the predefined content still works fine. So for example if you change the cell's `imageView` or `backgroundView`, `SWTableViewCell` will still work as expected
 * Don't use accessory views in your cell, because they live above the `contentView` and will stay in place when the cell scrolls.
 

@@ -8,6 +8,7 @@
 
 #import "ViewController.h"
 #import "SWTableViewCell.h"
+#import "UMTableViewCell.h"
 
 @interface ViewController () {
     NSArray *_sections;
@@ -15,6 +16,8 @@
 }
 
 @property (nonatomic, weak) IBOutlet UITableView *tableView;
+@property (nonatomic) BOOL useCustomCells;
+@property (nonatomic, weak) UIRefreshControl *refreshControl;
 
 @end
 
@@ -27,7 +30,14 @@
     self.tableView.dataSource = self;
     self.tableView.rowHeight = 90;
     self.tableView.allowsSelection = NO; // We essentially implement our own selection
+    self.navigationItem.title = @"Pull to Toggle Cell Type";
     
+    UIRefreshControl *refreshControl = [[UIRefreshControl alloc] init];
+    [refreshControl addTarget:self action:@selector(toggleCells:) forControlEvents:UIControlEventValueChanged];
+    refreshControl.tintColor = [UIColor blueColor];
+    [self.tableView addSubview:refreshControl];
+    self.refreshControl = refreshControl;
+
     // If you set the seperator inset on iOS 6 you get a NSInvalidArgumentException...weird
     if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 7) {
        self.tableView.separatorInset = UIEdgeInsetsMake(0, 0, 0, 0); // Makes the horizontal row seperator stretch the entire length of the table view
@@ -77,6 +87,24 @@
 //    return [[UILocalizedIndexedCollation currentCollation] sectionForSectionIndexTitleAtIndex:index];
 //}
 
+#pragma mark - UIRefreshControl Selector
+
+- (void)toggleCells:(UIRefreshControl*)refreshControl
+{
+    [refreshControl beginRefreshing];
+    self.useCustomCells = !self.useCustomCells;
+    if (self.useCustomCells)
+    {
+        self.refreshControl.tintColor = [UIColor yellowColor];
+    }
+    else
+    {
+        self.refreshControl.tintColor = [UIColor blueColor];
+    }
+    [self.tableView reloadData];
+    [refreshControl endRefreshing];
+}
+
 #pragma mark - UIScrollViewDelegate
 
 /*
@@ -92,53 +120,78 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    static NSString *cellIdentifier = @"Cell";
     
-    SWTableViewCell *cell = (SWTableViewCell *)[tableView dequeueReusableCellWithIdentifier:cellIdentifier];
-    
-    if (cell == nil) {
-        NSMutableArray *leftUtilityButtons = [NSMutableArray new];
-        NSMutableArray *rightUtilityButtons = [NSMutableArray new];
+    if (self.useCustomCells)
+    {
+        UMTableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:@"UMCell" forIndexPath:indexPath];
+        [cell setCellHeight:cell.frame.size.height];
+        cell.containingTableView = tableView;
+
+        cell.label.text = [NSString stringWithFormat:@"Section: %d, Seat: %d", indexPath.section, indexPath.row];
         
-        [leftUtilityButtons sw_addUtilityButtonWithColor:
-         [UIColor colorWithRed:0.07 green:0.75f blue:0.16f alpha:1.0]
-                                                 icon:[UIImage imageNamed:@"check.png"]];
-        [leftUtilityButtons sw_addUtilityButtonWithColor:
-         [UIColor colorWithRed:1.0f green:1.0f blue:0.35f alpha:1.0]
-                                                 icon:[UIImage imageNamed:@"clock.png"]];
-        [leftUtilityButtons sw_addUtilityButtonWithColor:
-         [UIColor colorWithRed:1.0f green:0.231f blue:0.188f alpha:1.0]
-                                                 icon:[UIImage imageNamed:@"cross.png"]];
-        [leftUtilityButtons sw_addUtilityButtonWithColor:
-         [UIColor colorWithRed:0.55f green:0.27f blue:0.07f alpha:1.0]
-                                                 icon:[UIImage imageNamed:@"list.png"]];
-        
-        [rightUtilityButtons sw_addUtilityButtonWithColor:
-         [UIColor colorWithRed:0.78f green:0.78f blue:0.8f alpha:1.0]
-                                                 title:@"More"];
-        [rightUtilityButtons sw_addUtilityButtonWithColor:
-         [UIColor colorWithRed:1.0f green:0.231f blue:0.188 alpha:1.0f]
-                                                 title:@"Delete"];
-        
-        cell = [[SWTableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle
-                                      reuseIdentifier:cellIdentifier
-                                  containingTableView:_tableView // Used for row height and selection
-                                   leftUtilityButtons:leftUtilityButtons
-                                  rightUtilityButtons:rightUtilityButtons];
+        cell.leftUtilityButtons = [self leftButtons];
+        cell.rightUtilityButtons = [self rightButtons];
         cell.delegate = self;
+
+        return cell;
     }
+    else
+    {
+        static NSString *cellIdentifier = @"Cell";
+        
+        SWTableViewCell *cell = (SWTableViewCell *)[tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+        
+        if (cell == nil) {
+            
+            cell = [[SWTableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle
+                                          reuseIdentifier:cellIdentifier
+                                      containingTableView:_tableView // Used for row height and selection
+                                       leftUtilityButtons:[self leftButtons]
+                                      rightUtilityButtons:[self rightButtons]];
+            cell.delegate = self;
+        }
+        
+        NSDate *dateObject = _testArray[indexPath.section][indexPath.row];
+        cell.textLabel.text = [dateObject description];
+        cell.textLabel.backgroundColor = [UIColor whiteColor];
+        cell.detailTextLabel.backgroundColor = [UIColor whiteColor];
+        cell.detailTextLabel.text = @"Some detail text";
+
+        return cell;
+    }
+}
+
+- (NSArray *)rightButtons
+{
+    NSMutableArray *rightUtilityButtons = [NSMutableArray new];
+    [rightUtilityButtons sw_addUtilityButtonWithColor:
+     [UIColor colorWithRed:0.78f green:0.78f blue:0.8f alpha:1.0]
+                                                title:@"More"];
+    [rightUtilityButtons sw_addUtilityButtonWithColor:
+     [UIColor colorWithRed:1.0f green:0.231f blue:0.188 alpha:1.0f]
+                                                title:@"Delete"];
+
+    return rightUtilityButtons;
+}
+
+- (NSArray *)leftButtons
+{
+    NSMutableArray *leftUtilityButtons = [NSMutableArray new];
     
-    NSDate *dateObject = _testArray[indexPath.section][indexPath.row];
-    cell.textLabel.text = [dateObject description];
-    cell.textLabel.backgroundColor = [UIColor whiteColor];
-    cell.detailTextLabel.backgroundColor = [UIColor whiteColor];
-    cell.detailTextLabel.text = @"Some detail text";
+    [leftUtilityButtons sw_addUtilityButtonWithColor:
+     [UIColor colorWithRed:0.07 green:0.75f blue:0.16f alpha:1.0]
+                                                icon:[UIImage imageNamed:@"check.png"]];
+    [leftUtilityButtons sw_addUtilityButtonWithColor:
+     [UIColor colorWithRed:1.0f green:1.0f blue:0.35f alpha:1.0]
+                                                icon:[UIImage imageNamed:@"clock.png"]];
+    [leftUtilityButtons sw_addUtilityButtonWithColor:
+     [UIColor colorWithRed:1.0f green:0.231f blue:0.188f alpha:1.0]
+                                                icon:[UIImage imageNamed:@"cross.png"]];
+    [leftUtilityButtons sw_addUtilityButtonWithColor:
+     [UIColor colorWithRed:0.55f green:0.27f blue:0.07f alpha:1.0]
+                                                icon:[UIImage imageNamed:@"list.png"]];
     
-//     If you are setting the row height on an individual basis:
-//     e.g: With tableView:heightForRowAtIndexPath:
-//    [cell setCellHeight:[self rowHeightForIndexPath:indexPath]];
-    
-    return cell;
+    return leftUtilityButtons;
 }
 
 // Set row height on an individual basis
