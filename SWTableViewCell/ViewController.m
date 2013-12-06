@@ -47,6 +47,8 @@
     
     _testArray = [[NSMutableArray alloc] init];
     
+    self.useCustomCells = NO;
+    
     for (int i = 0; i < _sections.count; ++i) {
         [_testArray addObject:[NSMutableArray array]];
     }
