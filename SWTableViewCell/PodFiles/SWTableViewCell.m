@@ -543,7 +543,6 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
         CGRect scrollViewBounds = self.scrollViewButtonViewRight.bounds;
         scrollViewBounds.origin.x = MAX([self rightUtilityButtonsWidth] - scrollViewWidth, [self rightUtilityButtonsWidth] - scrollView.contentOffset.x);
         self.scrollViewButtonViewRight.bounds = scrollViewBounds;
-        
     }
     else
     {
