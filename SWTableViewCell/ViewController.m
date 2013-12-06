@@ -30,11 +30,14 @@
     self.tableView.dataSource = self;
     self.tableView.rowHeight = 90;
     self.tableView.allowsSelection = NO; // We essentially implement our own selection
+    
     self.navigationItem.title = @"Pull to Toggle Cell Type";
     
+    // Setup refresh control for example app
     UIRefreshControl *refreshControl = [[UIRefreshControl alloc] init];
     [refreshControl addTarget:self action:@selector(toggleCells:) forControlEvents:UIControlEventValueChanged];
     refreshControl.tintColor = [UIColor blueColor];
+    
     [self.tableView addSubview:refreshControl];
     self.refreshControl = refreshControl;
 
@@ -109,17 +112,17 @@
 
 #pragma mark - UIScrollViewDelegate
 
-/*
- This makes it so cells will not scroll sideways when the table view is scrolling.
- */
-
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    [SWTableViewCell setContainingTableViewIsScrolling:YES];
-}
-
-- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
-    [SWTableViewCell setContainingTableViewIsScrolling:NO];
-}
+///*
+// This makes it so cells will not scroll sideways when the table view is scrolling.
+// */
+//
+//- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+//    [SWTableViewCell setContainingTableViewIsScrolling:YES];
+//}
+//
+//- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
+//    [SWTableViewCell setContainingTableViewIsScrolling:NO];
+//}
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     

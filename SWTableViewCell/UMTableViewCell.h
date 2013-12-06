@@ -9,6 +9,9 @@
 #import <UIKit/UIKit.h>
 #import "SWTableViewCell.h"
 
+/*
+ *  Example of a custom cell built in Storyboard
+ */
 @interface UMTableViewCell : SWTableViewCell
 
 @property (weak, nonatomic) IBOutlet UIImageView *image;

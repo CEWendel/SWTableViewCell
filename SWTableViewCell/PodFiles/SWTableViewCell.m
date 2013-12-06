@@ -14,8 +14,6 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
 
 #pragma mark - SWUtilityButtonView
 
-static BOOL containingScrollViewIsScrolling = false;
-
 @interface SWTableViewCell () <UIScrollViewDelegate>
 {
     SWCellState _cellState; // The state of the cell within the scroll view, can be left, right or middle
@@ -156,7 +154,6 @@ static BOOL containingScrollViewIsScrolling = false;
     self.cellScrollView.scrollEnabled = YES;
     self.containingTableView.scrollEnabled = YES;
     self.tapGestureRecognizer.enabled = YES;
-
 }
 
 #pragma mark - Properties
@@ -534,39 +531,27 @@ static BOOL containingScrollViewIsScrolling = false;
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
-    if (!containingScrollViewIsScrolling)
+    self.containingTableView.scrollEnabled = NO;
+    self.tapGestureRecognizer.enabled = NO;
+    if (scrollView.contentOffset.x > [self leftUtilityButtonsWidth])
     {
-        self.containingTableView.scrollEnabled = NO;
-        self.tapGestureRecognizer.enabled = NO;
-        if (scrollView.contentOffset.x > [self leftUtilityButtonsWidth])
-        {
-            CGFloat scrollViewWidth = MIN(scrollView.contentOffset.x - [self leftUtilityButtonsWidth], [self rightUtilityButtonsWidth]);
-            
-            // Expose the right button view
-            self.scrollViewButtonViewRight.frame = CGRectMake(scrollView.contentOffset.x + (CGRectGetWidth(self.bounds) - scrollViewWidth), 0.0f, scrollViewWidth,self.height);
-            
-            CGRect scrollViewBounds = self.scrollViewButtonViewRight.bounds;
-            scrollViewBounds.origin.x = MAX([self rightUtilityButtonsWidth] - scrollViewWidth, [self rightUtilityButtonsWidth] - scrollView.contentOffset.x);
-            self.scrollViewButtonViewRight.bounds = scrollViewBounds;
-            
-        }
-        else
-        {
-            CGFloat scrollViewWidth = MIN(scrollView.contentOffset.x - [self leftUtilityButtonsWidth], [self leftUtilityButtonsWidth]);
-            
-            // Expose the left button view
-            self.scrollViewButtonViewLeft.frame = CGRectMake([self leftUtilityButtonsWidth], 0.0f, scrollViewWidth, self.height);
-            
-            CGPoint offset = scrollView.contentOffset;
-            offset.x = MAX(0, scrollView.contentOffset.x);
-            
-            scrollView.contentOffset = offset;
-        }
+        CGFloat scrollViewWidth = MIN(scrollView.contentOffset.x - [self leftUtilityButtonsWidth], [self rightUtilityButtonsWidth]);
+        
+        // Expose the right button view
+        self.scrollViewButtonViewRight.frame = CGRectMake(scrollView.contentOffset.x + (CGRectGetWidth(self.bounds) - scrollViewWidth), 0.0f, scrollViewWidth,self.height);
+        
+        CGRect scrollViewBounds = self.scrollViewButtonViewRight.bounds;
+        scrollViewBounds.origin.x = MAX([self rightUtilityButtonsWidth] - scrollViewWidth, [self rightUtilityButtonsWidth] - scrollView.contentOffset.x);
+        self.scrollViewButtonViewRight.bounds = scrollViewBounds;
+        
     }
     else
     {
-        self.containingTableView.scrollEnabled = YES;
-        [scrollView setContentOffset:CGPointMake([self leftUtilityButtonsWidth], 0) animated:NO];
+        CGFloat scrollViewWidth = MIN(scrollView.contentOffset.x - [self leftUtilityButtonsWidth], [self leftUtilityButtonsWidth]);
+        
+        // Expose the left button view
+        self.scrollViewButtonViewLeft.frame = CGRectMake([self leftUtilityButtonsWidth], 0.0f, scrollViewWidth, self.height);
+        
     }
 }
 
@@ -585,13 +570,6 @@ static BOOL containingScrollViewIsScrolling = false;
         self.containingTableView.scrollEnabled = YES;
         self.longPressGestureRecognizer.enabled = YES;
     }
-}
-
-#pragma mark - Class Methods
-
-+ (void)setContainingTableViewIsScrolling:(BOOL)isScrolling
-{
-    containingScrollViewIsScrolling = isScrolling;
 }
 
 @end
