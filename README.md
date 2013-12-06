@@ -78,6 +78,8 @@ return cell;
 
 ###Custom Table View Cells
 
+Thanks to [Matt Bowman](https://github.com/MattCBowman) you can now create custom table view cells using Interface Builder that have the capabilities of an SWTableViewCell
+
 The first step is to design your cell either in a standalone nib or inside of a
 table view using prototype cells. Make sure to set the custom class on the 
 cell in interface builder to the subclass you made for it:
