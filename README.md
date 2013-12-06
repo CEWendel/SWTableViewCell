@@ -76,7 +76,7 @@ return cell;
 }
 ```
 
-###Custom Table View Cells
+###Custom Table View Cells (Thanks to [Matt Bowman](https://github.com/MattCBowman))
 
 The first step is to design your cell either in a standalone nib or inside of a
 table view using prototype cells. Make sure to set the custom class on the 
