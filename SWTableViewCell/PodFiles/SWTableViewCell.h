@@ -35,7 +35,7 @@ typedef enum {
 
 @property (nonatomic, strong) NSArray *leftUtilityButtons;
 @property (nonatomic, strong) NSArray *rightUtilityButtons;
-@property (nonatomic) id <SWTableViewCellDelegate> delegate;
+@property (nonatomic, weak) id <SWTableViewCellDelegate> delegate;
 @property (nonatomic, weak) UITableView *containingTableView;
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier containingTableView:(UITableView *)containingTableView leftUtilityButtons:(NSArray *)leftUtilityButtons rightUtilityButtons:(NSArray *)rightUtilityButtons;
