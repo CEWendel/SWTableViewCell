@@ -535,22 +535,27 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
     self.tapGestureRecognizer.enabled = NO;
     if (scrollView.contentOffset.x > [self leftUtilityButtonsWidth])
     {
-        CGFloat scrollViewWidth = MIN(scrollView.contentOffset.x - [self leftUtilityButtonsWidth], [self rightUtilityButtonsWidth]);
-        
-        // Expose the right button view
-        self.scrollViewButtonViewRight.frame = CGRectMake(scrollView.contentOffset.x + (CGRectGetWidth(self.bounds) - scrollViewWidth), 0.0f, scrollViewWidth,self.height);
-        
-        CGRect scrollViewBounds = self.scrollViewButtonViewRight.bounds;
-        scrollViewBounds.origin.x = MAX([self rightUtilityButtonsWidth] - scrollViewWidth, [self rightUtilityButtonsWidth] - scrollView.contentOffset.x);
-        self.scrollViewButtonViewRight.bounds = scrollViewBounds;
+        if ([self rightUtilityButtonsWidth] > 0)
+        {
+            CGFloat scrollViewWidth = MIN(scrollView.contentOffset.x - [self leftUtilityButtonsWidth], [self rightUtilityButtonsWidth]);
+            
+            // Expose the right button view
+            self.scrollViewButtonViewRight.frame = CGRectMake(scrollView.contentOffset.x + (CGRectGetWidth(self.bounds) - scrollViewWidth), 0.0f, scrollViewWidth,self.height);
+            
+            CGRect scrollViewBounds = self.scrollViewButtonViewRight.bounds;
+            scrollViewBounds.origin.x = MAX([self rightUtilityButtonsWidth] - scrollViewWidth, [self rightUtilityButtonsWidth] - scrollView.contentOffset.x);
+            self.scrollViewButtonViewRight.bounds = scrollViewBounds;
+        }
     }
     else
     {
-        CGFloat scrollViewWidth = MIN(scrollView.contentOffset.x - [self leftUtilityButtonsWidth], [self leftUtilityButtonsWidth]);
-        
         // Expose the left button view
-        self.scrollViewButtonViewLeft.frame = CGRectMake([self leftUtilityButtonsWidth], 0.0f, scrollViewWidth, self.height);
-        
+        if ([self leftUtilityButtonsWidth] > 0)
+        {
+            CGFloat scrollViewWidth = MIN(scrollView.contentOffset.x - [self leftUtilityButtonsWidth], [self leftUtilityButtonsWidth]);
+            
+            self.scrollViewButtonViewLeft.frame = CGRectMake([self leftUtilityButtonsWidth], 0.0f, scrollViewWidth, self.height);
+        }
     }
 }
 
