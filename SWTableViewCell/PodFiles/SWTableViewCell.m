@@ -286,60 +286,31 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
 
 - (void)setBackgroundColor:(UIColor *)backgroundColor
 {
-    self.scrollViewContentView.backgroundColor = backgroundColor;
+    _scrollViewContentView.backgroundColor = backgroundColor;
 }
 
 - (void)setHighlighted:(BOOL)highlighted
 {
     [super setHighlighted:highlighted animated:NO];
-    if (highlighted)
-    {
-        self.scrollViewButtonViewLeft.hidden = YES;
-        self.scrollViewButtonViewRight.hidden = YES;
-    }
-    else
-    {
-        self.scrollViewButtonViewLeft.hidden = NO;
-        self.scrollViewButtonViewRight.hidden = NO;
-    }
+    self.scrollViewButtonViewLeft.hidden = highlighted;
+    self.scrollViewButtonViewRight.hidden = highlighted;
 }
 
 - (void)setHighlighted:(BOOL)highlighted animated:(BOOL)animated
 {
-    if (highlighted)
-    {
-        self.scrollViewButtonViewLeft.hidden = YES;
-        self.scrollViewButtonViewRight.hidden = YES;
-    }
-    else
-    {
-        self.scrollViewButtonViewLeft.hidden = NO;
-        self.scrollViewButtonViewRight.hidden = NO;
-    }
+    [super setHighlighted:highlighted animated:animated];
+    self.scrollViewButtonViewLeft.hidden = highlighted;
+    self.scrollViewButtonViewRight.hidden = highlighted;
 }
 
 - (void)setSelected:(BOOL)selected
 {
-    if (selected)
-    {
-        [self setHighlighted:YES];
-    }
-    else
-    {
-        [self setHighlighted:NO];
-    }
+    [self setHighlighted:selected];
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated
 {
-    if (selected)
-    {
-        [self setHighlighted:YES];
-    }
-    else
-    {
-        [self setHighlighted:NO];
-    }
+    [self setHighlighted:selected];
 }
 
 #pragma mark Height methods
