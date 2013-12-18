@@ -137,6 +137,8 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
     {
         [self.scrollViewContentView addSubview:subview];
     }
+    
+    self.containingTableView.directionalLockEnabled = YES;
 }
 
 - (void)layoutSubviews
@@ -152,7 +154,6 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
     self.scrollViewButtonViewRight.layer.masksToBounds = YES;
     self.scrollViewContentView.frame = CGRectMake([self leftUtilityButtonsWidth], 0, CGRectGetWidth(self.bounds), self.height);
     self.cellScrollView.scrollEnabled = YES;
-    self.containingTableView.scrollEnabled = YES;
     self.tapGestureRecognizer.enabled = YES;
 }
 
@@ -531,7 +532,6 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
-    self.containingTableView.scrollEnabled = NO;
     self.tapGestureRecognizer.enabled = NO;
     if (scrollView.contentOffset.x > [self leftUtilityButtonsWidth])
     {
@@ -562,7 +562,6 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
 {
     self.tapGestureRecognizer.enabled = YES;
-    self.containingTableView.scrollEnabled = YES;
 }
 
 - (void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView
@@ -571,7 +570,6 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
     self.tapGestureRecognizer.enabled = YES;
     if (_cellState == kCellStateCenter)
     {
-        self.containingTableView.scrollEnabled = YES;
         self.longPressGestureRecognizer.enabled = YES;
     }
 }
