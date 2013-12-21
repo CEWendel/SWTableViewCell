@@ -401,6 +401,15 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
     {
         [self.delegate swipeableTableViewCell:self scrollingToState:kCellStateRight];
     }
+
+    if ([self.delegate respondsToSelector:@selector(swipeableTableViewCellShouldHideUtilityButtonsOnSwipe:)])
+    {
+        for (SWTableViewCell *cell in [self.containingTableView visibleCells]) {
+            if (cell != self && [self.delegate swipeableTableViewCellShouldHideUtilityButtonsOnSwipe:cell]) {
+                [cell hideUtilityButtonsAnimated:YES];
+            }
+        }
+    }
 }
 
 - (void)scrollToCenter:(inout CGPoint *)targetContentOffset
@@ -428,6 +437,15 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
     if ([self.delegate respondsToSelector:@selector(swipeableTableViewCell:scrollingToState:)])
     {
         [self.delegate swipeableTableViewCell:self scrollingToState:kCellStateLeft];
+    }
+    
+    if ([self.delegate respondsToSelector:@selector(swipeableTableViewCellShouldHideUtilityButtonsOnSwipe:)])
+    {
+        for (SWTableViewCell *cell in [self.containingTableView visibleCells]) {
+            if (cell != self && [self.delegate swipeableTableViewCellShouldHideUtilityButtonsOnSwipe:cell]) {
+                [cell hideUtilityButtonsAnimated:YES];
+            }
+        }
     }
 }
 
