@@ -508,6 +508,14 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
     {
         if ([self rightUtilityButtonsWidth] > 0)
         {
+            if (self.delegate && [self.delegate respondsToSelector:@selector(swipeableTableViewCell:canSwipeToState:)])
+            {
+                scrollView.scrollEnabled = [self.delegate swipeableTableViewCell:self canSwipeToState:kCellStateRight];
+                if (!scrollView.scrollEnabled)
+                {
+                    return;
+                }
+            }
             CGFloat scrollViewWidth = MIN(scrollView.contentOffset.x - [self leftUtilityButtonsWidth], [self rightUtilityButtonsWidth]);
             
             // Expose the right button view
@@ -523,6 +531,14 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
         // Expose the left button view
         if ([self leftUtilityButtonsWidth] > 0)
         {
+            if (self.delegate && [self.delegate respondsToSelector:@selector(swipeableTableViewCell:canSwipeToState:)])
+            {
+                scrollView.scrollEnabled = [self.delegate swipeableTableViewCell:self canSwipeToState:kCellStateLeft];
+                if (!scrollView.scrollEnabled)
+                {
+                    return;
+                }
+            }
             CGFloat scrollViewWidth = MIN(scrollView.contentOffset.x - [self leftUtilityButtonsWidth], [self leftUtilityButtonsWidth]);
             
             self.scrollViewButtonViewLeft.frame = CGRectMake([self leftUtilityButtonsWidth], 0.0f, scrollViewWidth, self.height);
