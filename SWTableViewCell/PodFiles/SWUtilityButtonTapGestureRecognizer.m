@@ -10,5 +10,15 @@
 
 @implementation SWUtilityButtonTapGestureRecognizer
 
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
+    self.state = UIGestureRecognizerStateBegan;
+}
+
+- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
+    self.state = UIGestureRecognizerStateEnded;
+}
+
+
+
 @end
 

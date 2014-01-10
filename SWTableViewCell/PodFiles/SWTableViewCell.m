@@ -327,18 +327,58 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
 
 #pragma mark - Utility buttons handling
 
+- (void)utilityButtonHandler:(id)sender
+{
+    
+    SWUtilityButtonTapGestureRecognizer *utilityButtonTapGestureRecognizer = (SWUtilityButtonTapGestureRecognizer *)sender;
+    
+    UIButton *selectedButton = (UIButton *)[utilityButtonTapGestureRecognizer view];
+    
+    // This part was quickly implemented - may need review. Not thoroughly bug tested.
+    if (!_originalButtonBackground) {
+        _originalButtonBackground = selectedButton.backgroundColor;
+    }
+    
+    if (utilityButtonTapGestureRecognizer.state == UIGestureRecognizerStateBegan) {
+        
+        CGFloat r, g, b, a;
+        if ([selectedButton.backgroundColor getRed:&r green:&g blue:&b alpha:&a]) {
+            selectedButton.backgroundColor =  [UIColor colorWithRed:MIN(r + 0.1, 1.0)
+                                                              green:MIN(g + 0.1, 1.0)
+                                                               blue:MIN(b + 0.1, 1.0)
+                                                              alpha:a];
+        }
+        
+    } else {
+        
+        selectedButton.backgroundColor = _originalButtonBackground;
+        _originalButtonBackground = nil;
+    }
+    
+}
+
 - (void)rightUtilityButtonHandler:(id)sender
 {
+    [self utilityButtonHandler:sender];
+    
     SWUtilityButtonTapGestureRecognizer *utilityButtonTapGestureRecognizer = (SWUtilityButtonTapGestureRecognizer *)sender;
-    NSUInteger utilityButtonIndex = utilityButtonTapGestureRecognizer.buttonIndex;
-    if ([self.delegate respondsToSelector:@selector(swipeableTableViewCell:didTriggerRightUtilityButtonWithIndex:)])
-    {
-        [self.delegate swipeableTableViewCell:self didTriggerRightUtilityButtonWithIndex:utilityButtonIndex];
+    
+    if (utilityButtonTapGestureRecognizer.state == UIGestureRecognizerStateEnded) {
+        
+        NSUInteger utilityButtonIndex = utilityButtonTapGestureRecognizer.buttonIndex;
+        if ([self.delegate respondsToSelector:@selector(swipeableTableViewCell:didTriggerRightUtilityButtonWithIndex:)])
+        {
+            [self.delegate swipeableTableViewCell:self didTriggerRightUtilityButtonWithIndex:utilityButtonIndex];
+        }
     }
+    
+    
 }
 
 - (void)leftUtilityButtonHandler:(id)sender
 {
+    [self utilityButtonHandler:sender];
+    
     SWUtilityButtonTapGestureRecognizer *utilityButtonTapGestureRecognizer = (SWUtilityButtonTapGestureRecognizer *)sender;
     NSUInteger utilityButtonIndex = utilityButtonTapGestureRecognizer.buttonIndex;
     if ([self.delegate respondsToSelector:@selector(swipeableTableViewCell:didTriggerLeftUtilityButtonWithIndex:)])
