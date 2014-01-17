@@ -404,7 +404,7 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
     if ([self.delegate respondsToSelector:@selector(swipeableTableViewCellShouldHideUtilityButtonsOnSwipe:)])
     {
         for (SWTableViewCell *cell in [self.containingTableView visibleCells]) {
-            if (cell != self && [self.delegate swipeableTableViewCellShouldHideUtilityButtonsOnSwipe:cell]) {
+            if (cell != self && [cell isKindOfClass:[SWTableViewCell class]] && [self.delegate swipeableTableViewCellShouldHideUtilityButtonsOnSwipe:cell]) {
                 [cell hideUtilityButtonsAnimated:YES];
             }
         }
@@ -441,7 +441,7 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
     if ([self.delegate respondsToSelector:@selector(swipeableTableViewCellShouldHideUtilityButtonsOnSwipe:)])
     {
         for (SWTableViewCell *cell in [self.containingTableView visibleCells]) {
-            if (cell != self && [self.delegate swipeableTableViewCellShouldHideUtilityButtonsOnSwipe:cell]) {
+            if (cell != self && [cell isKindOfClass:[SWTableViewCell class]] && [self.delegate swipeableTableViewCellShouldHideUtilityButtonsOnSwipe:cell]) {
                 [cell hideUtilityButtonsAnimated:YES];
             }
         }
