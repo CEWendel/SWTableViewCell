@@ -125,7 +125,7 @@
         cell.leftUtilityButtons = [self leftButtons];
         cell.rightUtilityButtons = [self rightButtons];
         cell.delegate = self;
-
+        
         return cell;
     }
     else
