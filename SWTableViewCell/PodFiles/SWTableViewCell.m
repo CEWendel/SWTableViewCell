@@ -107,6 +107,7 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
     [cellScrollView addGestureRecognizer:tapGestureRecognizer];
     
     self.tapGestureRecognizer = tapGestureRecognizer;
+    self.tapGestureRecognizer.delegate = self;
     
     SWLongPressGestureRecognizer *longPressGestureRecognizer = [[SWLongPressGestureRecognizer alloc] initWithTarget:self
                                                                                                              action:@selector(scrollViewPressed:)];
@@ -114,6 +115,7 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
     [cellScrollView addGestureRecognizer:longPressGestureRecognizer];
     
     self.longPressGestureRecognizer = longPressGestureRecognizer;
+    self.longPressGestureRecognizer.delegate = self;
     
     self.cellScrollView = cellScrollView;
     
@@ -576,6 +578,27 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
     {
         self.longPressGestureRecognizer.enabled = YES;
     }
+}
+
+#pragma mark UIGestureRecognizer
+-(BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
+{
+    
+    __block BOOL withinBounds = NO;
+    [self.contentView.subviews enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        
+        // Check if touch inside an enabled button
+        if ([obj isKindOfClass:[UIButton class]]) {
+            UIButton* button = obj;
+            if (button.enabled) {
+                CGPoint location = [touch locationInView:button];
+                withinBounds = CGRectContainsPoint(button.bounds, location);
+                *stop = YES;
+            }
+        }
+    }];
+    
+    return !withinBounds;
 }
 
 @end
