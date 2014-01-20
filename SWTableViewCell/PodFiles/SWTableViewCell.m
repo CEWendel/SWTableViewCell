@@ -583,37 +583,7 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
 #pragma mark UIGestureRecognizer
 -(BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
 {
-    return ![self touch:touch shouldIgnoreIn:self.contentView];
-}
-
--(BOOL)touch:(UITouch*)touch shouldIgnoreIn:(UIView*)view
-{
-    __block BOOL withinBounds = NO;
-    [view.subviews enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-        UIView* subView = obj;
-
-        // Check if touch inside an enabled button
-        if ([subView isKindOfClass:[UIButton class]]) {
-            UIButton* button = (id)subView;
-            if (button.enabled) {
-                CGPoint location = [touch locationInView:button];
-                withinBounds = CGRectContainsPoint(button.bounds, location);
-            }
-        }
-        
-        if (!withinBounds) {
-            withinBounds = [self touch:touch shouldIgnoreIn:subView];
-            if (withinBounds) {
-                *stop = YES;
-            }
-        }
-        
-        if (withinBounds) {
-            *stop = YES;
-        }
-    }];
-    
-    return withinBounds;
+    return ![touch.view isKindOfClass:[UIButton class]];
 }
 
 @end
