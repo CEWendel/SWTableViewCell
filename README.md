@@ -128,40 +128,43 @@ Then, in the `tableView:cellForRowAtIndexPath:` method of your `UITableViewDeleg
     
     MyCustomTableViewCell *cell = (MyCustomTableViewCell *)[tableView dequeueReusableCellWithIdentifier:cellIdentifier 
                                                                                            forIndexPath:indexPath];
+	__weak MyCustomTableViewCell *weakCell = cell;																					   
+	//Do any fixed setup here (will be executed once unless force is set to YES)
+	[cell setAppearanceWithBlock:^{
+		cell.containingTableView = tableView;
+		
+	    NSMutableArray *leftUtilityButtons = [NSMutableArray new];
+	    NSMutableArray *rightUtilityButtons = [NSMutableArray new];
     
+	    [leftUtilityButtons sw_addUtilityButtonWithColor:
+	                    [UIColor colorWithRed:0.07 green:0.75f blue:0.16f alpha:1.0] 
+	                    icon:[UIImage imageNamed:@"check.png"]];
+	    [leftUtilityButtons sw_addUtilityButtonWithColor:
+	                    [UIColor colorWithRed:1.0f green:1.0f blue:0.35f alpha:1.0] 
+	                    icon:[UIImage imageNamed:@"clock.png"]];
+	    [leftUtilityButtons sw_addUtilityButtonWithColor:
+	                    [UIColor colorWithRed:1.0f green:0.231f blue:0.188f alpha:1.0] 
+	                    icon:[UIImage imageNamed:@"cross.png"]];
+	    [leftUtilityButtons sw_addUtilityButtonWithColor:
+	                    [UIColor colorWithRed:0.55f green:0.27f blue:0.07f alpha:1.0] 
+	                    icon:[UIImage imageNamed:@"list.png"]];
+    
+	    [rightUtilityButtons sw_addUtilityButtonWithColor:
+	                    [UIColor colorWithRed:0.78f green:0.78f blue:0.8f alpha:1.0]
+	                    title:@"More"];
+	    [rightUtilityButtons sw_addUtilityButtonWithColor:
+	                    [UIColor colorWithRed:1.0f green:0.231f blue:0.188 alpha:1.0f] 
+	                        title:@"Delete"];
+
+	    cell.leftUtilityButtons = leftUtilityButtons;
+	    cell.rightUtilityButtons = rightUtilityButtons;
+    
+	    cell.delegate = self;
+	} force:NO];
+	
     cell.customLabel.text = @"Some Text";
     cell.customImageView.image = [UIImage imageNamed:@"MyAwesomeTableCellImage"];
-    cell.containingTableView = tableView;
     [cell setCellHeight:cell.frame.size.height];
-
-    NSMutableArray *leftUtilityButtons = [NSMutableArray new];
-    NSMutableArray *rightUtilityButtons = [NSMutableArray new];
-    
-    [leftUtilityButtons sw_addUtilityButtonWithColor:
-                    [UIColor colorWithRed:0.07 green:0.75f blue:0.16f alpha:1.0] 
-                    icon:[UIImage imageNamed:@"check.png"]];
-    [leftUtilityButtons sw_addUtilityButtonWithColor:
-                    [UIColor colorWithRed:1.0f green:1.0f blue:0.35f alpha:1.0] 
-                    icon:[UIImage imageNamed:@"clock.png"]];
-    [leftUtilityButtons sw_addUtilityButtonWithColor:
-                    [UIColor colorWithRed:1.0f green:0.231f blue:0.188f alpha:1.0] 
-                    icon:[UIImage imageNamed:@"cross.png"]];
-    [leftUtilityButtons sw_addUtilityButtonWithColor:
-                    [UIColor colorWithRed:0.55f green:0.27f blue:0.07f alpha:1.0] 
-                    icon:[UIImage imageNamed:@"list.png"]];
-    
-    [rightUtilityButtons sw_addUtilityButtonWithColor:
-                    [UIColor colorWithRed:0.78f green:0.78f blue:0.8f alpha:1.0]
-                    title:@"More"];
-    [rightUtilityButtons sw_addUtilityButtonWithColor:
-                    [UIColor colorWithRed:1.0f green:0.231f blue:0.188 alpha:1.0f] 
-                        title:@"Delete"];
-
-    cell.leftUtilityButtons = leftUtilityButtons;
-    cell.rightUtilityButtons = rightUtilityButtons;
-    
-    cell.delegate = self;
-
     return cell;
 }
 ```

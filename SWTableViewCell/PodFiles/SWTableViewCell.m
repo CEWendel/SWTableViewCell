@@ -18,6 +18,8 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
 {
     SWCellState _cellState; // The state of the cell within the scroll view, can be left, right or middle
     CGFloat additionalRightPadding;
+    
+    dispatch_once_t onceToken;
 }
 
 @property (nonatomic, strong) SWUtilityButtonView *scrollViewButtonViewLeft;
@@ -142,6 +144,7 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
 
 - (void)layoutSubviews
 {
+
     [super layoutSubviews];
     
     self.cellScrollView.frame = CGRectMake(0, 0, CGRectGetWidth(self.bounds), self.height);
@@ -154,6 +157,7 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
     self.scrollViewContentView.frame = CGRectMake([self leftUtilityButtonsWidth], 0, CGRectGetWidth(self.bounds), self.height);
     self.cellScrollView.scrollEnabled = YES;
     self.tapGestureRecognizer.enabled = YES;
+    
 }
 
 #pragma mark - Properties
@@ -384,6 +388,20 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
 - (CGPoint)scrollViewContentOffset
 {
     return CGPointMake([self.scrollViewButtonViewLeft utilityButtonsWidth], 0);
+}
+
+- (void) setAppearanceWithBlock:(void (^)())appearanceBlock force:(BOOL)force
+{
+    if (force)
+    {
+        appearanceBlock();
+    }
+    else
+    {
+        dispatch_once(&onceToken, ^{
+            appearanceBlock();
+        });
+    }
 }
 
 #pragma mark UIScrollView helpers
