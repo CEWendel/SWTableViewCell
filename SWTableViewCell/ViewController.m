@@ -116,16 +116,22 @@
     
     if (self.useCustomCells)
     {
+        
         UMTableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:@"UMCell" forIndexPath:indexPath];
+        
+        UMTableViewCell __weak *weakCell = cell;
+                
+        [cell setAppearanceWithBlock:^{
+            weakCell.leftUtilityButtons = [self leftButtons];
+            weakCell.rightUtilityButtons = [self rightButtons];
+            weakCell.delegate = self;
+            weakCell.containingTableView = tableView;
+        } force:NO];
+        
         [cell setCellHeight:cell.frame.size.height];
-        cell.containingTableView = tableView;
 
         cell.label.text = [NSString stringWithFormat:@"Section: %d, Seat: %d", indexPath.section, indexPath.row];
         
-        cell.leftUtilityButtons = [self leftButtons];
-        cell.rightUtilityButtons = [self rightButtons];
-        cell.delegate = self;
-
         return cell;
     }
     else
@@ -152,6 +158,7 @@
 
         return cell;
     }
+    
 }
 
 - (NSArray *)rightButtons

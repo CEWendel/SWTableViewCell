@@ -46,5 +46,6 @@ typedef enum {
 - (void)setCellHeight:(CGFloat)height;
 - (void)setBackgroundColor:(UIColor *)backgroundColor;
 - (void)hideUtilityButtonsAnimated:(BOOL)animated;
+- (void)setAppearanceWithBlock:(void (^) ())appearanceBlock force:(BOOL)force;
 
 @end
