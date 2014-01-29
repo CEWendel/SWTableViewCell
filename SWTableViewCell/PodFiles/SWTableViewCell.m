@@ -241,7 +241,9 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
         if ([self.containingTableView.delegate respondsToSelector:@selector(tableView:didSelectRowAtIndexPath:)])
         {
             NSIndexPath *cellIndexPath = [self.containingTableView indexPathForCell:self];
+            [self.containingTableView selectRowAtIndexPath:cellIndexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
             [self.containingTableView.delegate tableView:self.containingTableView didSelectRowAtIndexPath:cellIndexPath];
+            [self.containingTableView deselectRowAtIndexPath:cellIndexPath animated:NO];
         }
     }
 }
@@ -255,7 +257,9 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
         {
             NSIndexPath *cellIndexPath = [self.containingTableView indexPathForCell:self];
             [self setSelected:YES];
+            [self.containingTableView selectRowAtIndexPath:cellIndexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
             [self.containingTableView.delegate tableView:self.containingTableView didSelectRowAtIndexPath:cellIndexPath];
+            [self.containingTableView deselectRowAtIndexPath:cellIndexPath animated:NO];
             // Make the selection visible
             NSTimer *endHighlightTimer = [NSTimer scheduledTimerWithTimeInterval:0.20
                                                                           target:self
