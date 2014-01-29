@@ -29,7 +29,6 @@
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
     self.tableView.rowHeight = 90;
-    self.tableView.allowsSelection = NO; // We essentially implement our own selection
     
     self.navigationItem.title = @"Pull to Toggle Cell Type";
     
@@ -74,8 +73,6 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     NSLog(@"cell selected at index path %d:%d", indexPath.section, indexPath.row);
-
-    [_tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
