@@ -293,6 +293,7 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
 
 - (void)setBackgroundColor:(UIColor *)backgroundColor
 {
+    [super setBackgroundColor:backgroundColor];
     _scrollViewContentView.backgroundColor = backgroundColor;
 }
 
