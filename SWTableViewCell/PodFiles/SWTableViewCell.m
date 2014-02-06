@@ -360,6 +360,10 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
 
 - (void)hideUtilityButtonsAnimated:(BOOL)animated
 {
+    // No need to scroll if already centered
+    if ( _cellState == kCellStateCenter )
+        return;
+
     // Scroll back to center
     
     // Force the scroll back to run on the main thread because of weird scroll view bugs
@@ -546,6 +550,16 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
     self.tapGestureRecognizer.enabled = NO;
+    
+    if ([self.delegate respondsToSelector:@selector(swipeableTableViewCellShouldHideUtilityButtonsImmediatelyOnSwipe:)])
+    {
+        for (SWTableViewCell *cell in [self.containingTableView visibleCells]) {
+            if (cell != self && [cell isKindOfClass:[SWTableViewCell class]] && [self.delegate swipeableTableViewCellShouldHideUtilityButtonsImmediatelyOnSwipe:cell]) {
+                [cell hideUtilityButtonsAnimated:YES];
+            }
+        }
+    }
+    
     if (scrollView.contentOffset.x > [self leftUtilityButtonsWidth])
     {
         if ([self rightUtilityButtonsWidth] > 0)
