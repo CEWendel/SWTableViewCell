@@ -1,5 +1,5 @@
 //
-//  Constants.h
+//  SWConstants.h
 //  SWTableViewCell
 //
 //  Created by Matt Bowman on 11/27/13.

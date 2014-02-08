@@ -46,7 +46,7 @@
 		8103088E1846579B00C378F0 /* SWUtilityButtonTapGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWUtilityButtonTapGestureRecognizer.m; sourceTree = "<group>"; };
 		8103088F1846579B00C378F0 /* SWUtilityButtonView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWUtilityButtonView.h; sourceTree = "<group>"; };
 		810308901846579B00C378F0 /* SWUtilityButtonView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWUtilityButtonView.m; sourceTree = "<group>"; };
-		810308971846584300C378F0 /* Constants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
+		810308971846584300C378F0 /* SWConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWConstants.h; sourceTree = "<group>"; };
 		810308A1184D682700C378F0 /* um.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = um.png; sourceTree = "<group>"; };
 		810308A3184D688D00C378F0 /* UMTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UMTableViewCell.h; sourceTree = "<group>"; };
 		810308A4184D688D00C378F0 /* UMTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UMTableViewCell.m; sourceTree = "<group>"; };
@@ -91,7 +91,7 @@
 		810308841846579B00C378F0 /* PodFiles */ = {
 			isa = PBXGroup;
 			children = (
-				810308971846584300C378F0 /* Constants.h */,
+				810308971846584300C378F0 /* SWConstants.h */,
 				810308851846579B00C378F0 /* NSMutableArray+SWUtilityButtons.h */,
 				810308861846579B00C378F0 /* NSMutableArray+SWUtilityButtons.m */,
 				810308871846579B00C378F0 /* SWCellScrollView.h */,

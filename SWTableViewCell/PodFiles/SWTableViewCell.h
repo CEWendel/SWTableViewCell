@@ -12,7 +12,7 @@
 #import "SWLongPressGestureRecognizer.h"
 #import "SWUtilityButtonTapGestureRecognizer.h"
 #import "NSMutableArray+SWUtilityButtons.h"
-#import "Constants.h"
+#import "SWConstants.h"
 
 @class SWTableViewCell;
 
