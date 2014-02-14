@@ -573,6 +573,7 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
         else
         {
             [scrollView setContentOffset:CGPointMake([self leftUtilityButtonsWidth], 0)];
+            self.tapGestureRecognizer.enabled = YES;
         }
     }
     else
@@ -595,6 +596,7 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
         else
         {
             [scrollView setContentOffset:CGPointMake(0, 0)];
+            self.tapGestureRecognizer.enabled = YES;
         }
     }
 }
