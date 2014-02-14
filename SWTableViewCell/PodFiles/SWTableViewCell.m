@@ -567,6 +567,11 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
             scrollViewBounds.origin.x = MAX([self rightUtilityButtonsWidth] - scrollViewWidth, [self rightUtilityButtonsWidth] - scrollView.contentOffset.x);
             self.scrollViewButtonViewRight.bounds = scrollViewBounds;
         }
+        else
+        {
+            [scrollView setContentOffset:CGPointMake([self leftUtilityButtonsWidth], 0)];
+            self.tapGestureRecognizer.enabled = YES;
+        }
     }
     else
     {
@@ -584,6 +589,11 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
             CGFloat scrollViewWidth = MIN(scrollView.contentOffset.x - [self leftUtilityButtonsWidth], [self leftUtilityButtonsWidth]);
             
             self.scrollViewButtonViewLeft.frame = CGRectMake([self leftUtilityButtonsWidth], 0.0f, scrollViewWidth, self.height);
+        }
+        else
+        {
+            [scrollView setContentOffset:CGPointMake(0, 0)];
+            self.tapGestureRecognizer.enabled = YES;
         }
     }
 }
