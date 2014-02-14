@@ -477,6 +477,9 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
 
 - (void)scrollViewWillEndDragging:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset
 {
+    if (CGPointEqualToPoint(*targetContentOffset, CGPointZero))
+        return;
+    
     switch (_cellState)
     {
         case kCellStateCenter:
