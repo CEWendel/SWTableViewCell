@@ -490,7 +490,7 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
                 if ([self leftUtilityButtonsWidth] > 0)
                     [self scrollToLeft:targetContentOffset];
             }
-            else
+            else if (velocity.x != 0)
             {
                 CGFloat rightThreshold = [self utilityButtonsPadding] - ([self rightUtilityButtonsWidth] / 2);
                 CGFloat leftThreshold = [self leftUtilityButtonsWidth] / 2;
