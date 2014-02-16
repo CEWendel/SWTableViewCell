@@ -131,7 +131,7 @@ Then, in the `tableView:cellForRowAtIndexPath:` method of your `UITableViewDeleg
 	__weak MyCustomTableViewCell *weakCell = cell;																					   
 	//Do any fixed setup here (will be executed once unless force is set to YES)
 	[cell setAppearanceWithBlock:^{
-		cell.containingTableView = tableView;
+		weakCell.containingTableView = tableView;
 		
 	    NSMutableArray *leftUtilityButtons = [NSMutableArray new];
 	    NSMutableArray *rightUtilityButtons = [NSMutableArray new];
@@ -156,10 +156,10 @@ Then, in the `tableView:cellForRowAtIndexPath:` method of your `UITableViewDeleg
 	                    [UIColor colorWithRed:1.0f green:0.231f blue:0.188 alpha:1.0f] 
 	                        title:@"Delete"];
 
-	    cell.leftUtilityButtons = leftUtilityButtons;
-	    cell.rightUtilityButtons = rightUtilityButtons;
+	    weakCell.leftUtilityButtons = leftUtilityButtons;
+	    weakCell.rightUtilityButtons = rightUtilityButtons;
     
-	    cell.delegate = self;
+	    weakCell.delegate = self;
 	} force:NO];
 	
     cell.customLabel.text = @"Some Text";
