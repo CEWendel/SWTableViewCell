@@ -27,12 +27,17 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
 @property (nonatomic, weak) UIView *scrollViewContentView;
 @property (nonatomic) CGFloat height;
 
+// The accessory button's view.
+@property (nonatomic, weak) UIView *accessoryButton;
+
 @property (nonatomic, strong) SWLongPressGestureRecognizer *longPressGestureRecognizer;
 @property (nonatomic, strong) UITapGestureRecognizer *tapGestureRecognizer;
 
 @end
 
 @implementation SWTableViewCell
+
+@synthesize accessoryButton;
 
 #pragma mark Initializers
 
@@ -47,6 +52,7 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
         [self initializer];
         self.rightUtilityButtons = rightUtilityButtons;
         self.leftUtilityButtons = leftUtilityButtons;
+        self.accessoryButton = nil;
     }
     
     return self;
@@ -131,7 +137,14 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
     UIView *contentViewParent = self;
     if (![NSStringFromClass([[self.subviews objectAtIndex:0] class]) isEqualToString:kTableViewCellContentView])
     {
-        // iOS 7
+        /*
+         * iOS 7
+         *
+         * This associates contentViewParent to the first subview which is,
+         * in iOS 7, a private class called UITableViewCellScrollView.
+         * The view heiarchy is
+         * UITableViewCell > UITableViewCellScrollView > UITableViewCellContentView
+         */
         contentViewParent = [self.subviews objectAtIndex:0];
     }
     NSArray *cellSubviews = [contentViewParent subviews];
@@ -146,8 +159,28 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
 
 - (void)layoutSubviews
 {
-
     [super layoutSubviews];
+    
+    // @todo accessoryView is untested.
+    if (self.accessoryView)
+    {
+        self.accessoryButton = self.accessoryView;
+    }
+    else
+    {
+        // Note: This will work with iOS 7 only.
+        UIView *scrollView = [self.subviews objectAtIndex:0];
+        for (UIView *view in scrollView.subviews)
+        {
+            // Assign the accessoryButton to the respective detail, detail
+            // disclosure or detail indicator button.
+            NSString *className = NSStringFromClass([view class]);
+            if ([view isKindOfClass:[UIButton class]] || [className hasSuffix:@"DetailDisclosureView"])
+            {
+                self.accessoryButton = view;
+            }
+        }
+    }
     
     self.cellScrollView.frame = CGRectMake(0, 0, CGRectGetWidth(self.bounds), self.height);
     self.cellScrollView.contentSize = CGSizeMake(CGRectGetWidth(self.bounds) + [self utilityButtonsPadding], self.height);
@@ -397,7 +430,7 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
     return CGPointMake([self.scrollViewButtonViewLeft utilityButtonsWidth], 0);
 }
 
-- (void) setAppearanceWithBlock:(void (^)())appearanceBlock force:(BOOL)force
+- (void)setAppearanceWithBlock:(void (^)())appearanceBlock force:(BOOL)force
 {
     if (force)
     {
@@ -563,7 +596,7 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
             CGFloat scrollViewWidth = MIN(scrollView.contentOffset.x - [self leftUtilityButtonsWidth], [self rightUtilityButtonsWidth]);
             
             // Expose the right button view
-            self.scrollViewButtonViewRight.frame = CGRectMake(scrollView.contentOffset.x + (CGRectGetWidth(self.bounds) - scrollViewWidth), 0.0f, scrollViewWidth,self.height);
+            self.scrollViewButtonViewRight.frame = CGRectMake(scrollView.contentOffset.x + (CGRectGetWidth(self.bounds) - scrollViewWidth), 0.0f, scrollViewWidth, self.height);
             
             CGRect scrollViewBounds = self.scrollViewButtonViewRight.bounds;
             scrollViewBounds.origin.x = MAX([self rightUtilityButtonsWidth] - scrollViewWidth, [self rightUtilityButtonsWidth] - scrollView.contentOffset.x);
@@ -574,6 +607,7 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
             [scrollView setContentOffset:CGPointMake([self leftUtilityButtonsWidth], 0)];
             self.tapGestureRecognizer.enabled = YES;
         }
+        [self updateAccessoryButtonPosition:scrollView.contentOffset.x];
     }
     else
     {
@@ -597,6 +631,7 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
             [scrollView setContentOffset:CGPointMake(0, 0)];
             self.tapGestureRecognizer.enabled = YES;
         }
+        [self updateAccessoryButtonPosition:scrollView.contentOffset.x];
     }
 }
 
@@ -613,6 +648,14 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
     {
         self.longPressGestureRecognizer.enabled = YES;
     }
+}
+
+- (void)updateAccessoryButtonPosition:(CGFloat)x
+{
+    CGFloat screenWidth = [[UIScreen mainScreen] bounds].size.width;
+    CGRect frame = self.accessoryButton.frame;
+    frame.origin.x = (screenWidth - 15.0f /* iOS padding constant */ - frame.size.width) - x;
+    self.accessoryButton.frame = frame;
 }
 
 @end
