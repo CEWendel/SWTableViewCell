@@ -360,6 +360,10 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
 
 - (void)hideUtilityButtonsAnimated:(BOOL)animated
 {
+    // No need to scroll if already centered
+    if ( _cellState == kCellStateCenter )
+        return;
+
     // Scroll back to center
     
     // Force the scroll back to run on the main thread because of weird scroll view bugs
@@ -546,15 +550,26 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
     self.tapGestureRecognizer.enabled = NO;
+    
+    if ([self.delegate respondsToSelector:@selector(swipeableTableViewCellShouldHideUtilityButtonsImmediatelyOnSwipe:)])
+    {
+        for (SWTableViewCell *cell in [self.containingTableView visibleCells]) {
+            if (cell != self && [cell isKindOfClass:[SWTableViewCell class]] && [self.delegate swipeableTableViewCellShouldHideUtilityButtonsImmediatelyOnSwipe:cell]) {
+                [cell hideUtilityButtonsAnimated:YES];
+            }
+        }
+    }
+    
     if (scrollView.contentOffset.x > [self leftUtilityButtonsWidth])
     {
         if ([self rightUtilityButtonsWidth] > 0)
         {
             if (self.delegate && [self.delegate respondsToSelector:@selector(swipeableTableViewCell:canSwipeToState:)])
             {
-                scrollView.scrollEnabled = [self.delegate swipeableTableViewCell:self canSwipeToState:kCellStateRight];
-                if (!scrollView.scrollEnabled)
+                BOOL shouldScroll = [self.delegate swipeableTableViewCell:self canSwipeToState:kCellStateRight];
+                if (!shouldScroll)
                 {
+                    scrollView.contentOffset = CGPointMake([self leftUtilityButtonsWidth], 0);
                     return;
                 }
             }
@@ -575,9 +590,10 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
         {
             if (self.delegate && [self.delegate respondsToSelector:@selector(swipeableTableViewCell:canSwipeToState:)])
             {
-                scrollView.scrollEnabled = [self.delegate swipeableTableViewCell:self canSwipeToState:kCellStateLeft];
-                if (!scrollView.scrollEnabled)
+                BOOL shouldScroll = [self.delegate swipeableTableViewCell:self canSwipeToState:kCellStateLeft];
+                if (!shouldScroll)
                 {
+                    scrollView.contentOffset = CGPointMake([self leftUtilityButtonsWidth], 0);
                     return;
                 }
             }

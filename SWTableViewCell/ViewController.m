@@ -254,4 +254,8 @@
     return YES;
 }
 
+- (BOOL)swipeableTableViewCellShouldHideUtilityButtonsImmediatelyOnSwipe:(SWTableViewCell *)cell {
+    return NO;
+}
+
 @end
