@@ -360,6 +360,8 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
 
 - (void)hideUtilityButtonsAnimated:(BOOL)animated
 {
+    if (_cellState == kCellStateCenter)
+        return;
     // Scroll back to center
     
     // Force the scroll back to run on the main thread because of weird scroll view bugs
