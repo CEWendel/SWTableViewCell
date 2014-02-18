@@ -607,7 +607,6 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
             [scrollView setContentOffset:CGPointMake([self leftUtilityButtonsWidth], 0)];
             self.tapGestureRecognizer.enabled = YES;
         }
-        [self updateAccessoryButtonPosition:scrollView.contentOffset.x];
     }
     else
     {
@@ -631,8 +630,8 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
             [scrollView setContentOffset:CGPointMake(0, 0)];
             self.tapGestureRecognizer.enabled = YES;
         }
-        [self updateAccessoryButtonPosition:scrollView.contentOffset.x];
     }
+    [self updateAccessoryButtonPosition:scrollView.contentOffset.x];
 }
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
@@ -652,9 +651,10 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
 
 - (void)updateAccessoryButtonPosition:(CGFloat)x
 {
+    CGFloat leftButtonWidth = [self leftUtilityButtonsWidth];
     CGFloat screenWidth = [[UIScreen mainScreen] bounds].size.width;
     CGRect frame = self.accessoryButton.frame;
-    frame.origin.x = (screenWidth - 15.0f /* iOS padding constant */ - frame.size.width) - x;
+    frame.origin.x = ((screenWidth - 15.0f /* iOS padding constant */ - frame.size.width) + leftButtonWidth) - x;
     self.accessoryButton.frame = frame;
 }
 
