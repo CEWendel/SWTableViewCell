@@ -566,9 +566,10 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
         {
             if (self.delegate && [self.delegate respondsToSelector:@selector(swipeableTableViewCell:canSwipeToState:)])
             {
-                scrollView.scrollEnabled = [self.delegate swipeableTableViewCell:self canSwipeToState:kCellStateRight];
-                if (!scrollView.scrollEnabled)
+                BOOL shouldScroll = [self.delegate swipeableTableViewCell:self canSwipeToState:kCellStateRight];
+                if (!shouldScroll)
                 {
+                    scrollView.contentOffset = CGPointMake([self leftUtilityButtonsWidth], 0);
                     return;
                 }
             }
@@ -589,9 +590,10 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
         {
             if (self.delegate && [self.delegate respondsToSelector:@selector(swipeableTableViewCell:canSwipeToState:)])
             {
-                scrollView.scrollEnabled = [self.delegate swipeableTableViewCell:self canSwipeToState:kCellStateLeft];
-                if (!scrollView.scrollEnabled)
+                BOOL shouldScroll = [self.delegate swipeableTableViewCell:self canSwipeToState:kCellStateLeft];
+                if (!shouldScroll)
                 {
+                    scrollView.contentOffset = CGPointMake([self leftUtilityButtonsWidth], 0);
                     return;
                 }
             }
