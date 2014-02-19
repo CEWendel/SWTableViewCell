@@ -360,6 +360,8 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
 
 - (void)hideUtilityButtonsAnimated:(BOOL)animated
 {
+    if (_cellState == kCellStateCenter)
+        return;
     // Scroll back to center
     
     // Force the scroll back to run on the main thread because of weird scroll view bugs
@@ -602,17 +604,31 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
 {
+    [self setCellState];
+    
     self.tapGestureRecognizer.enabled = YES;
 }
 
 - (void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView
 {
+    [self setCellState];
+    
     // Called when setContentOffset in hideUtilityButtonsAnimated: is done
     self.tapGestureRecognizer.enabled = YES;
     if (_cellState == kCellStateCenter)
     {
         self.longPressGestureRecognizer.enabled = YES;
     }
+}
+
+- (void)setCellState
+{
+    if ([self.cellScrollView contentOffset].x == [self leftUtilityButtonsWidth])
+        _cellState = kCellStateCenter;
+    else if ([self.cellScrollView contentOffset].x == 0)
+        _cellState = kCellStateLeft;
+    else if ([self.cellScrollView contentOffset].x == [self utilityButtonsPadding])
+        _cellState = kCellStateRight;
 }
 
 @end
