@@ -27,17 +27,12 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
 @property (nonatomic, weak) UIView *scrollViewContentView;
 @property (nonatomic) CGFloat height;
 
-// The accessory button's view.
-@property (nonatomic, weak) UIView *accessoryButton;
-
 @property (nonatomic, strong) SWLongPressGestureRecognizer *longPressGestureRecognizer;
 @property (nonatomic, strong) UITapGestureRecognizer *tapGestureRecognizer;
 
 @end
 
 @implementation SWTableViewCell
-
-@synthesize accessoryButton;
 
 #pragma mark Initializers
 
@@ -52,7 +47,6 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
         [self initializer];
         self.rightUtilityButtons = rightUtilityButtons;
         self.leftUtilityButtons = leftUtilityButtons;
-        self.accessoryButton = nil;
     }
     
     return self;
@@ -161,27 +155,6 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
 {
     [super layoutSubviews];
     
-    // @todo accessoryView is untested.
-    if (self.accessoryView)
-    {
-        self.accessoryButton = self.accessoryView;
-    }
-    else
-    {
-        // Note: This will work with iOS 7 only.
-        UIView *scrollView = [self.subviews objectAtIndex:0];
-        for (UIView *view in scrollView.subviews)
-        {
-            // Assign the accessoryButton to the respective detail, detail
-            // disclosure or detail indicator button.
-            NSString *className = NSStringFromClass([view class]);
-            if ([view isKindOfClass:[UIButton class]] || [className hasSuffix:@"DetailDisclosureView"])
-            {
-                self.accessoryButton = view;
-            }
-        }
-    }
-    
     self.cellScrollView.frame = CGRectMake(0, 0, CGRectGetWidth(self.bounds), self.height);
     self.cellScrollView.contentSize = CGSizeMake(CGRectGetWidth(self.bounds) + [self utilityButtonsPadding], self.height);
     self.cellScrollView.contentOffset = CGPointMake([self leftUtilityButtonsWidth], 0);
@@ -193,6 +166,33 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
     self.cellScrollView.scrollEnabled = YES;
     self.tapGestureRecognizer.enabled = YES;
     
+    // @todo accessoryView is currently not supported.
+    if (self.accessoryView)
+    {
+        // Nothing to do yet.
+    }
+    else
+    {
+        UIView *scrollView = [self.subviews objectAtIndex:0];
+        UIView *accessoryButton = nil;
+        for (UIView *tView in scrollView.subviews)
+        {
+            // Find the respective accessory button and remove it from the
+            // superview.
+            NSString *className = NSStringFromClass([tView class]);
+            if ([tView isKindOfClass:[UIButton class]] || [className hasSuffix:@"DetailDisclosureView"])
+            {
+                [tView removeFromSuperview];
+                accessoryButton = tView;
+                break;
+            }
+        }
+        // Now move it to our view.
+        if (accessoryButton)
+        {
+            [self.cellScrollView addSubview:accessoryButton];
+        }
+    }
 }
 
 #pragma mark - Properties
@@ -452,7 +452,7 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
     _cellState = kCellStateRight;
     
     self.longPressGestureRecognizer.enabled = NO;
-    self.tapGestureRecognizer.enabled = NO;
+    //self.tapGestureRecognizer.enabled = NO;
     
     if ([self.delegate respondsToSelector:@selector(swipeableTableViewCell:scrollingToState:)])
     {
@@ -475,7 +475,7 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
     _cellState = kCellStateCenter;
     
     self.longPressGestureRecognizer.enabled = YES;
-    self.tapGestureRecognizer.enabled = NO;
+    //self.tapGestureRecognizer.enabled = NO;
 
     if ([self.delegate respondsToSelector:@selector(swipeableTableViewCell:scrollingToState:)])
     {
@@ -489,7 +489,7 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
     _cellState = kCellStateLeft;
     
     self.longPressGestureRecognizer.enabled = NO;
-    self.tapGestureRecognizer.enabled = NO;
+    //self.tapGestureRecognizer.enabled = NO;
     
     if ([self.delegate respondsToSelector:@selector(swipeableTableViewCell:scrollingToState:)])
     {
@@ -580,7 +580,7 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
-    self.tapGestureRecognizer.enabled = NO;
+    //self.tapGestureRecognizer.enabled = NO;
     if (scrollView.contentOffset.x > [self leftUtilityButtonsWidth])
     {
         if ([self rightUtilityButtonsWidth] > 0)
@@ -631,7 +631,6 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
             self.tapGestureRecognizer.enabled = YES;
         }
     }
-    [self updateAccessoryButtonPosition:scrollView.contentOffset.x];
 }
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
@@ -647,15 +646,6 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
     {
         self.longPressGestureRecognizer.enabled = YES;
     }
-}
-
-- (void)updateAccessoryButtonPosition:(CGFloat)x
-{
-    CGFloat leftButtonWidth = [self leftUtilityButtonsWidth];
-    CGFloat screenWidth = [[UIScreen mainScreen] bounds].size.width;
-    CGRect frame = self.accessoryButton.frame;
-    frame.origin.x = ((screenWidth - 15.0f /* iOS padding constant */ - frame.size.width) + leftButtonWidth) - x;
-    self.accessoryButton.frame = frame;
 }
 
 @end
