@@ -106,7 +106,7 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
     
     UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self
                                                                                            action:@selector(scrollViewUp:)];
-    tapGestureRecognizer.cancelsTouchesInView = NO;
+    tapGestureRecognizer.cancelsTouchesInView = YES;
     [cellScrollView addGestureRecognizer:tapGestureRecognizer];
     
     self.tapGestureRecognizer = tapGestureRecognizer;
@@ -166,10 +166,9 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
     self.cellScrollView.scrollEnabled = YES;
     self.tapGestureRecognizer.enabled = YES;
     
-    // @todo accessoryView is currently not supported.
     if (self.accessoryView)
     {
-        // Nothing to do yet.
+        // @todo accessoryView is currently not supported.
     }
     else
     {
@@ -452,7 +451,7 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
     _cellState = kCellStateRight;
     
     self.longPressGestureRecognizer.enabled = NO;
-    //self.tapGestureRecognizer.enabled = NO;
+    self.tapGestureRecognizer.enabled = NO;
     
     if ([self.delegate respondsToSelector:@selector(swipeableTableViewCell:scrollingToState:)])
     {
@@ -475,7 +474,7 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
     _cellState = kCellStateCenter;
     
     self.longPressGestureRecognizer.enabled = YES;
-    //self.tapGestureRecognizer.enabled = NO;
+    self.tapGestureRecognizer.enabled = NO;
 
     if ([self.delegate respondsToSelector:@selector(swipeableTableViewCell:scrollingToState:)])
     {
@@ -489,7 +488,7 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
     _cellState = kCellStateLeft;
     
     self.longPressGestureRecognizer.enabled = NO;
-    //self.tapGestureRecognizer.enabled = NO;
+    self.tapGestureRecognizer.enabled = NO;
     
     if ([self.delegate respondsToSelector:@selector(swipeableTableViewCell:scrollingToState:)])
     {
