@@ -619,6 +619,12 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
     {
         self.longPressGestureRecognizer.enabled = YES;
     }
+    
+    if ([self.delegate respondsToSelector:@selector(utilityButtonsHidden:)])
+    {
+        [self.delegate utilityButtonsHidden:self];
+    }
+
 }
 
 - (void)setCellState
