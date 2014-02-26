@@ -27,5 +27,14 @@
     [self addObject:button];
 }
 
+- (void)sw_addUtilityButtonWithColor:(UIColor *)color icon:(UIImage *)icon highlightedIcon:(UIImage *)highlightedIcon selectedIcon:(UIImage *)selectedIcon
+{
+    UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
+    button.backgroundColor = color;
+    [button setImage:icon forState:UIControlStateNormal];
+    [button setImage:highlightedIcon forState:UIControlStateHighlighted];
+    [button setImage:selectedIcon forState:UIControlStateSelected];
+    [self addObject:button];
+}
 @end
 
