@@ -12,5 +12,5 @@
 
 - (void)sw_addUtilityButtonWithColor:(UIColor *)color title:(NSString *)title;
 - (void)sw_addUtilityButtonWithColor:(UIColor *)color icon:(UIImage *)icon;
-
+- (void)sw_addUtilityButtonWithColor:(UIColor *)color icon:(UIImage *)icon highlightedIcon:(UIImage *)highlightedIcon selectedIcon:(UIImage *)selectedIcon;
 @end
