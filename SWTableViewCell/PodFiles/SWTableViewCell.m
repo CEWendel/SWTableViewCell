@@ -30,6 +30,8 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
 @property (nonatomic, strong) SWLongPressGestureRecognizer *longPressGestureRecognizer;
 @property (nonatomic, strong) UITapGestureRecognizer *tapGestureRecognizer;
 
+@property (nonatomic, assign, getter = isShowingSelection) BOOL showingSelection; // YES if we are currently highlighting the cell for selection
+
 @end
 
 @implementation SWTableViewCell
@@ -43,7 +45,6 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
     {
         self.height = containingTableView.rowHeight;
         self.containingTableView = containingTableView;
-        self.highlighted = NO;
         [self initializer];
         self.rightUtilityButtons = rightUtilityButtons;
         self.leftUtilityButtons = leftUtilityButtons;
@@ -142,11 +143,13 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
     }
     
     self.containingTableView.directionalLockEnabled = YES;
+    
+    self.showingSelection = NO;
+    self.highlighted = NO;
 }
 
 - (void)layoutSubviews
 {
-
     [super layoutSubviews];
     
     self.cellScrollView.frame = CGRectMake(0, 0, CGRectGetWidth(self.bounds), self.height);
@@ -159,7 +162,7 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
     self.scrollViewContentView.frame = CGRectMake([self leftUtilityButtonsWidth], 0, CGRectGetWidth(self.bounds), self.height);
     self.cellScrollView.scrollEnabled = YES;
     self.tapGestureRecognizer.enabled = YES;
-    
+    self.showingSelection = NO;
 }
 
 #pragma mark - Properties
@@ -258,10 +261,11 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
         if ([self.containingTableView.delegate respondsToSelector:@selector(tableView:didSelectRowAtIndexPath:)])
         {
             NSIndexPath *cellIndexPath = [self.containingTableView indexPathForCell:self];
+            self.showingSelection = YES;
             [self setSelected:YES];
             [self.containingTableView selectRowAtIndexPath:cellIndexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
             [self.containingTableView.delegate tableView:self.containingTableView didSelectRowAtIndexPath:cellIndexPath];
-            [self.containingTableView deselectRowAtIndexPath:cellIndexPath animated:NO];
+            
             // Make the selection visible
             NSTimer *endHighlightTimer = [NSTimer scheduledTimerWithTimeInterval:0.20
                                                                           target:self
@@ -288,6 +292,7 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
 
 - (void)timerEndCellHighlight:(id)sender
 {
+    self.showingSelection = NO;
     [self setSelected:NO];
 }
 
@@ -315,15 +320,30 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
 
 - (void)setSelected:(BOOL)selected
 {
-    [self setHighlighted:selected];
+    [self updateHighlight:selected animated:NO];
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated
 {
-    [self setHighlighted:selected];
+    [self updateHighlight:selected animated:animated];
 }
 
-#pragma mark Height methods
+#pragma mark - Highlighting methods
+
+- (void)updateHighlight:(BOOL)highlight animated:(BOOL)animated;
+{
+    if (highlight) {
+        [self setHighlighted:YES animated:animated];
+    } else {
+        // We are unhighlighting
+        if (!self.isShowingSelection) {
+            // Make sure we only deselect if we are done showing the selection with a highlight
+            [self setHighlighted:NO];
+        }
+    }
+}
+
+#pragma mark -  Height methods
 
 - (void)setCellHeight:(CGFloat)height
 {
@@ -397,7 +417,7 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
     return CGPointMake([self.scrollViewButtonViewLeft utilityButtonsWidth], 0);
 }
 
-- (void) setAppearanceWithBlock:(void (^)())appearanceBlock force:(BOOL)force
+- (void)setAppearanceWithBlock:(void (^)())appearanceBlock force:(BOOL)force
 {
     if (force)
     {
