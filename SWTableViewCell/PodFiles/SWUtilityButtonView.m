@@ -73,7 +73,7 @@
                                                                                                                                       action:_utilityButtonSelector];
         utilityButtonTapGestureRecognizer.buttonIndex = utilityButtonsCounter;
         [utilityButton addGestureRecognizer:utilityButtonTapGestureRecognizer];
-        [self addSubview: utilityButton];
+        [self addSubview:utilityButton];
         utilityButtonsCounter++;
     }
 }
