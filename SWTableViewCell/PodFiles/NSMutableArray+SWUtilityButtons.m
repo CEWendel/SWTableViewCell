@@ -7,12 +7,13 @@
 //
 
 #import "NSMutableArray+SWUtilityButtons.h"
+#import "SWButton.h"
 
 @implementation NSMutableArray (SWUtilityButtons)
 
 - (void)sw_addUtilityButtonWithColor:(UIColor *)color title:(NSString *)title
 {
-    UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
+    SWButton *button = [SWButton buttonWithType:UIButtonTypeCustom];
     button.backgroundColor = color;
     [button setTitle:title forState:UIControlStateNormal];
     [button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
@@ -21,7 +22,7 @@
 
 - (void)sw_addUtilityButtonWithColor:(UIColor *)color icon:(UIImage *)icon
 {
-    UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
+    SWButton *button = [SWButton buttonWithType:UIButtonTypeCustom];
     button.backgroundColor = color;
     [button setImage:icon forState:UIControlStateNormal];
     [self addObject:button];

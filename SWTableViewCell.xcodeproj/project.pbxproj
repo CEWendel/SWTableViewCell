@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1F39D24118C5394C00C47E3F /* UITableView+SWCellSelection.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F39D24018C5394C00C47E3F /* UITableView+SWCellSelection.m */; };
+		1F39D24418C5553E00C47E3F /* SWButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F39D24318C5553E00C47E3F /* SWButton.m */; };
 		810308911846579B00C378F0 /* NSMutableArray+SWUtilityButtons.m in Sources */ = {isa = PBXBuildFile; fileRef = 810308861846579B00C378F0 /* NSMutableArray+SWUtilityButtons.m */; };
 		810308921846579B00C378F0 /* SWCellScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 810308881846579B00C378F0 /* SWCellScrollView.m */; };
 		810308931846579B00C378F0 /* SWLongPressGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 8103088A1846579B00C378F0 /* SWLongPressGestureRecognizer.m */; };
@@ -34,6 +36,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		1F39D23F18C5394C00C47E3F /* UITableView+SWCellSelection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UITableView+SWCellSelection.h"; sourceTree = "<group>"; };
+		1F39D24018C5394C00C47E3F /* UITableView+SWCellSelection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UITableView+SWCellSelection.m"; sourceTree = "<group>"; };
+		1F39D24218C5553E00C47E3F /* SWButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWButton.h; sourceTree = "<group>"; };
+		1F39D24318C5553E00C47E3F /* SWButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWButton.m; sourceTree = "<group>"; };
 		810308851846579B00C378F0 /* NSMutableArray+SWUtilityButtons.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableArray+SWUtilityButtons.h"; sourceTree = "<group>"; };
 		810308861846579B00C378F0 /* NSMutableArray+SWUtilityButtons.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableArray+SWUtilityButtons.m"; sourceTree = "<group>"; };
 		810308871846579B00C378F0 /* SWCellScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWCellScrollView.h; sourceTree = "<group>"; };
@@ -104,6 +110,10 @@
 				8103088E1846579B00C378F0 /* SWUtilityButtonTapGestureRecognizer.m */,
 				8103088F1846579B00C378F0 /* SWUtilityButtonView.h */,
 				810308901846579B00C378F0 /* SWUtilityButtonView.m */,
+				1F39D23F18C5394C00C47E3F /* UITableView+SWCellSelection.h */,
+				1F39D24018C5394C00C47E3F /* UITableView+SWCellSelection.m */,
+				1F39D24218C5553E00C47E3F /* SWButton.h */,
+				1F39D24318C5553E00C47E3F /* SWButton.m */,
 			);
 			path = PodFiles;
 			sourceTree = "<group>";
@@ -247,10 +257,12 @@
 				AF34B77517DEE2B400BD9082 /* main.m in Sources */,
 				AF34B77917DEE2B400BD9082 /* AppDelegate.m in Sources */,
 				810308921846579B00C378F0 /* SWCellScrollView.m in Sources */,
+				1F39D24418C5553E00C47E3F /* SWButton.m in Sources */,
 				810308911846579B00C378F0 /* NSMutableArray+SWUtilityButtons.m in Sources */,
 				810308961846579B00C378F0 /* SWUtilityButtonView.m in Sources */,
 				810308A5184D688D00C378F0 /* UMTableViewCell.m in Sources */,
 				810308941846579B00C378F0 /* SWTableViewCell.m in Sources */,
+				1F39D24118C5394C00C47E3F /* UITableView+SWCellSelection.m in Sources */,
 				AF34B78517DEE2B800BD9082 /* ViewController.m in Sources */,
 				810308951846579B00C378F0 /* SWUtilityButtonTapGestureRecognizer.m in Sources */,
 				810308931846579B00C378F0 /* SWLongPressGestureRecognizer.m in Sources */,

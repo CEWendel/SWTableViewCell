@@ -71,11 +71,27 @@
     return [_testArray[section] count];
 }
 
+/*
+- (NSIndexPath *)tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    NSLog(@"Did deselect %d,%d", indexPath.section, indexPath.row);
+    return indexPath;
+}
+
+- (NSIndexPath *)tableView:(UITableView *)tableView willDeselectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    NSLog(@"Will deselect %d,%d", indexPath.section, indexPath.row);
+    return indexPath;
+}
+
+- (void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    NSLog(@"Did deselect %d,%d", indexPath.section, indexPath.row);
+}
+*/
+
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    NSLog(@"cell selected at index path %d:%d", indexPath.section, indexPath.row);
-    NSLog(@"selected cell index path is %@", [self.tableView indexPathForSelectedRow]);
-    
-    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    NSLog(@"Did select %d,%d", indexPath.section, indexPath.row);
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
