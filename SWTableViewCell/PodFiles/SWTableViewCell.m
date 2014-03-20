@@ -151,6 +151,7 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
     
     _containingTableView.directionalLockEnabled = YES;
     
+    self.height = _containingTableView.rowHeight;
     [self.tapGestureRecognizer requireGestureRecognizerToFail:_containingTableView.panGestureRecognizer];
 }
 
