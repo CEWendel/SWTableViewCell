@@ -36,6 +36,9 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
 
 @implementation SWTableViewCell
 
+UITableViewCellAccessoryType _myAccessoryType;
+UIView *_myAccessoryView;
+
 #pragma mark Initializers
 
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier containingTableView:(UITableView *)containingTableView leftUtilityButtons:(NSArray *)leftUtilityButtons rightUtilityButtons:(NSArray *)rightUtilityButtons
@@ -170,6 +173,16 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
     self.cellScrollView.scrollEnabled = YES;
     self.tapGestureRecognizer.enabled = YES;
     self.showingSelection = NO;
+}
+
+- (void)setAccessoryType:(UITableViewCellAccessoryType)accessoryType {
+    _myAccessoryType = accessoryType;
+    [super setAccessoryType:accessoryType];
+}
+
+-(void)setAccessoryView:(UIView *)accessoryView {
+    _myAccessoryView = accessoryView;
+    [super setAccessoryView:accessoryView];
 }
 
 #pragma mark - Properties
@@ -467,6 +480,8 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
 
 - (void)scrollToCenter:(inout CGPoint *)targetContentOffset
 {
+    [self restoreAccessories];
+    
     targetContentOffset->x = [self leftUtilityButtonsWidth];
     _cellState = kCellStateCenter;
     
@@ -481,6 +496,8 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
 
 - (void)scrollToLeft:(inout CGPoint *)targetContentOffset
 {
+    [self restoreAccessories];
+
     targetContentOffset->x = 0;
     _cellState = kCellStateLeft;
     
@@ -502,7 +519,21 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
     }
 }
 
+-(void)restoreAccessories {
+    if (_myAccessoryView != nil) {
+        [super setAccessoryView:_myAccessoryView];
+    } else {
+        [super setAccessoryType:_myAccessoryType];
+    }
+}
+
 #pragma mark UIScrollViewDelegate
+
+-(void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
+    //Hide accessories
+    [super setAccessoryView:nil];
+    [super setAccessoryType:UITableViewCellAccessoryNone];
+}
 
 - (void)scrollViewWillEndDragging:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset
 {
