@@ -44,8 +44,8 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
     if (self)
     {
         self.height = containingTableView.rowHeight;
-        self.containingTableView = containingTableView;
         [self initializer];
+        self.containingTableView = containingTableView;
         self.rightUtilityButtons = rightUtilityButtons;
         self.leftUtilityButtons = leftUtilityButtons;
     }
@@ -91,13 +91,6 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
 
 - (void)initializer
 {
-    // Check if the UITableView will display Indices on the right. If that's the case, add a padding
-    if([self.containingTableView.dataSource respondsToSelector:@selector(sectionIndexTitlesForTableView:)])
-    {
-        NSArray *indices = [self.containingTableView.dataSource sectionIndexTitlesForTableView:self.containingTableView];
-        additionalRightPadding = indices == nil ? 0 : kSectionIndexWidth;
-    }
-    
     // Set up scroll view that will host our cell content
     SWCellScrollView *cellScrollView = [[SWCellScrollView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.bounds), self.height)];
     cellScrollView.delegate = self;
@@ -142,10 +135,24 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
         [self.scrollViewContentView addSubview:subview];
     }
     
-    self.containingTableView.directionalLockEnabled = YES;
-    
     self.showingSelection = NO;
     self.highlighted = NO;
+}
+
+- (void)setContainingTableView:(UITableView *)containingTableView
+{
+    _containingTableView = containingTableView;
+    // Check if the UITableView will display Indices on the right. If that's the case, add a padding
+    if([_containingTableView.dataSource respondsToSelector:@selector(sectionIndexTitlesForTableView:)])
+    {
+        NSArray *indices = [_containingTableView.dataSource sectionIndexTitlesForTableView:_containingTableView];
+        additionalRightPadding = indices == nil ? 0 : kSectionIndexWidth;
+    }
+    
+    _containingTableView.directionalLockEnabled = YES;
+    
+    self.height = _containingTableView.rowHeight;
+    [self.tapGestureRecognizer requireGestureRecognizerToFail:_containingTableView.panGestureRecognizer];
 }
 
 - (void)layoutSubviews
