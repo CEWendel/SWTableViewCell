@@ -160,9 +160,9 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
     self.scrollViewButtonViewRight.frame = CGRectMake(CGRectGetWidth(self.bounds), 0, 0, self.height);
     self.scrollViewButtonViewRight.layer.masksToBounds = YES;
     self.scrollViewContentView.frame = CGRectMake([self leftUtilityButtonsWidth], 0, CGRectGetWidth(self.bounds), self.height);
-    self.cellScrollView.scrollEnabled = YES;
     self.tapGestureRecognizer.enabled = YES;
     self.showingSelection = NO;
+    self.cellScrollView.scrollEnabled = !self.highlighted;
 }
 
 #pragma mark - Properties
@@ -265,14 +265,6 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
             [self setSelected:YES];
             [self.containingTableView selectRowAtIndexPath:cellIndexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
             [self.containingTableView.delegate tableView:self.containingTableView didSelectRowAtIndexPath:cellIndexPath];
-            
-            // Make the selection visible
-            NSTimer *endHighlightTimer = [NSTimer scheduledTimerWithTimeInterval:0.20
-                                                                          target:self
-                                                                        selector:@selector(timerEndCellHighlight:)
-                                                                        userInfo:nil
-                                                                         repeats:NO];
-            [[NSRunLoop currentRunLoop] addTimer:endHighlightTimer forMode:NSRunLoopCommonModes];
         }
     }
     else
@@ -332,15 +324,7 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
 
 - (void)updateHighlight:(BOOL)highlight animated:(BOOL)animated;
 {
-    if (highlight) {
-        [self setHighlighted:YES animated:animated];
-    } else {
-        // We are unhighlighting
-        if (!self.isShowingSelection) {
-            // Make sure we only deselect if we are done showing the selection with a highlight
-            [self setHighlighted:NO];
-        }
-    }
+    [self setHighlighted:highlight animated:animated];
 }
 
 #pragma mark -  Height methods
