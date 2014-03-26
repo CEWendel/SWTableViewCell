@@ -17,8 +17,8 @@ Utility buttons that become visible on the left side of the Table View Cell when
 <p align="center"><img src="http://i.imgur.com/qt6aISz.gif"/></p>
 
 ###Features
-* Dynamic utility button scalling. As you add more buttons to a cell, the other buttons on that side get smaller to make room
-* Smart selection: The cell will pick up touch events and either scroll the cell back to center or fire the delegate method `- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath` 
+* Dynamic utility button scaling. As you add more buttons to a cell, the other buttons on that side get smaller to make room
+* Smart selection: The cell will pick up touch events and either scroll the cell back to center or fire the delegate method `- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath`
 <p align="center"><img src="http://i.imgur.com/TYGx9h8.gif"/></p>
 So the cell will not be considered selected when the user touches the cell while utility buttons are visible, instead the cell will slide back into place (same as iOS 7 Mail App functionality)
 * Create utilty buttons with either a title or an icon along with a RGB color
@@ -227,6 +227,16 @@ The index signifies which utility button the user pressed, for each side the but
 (This is all code from the included example project)
 
 ###Gotchas
+
+#### Selection
+* `SWTableViewCell` will call the following delegate methods during selection:
+```objc
+    – tableView:willSelectRowAtIndexPath:
+    – tableView:didSelectRowAtIndexPath:
+    – tableView:willDeselectRowAtIndexPath:
+    – tableView:didDeselectRowAtIndexPath:
+```
+* `SWTableViewCell` supports multiple selection and editing - revealing the utility buttons - during selection by setting the appropriate `UITableView` properties (`allowsMultipleSelection` and `allowsSelectionDuringEditing`, respectively).
 
 #### Custom `UITableViewCell` content
 * Accessing view of the cell object or managing the predefined content still works fine. So for example if you change the cell's `imageView` or `backgroundView`, `SWTableViewCell` will still work as expected

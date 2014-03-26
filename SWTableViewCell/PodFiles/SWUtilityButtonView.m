@@ -9,6 +9,7 @@
 #import "SWUtilityButtonView.h"
 #import "SWUtilityButtonTapGestureRecognizer.h"
 #import "SWConstants.h"
+#import "SWTableViewCell.h"
 
 @implementation SWUtilityButtonView
 
