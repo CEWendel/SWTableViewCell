@@ -10,6 +10,8 @@
 #import <UIKit/UIGestureRecognizerSubclass.h>
 #import "SWUtilityButtonView.h"
 
+#define LONG_PRESS_MINIMUM_DURATION 0.16f
+
 static NSString * const kTableViewCellContentView = @"UITableViewCellContentView";
 
 #pragma mark - SWUtilityButtonView
@@ -108,7 +110,8 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
     SWLongPressGestureRecognizer *longPressGestureRecognizer = [[SWLongPressGestureRecognizer alloc] initWithTarget:self
                                                                                                              action:@selector(scrollViewPressed:)];
     longPressGestureRecognizer.cancelsTouchesInView = NO;
-    longPressGestureRecognizer.minimumPressDuration = 0.1;
+    longPressGestureRecognizer.minimumPressDuration = LONG_PRESS_MINIMUM_DURATION;
+    longPressGestureRecognizer.delegate = self;
     [cellScrollView addGestureRecognizer:longPressGestureRecognizer];
     
     self.longPressGestureRecognizer = longPressGestureRecognizer;
@@ -629,6 +632,8 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
     }
 }
 
+#pragma mark - Cell State
+
 - (void)setCellState
 {
     if ([self.cellScrollView contentOffset].x == [self leftUtilityButtonsWidth])
@@ -637,6 +642,13 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
         _cellState = kCellStateLeft;
     else if ([self.cellScrollView contentOffset].x == [self utilityButtonsPadding])
         _cellState = kCellStateRight;
+}
+
+#pragma mark - UIGestureRecognizerDelegate
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
+    // Return YES so the pan gesture of the containing table view is not cancelled by the long press recognizer
+    return YES;
 }
 
 @end
