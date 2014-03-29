@@ -12,5 +12,6 @@
 #define kUtilityButtonsWidthMax 260
 #define kUtilityButtonWidthDefault 90
 #define kSectionIndexWidth 15
+#define kLongPressMinimumDuration 0.16f
 
 #endif

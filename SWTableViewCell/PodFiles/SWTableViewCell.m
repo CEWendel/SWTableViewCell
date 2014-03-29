@@ -10,8 +10,6 @@
 #import <UIKit/UIGestureRecognizerSubclass.h>
 #import "SWUtilityButtonView.h"
 
-#define LONG_PRESS_MINIMUM_DURATION 0.16f
-
 static NSString * const kTableViewCellContentView = @"UITableViewCellContentView";
 
 #pragma mark - SWUtilityButtonView
@@ -110,7 +108,7 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
     SWLongPressGestureRecognizer *longPressGestureRecognizer = [[SWLongPressGestureRecognizer alloc] initWithTarget:self
                                                                                                              action:@selector(scrollViewPressed:)];
     longPressGestureRecognizer.cancelsTouchesInView = NO;
-    longPressGestureRecognizer.minimumPressDuration = LONG_PRESS_MINIMUM_DURATION;
+    longPressGestureRecognizer.minimumPressDuration = kLongPressMinimumDuration;
     longPressGestureRecognizer.delegate = self;
     [cellScrollView addGestureRecognizer:longPressGestureRecognizer];
     
@@ -299,20 +297,6 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
 {
     [super setBackgroundColor:backgroundColor];
     _scrollViewContentView.backgroundColor = backgroundColor;
-}
-
-- (void)setHighlighted:(BOOL)highlighted
-{
-    [super setHighlighted:highlighted animated:NO];
-    self.scrollViewButtonViewLeft.hidden = highlighted;
-    self.scrollViewButtonViewRight.hidden = highlighted;
-}
-
-- (void)setHighlighted:(BOOL)highlighted animated:(BOOL)animated
-{
-    [super setHighlighted:highlighted animated:animated];
-    self.scrollViewButtonViewLeft.hidden = highlighted;
-    self.scrollViewButtonViewRight.hidden = highlighted;
 }
 
 - (void)setSelected:(BOOL)selected

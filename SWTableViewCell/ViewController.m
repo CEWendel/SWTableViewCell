@@ -75,7 +75,7 @@
     NSLog(@"cell selected at index path %d:%d", indexPath.section, indexPath.row);
     NSLog(@"selected cell index path is %@", [self.tableView indexPathForSelectedRow]);
     
-    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+//    [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
