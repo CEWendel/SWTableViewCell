@@ -312,22 +312,6 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
     [self updateHighlight:selected animated:animated];
 }
 
-- (void)prepareForReuse
-{
-    /*
-     - (void)setCellState
-     {
-     if ([self.cellScrollView contentOffset].x == [self leftUtilityButtonsWidth])
-     _cellState = kCellStateCenter;
-     else if ([self.cellScrollView contentOffset].x == 0)
-     _cellState = kCellStateLeft;
-     else if ([self.cellScrollView contentOffset].x == [self utilityButtonsPadding])
-     _cellState = kCellStateRight;
-     }
-     */
-    [super prepareForReuse];
-}
-
 #pragma mark - Highlighting methods
 
 - (void)updateHighlight:(BOOL)highlight animated:(BOOL)animated;
