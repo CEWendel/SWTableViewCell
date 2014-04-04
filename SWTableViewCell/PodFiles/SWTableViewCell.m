@@ -160,6 +160,7 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
 {
     [super layoutSubviews];
     
+    _cellState = kCellStateCenter;
     self.cellScrollView.frame = CGRectMake(0, 0, CGRectGetWidth(self.bounds), self.height);
     self.cellScrollView.contentSize = CGSizeMake(CGRectGetWidth(self.bounds) + [self utilityButtonsPadding], self.height);
     self.cellScrollView.contentOffset = CGPointMake([self leftUtilityButtonsWidth], 0);
@@ -309,6 +310,22 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
 {
     [super setSelected:selected animated:animated];
     [self updateHighlight:selected animated:animated];
+}
+
+- (void)prepareForReuse
+{
+    /*
+     - (void)setCellState
+     {
+     if ([self.cellScrollView contentOffset].x == [self leftUtilityButtonsWidth])
+     _cellState = kCellStateCenter;
+     else if ([self.cellScrollView contentOffset].x == 0)
+     _cellState = kCellStateLeft;
+     else if ([self.cellScrollView contentOffset].x == [self utilityButtonsPadding])
+     _cellState = kCellStateRight;
+     }
+     */
+    [super prepareForReuse];
 }
 
 #pragma mark - Highlighting methods
