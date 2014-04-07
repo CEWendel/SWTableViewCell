@@ -166,7 +166,7 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
     self.scrollViewButtonViewRight.frame = CGRectMake(CGRectGetWidth(self.bounds), 0, 0, self.height);
     self.scrollViewButtonViewRight.layer.masksToBounds = YES;
     self.scrollViewContentView.frame = CGRectMake([self leftUtilityButtonsWidth], 0, CGRectGetWidth(self.bounds), self.height);
-    self.tapGestureRecognizer.enabled = YES;
+    self.tapGestureRecognizer.enabled =
     self.cellScrollView.scrollEnabled = !self.selected && !self.editing;
 }
 
@@ -260,6 +260,12 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
     if (_cellState == kCellStateCenter)
     {
         NSIndexPath *cellIndexPath = [self.containingTableView indexPathForCell:self];
+        if ([self.containingTableView.delegate respondsToSelector:@selector(tableView:willSelectRowAtIndexPath:)])
+        {
+            [self.containingTableView.delegate tableView:self.containingTableView willSelectRowAtIndexPath:cellIndexPath];
+        }
+        
+        // Select the cell
         [self setSelected:YES];
         [self.containingTableView selectRowAtIndexPath:cellIndexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
         if ([self.containingTableView.delegate respondsToSelector:@selector(tableView:didSelectRowAtIndexPath:)])
@@ -274,6 +280,12 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
     if (_cellState == kCellStateCenter)
     {
         NSIndexPath *cellIndexPath = [self.containingTableView indexPathForCell:self];
+        if ([self.containingTableView.delegate respondsToSelector:@selector(tableView:willDeselectRowAtIndexPath:)])
+        {
+            [self.containingTableView.delegate tableView:self.containingTableView willDeselectRowAtIndexPath:cellIndexPath];
+        }
+        
+        // Deselect the cell
         [self setSelected:NO];
         [self.containingTableView deselectRowAtIndexPath:cellIndexPath animated:YES];
         if ([self.containingTableView.delegate respondsToSelector:@selector(tableView:didDeselectRowAtIndexPath:)])
