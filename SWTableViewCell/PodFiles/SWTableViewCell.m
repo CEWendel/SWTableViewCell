@@ -30,8 +30,6 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
 @property (nonatomic, strong) SWLongPressGestureRecognizer *longPressGestureRecognizer;
 @property (nonatomic, strong) UITapGestureRecognizer *tapGestureRecognizer;
 
-@property (nonatomic, assign, getter = isShowingSelection) BOOL showingSelection; // YES if we are currently highlighting the cell for selection
-
 @end
 
 @implementation SWTableViewCell
@@ -136,7 +134,6 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
         [self.scrollViewContentView addSubview:subview];
     }
     
-    self.showingSelection = NO;
     self.highlighted = NO;
 }
 
@@ -170,8 +167,7 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
     self.scrollViewButtonViewRight.layer.masksToBounds = YES;
     self.scrollViewContentView.frame = CGRectMake([self leftUtilityButtonsWidth], 0, CGRectGetWidth(self.bounds), self.height);
     self.tapGestureRecognizer.enabled = YES;
-    self.showingSelection = NO;
-    self.cellScrollView.scrollEnabled = !self.selected;
+    self.cellScrollView.scrollEnabled = !self.selected && !self.editing;
 }
 
 #pragma mark - Properties
@@ -247,15 +243,10 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
 {
     if(_cellState == kCellStateCenter)
     {
-        // Selection
-        if ([self.containingTableView.delegate respondsToSelector:@selector(tableView:didSelectRowAtIndexPath:)])
-        {
-            NSIndexPath *cellIndexPath = [self.containingTableView indexPathForCell:self];
-            self.showingSelection = YES;
-            [self setSelected:YES];
-            [self.containingTableView selectRowAtIndexPath:cellIndexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
-            [self.containingTableView.delegate tableView:self.containingTableView didSelectRowAtIndexPath:cellIndexPath];
-        }
+        if (self.selected)
+            [self deselectCell];
+        else
+            [self selectCell];
     }
     else
     {
@@ -268,12 +259,26 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
 {
     if (_cellState == kCellStateCenter)
     {
+        NSIndexPath *cellIndexPath = [self.containingTableView indexPathForCell:self];
+        [self setSelected:YES];
+        [self.containingTableView selectRowAtIndexPath:cellIndexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
         if ([self.containingTableView.delegate respondsToSelector:@selector(tableView:didSelectRowAtIndexPath:)])
         {
-            NSIndexPath *cellIndexPath = [self.containingTableView indexPathForCell:self];
-            [self.containingTableView selectRowAtIndexPath:cellIndexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
             [self.containingTableView.delegate tableView:self.containingTableView didSelectRowAtIndexPath:cellIndexPath];
-            [self.containingTableView deselectRowAtIndexPath:cellIndexPath animated:NO];
+        }
+    }
+}
+
+- (void)deselectCell
+{
+    if (_cellState == kCellStateCenter)
+    {
+        NSIndexPath *cellIndexPath = [self.containingTableView indexPathForCell:self];
+        [self setSelected:NO];
+        [self.containingTableView deselectRowAtIndexPath:cellIndexPath animated:YES];
+        if ([self.containingTableView.delegate respondsToSelector:@selector(tableView:didDeselectRowAtIndexPath:)])
+        {
+            [self.containingTableView.delegate tableView:self.containingTableView didDeselectRowAtIndexPath:cellIndexPath];
         }
     }
 }
@@ -284,12 +289,6 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
     {
         [self setHighlighted:YES];
     }
-}
-
-- (void)timerEndCellHighlight:(id)sender
-{
-    self.showingSelection = NO;
-    [self setSelected:NO];
 }
 
 #pragma mark UITableViewCell overrides
