@@ -40,6 +40,7 @@ typedef enum {
 @property (nonatomic, weak) id <SWTableViewCellDelegate> delegate;
 @property (nonatomic, strong) SWCellScrollView *cellScrollView;
 @property (nonatomic, weak) UITableView *containingTableView;
+@property (nonatomic, strong) UIColor *originalButtonBackground;
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier containingTableView:(UITableView *)containingTableView leftUtilityButtons:(NSArray *)leftUtilityButtons rightUtilityButtons:(NSArray *)rightUtilityButtons;
 
