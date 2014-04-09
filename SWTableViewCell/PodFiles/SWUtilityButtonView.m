@@ -68,7 +68,6 @@
         CGFloat utilityButtonXCord = 0;
         if (utilityButtonsCounter >= 1) utilityButtonXCord = _utilityButtonWidth * utilityButtonsCounter;
         [utilityButton setFrame:CGRectMake(utilityButtonXCord, 0, _utilityButtonWidth, CGRectGetHeight(self.bounds))];
-        [utilityButton setTag:utilityButtonsCounter];
         SWUtilityButtonTapGestureRecognizer *utilityButtonTapGestureRecognizer = [[SWUtilityButtonTapGestureRecognizer alloc] initWithTarget:_parentCell
                                                                                                                                       action:_utilityButtonSelector];
         utilityButtonTapGestureRecognizer.buttonIndex = utilityButtonsCounter;
