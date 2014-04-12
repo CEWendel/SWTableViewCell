@@ -18,14 +18,13 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
 {
     SWCellState _cellState; // The state of the cell within the scroll view, can be left, right or middle
     CGFloat additionalRightPadding;
-    
-    dispatch_once_t onceToken;
 }
 
 @property (nonatomic, strong) SWUtilityButtonView *scrollViewButtonViewLeft;
 @property (nonatomic, strong) SWUtilityButtonView *scrollViewButtonViewRight;
 @property (nonatomic, weak) UIView *scrollViewContentView;
 @property (nonatomic) CGFloat height;
+@property (nonatomic, assign, getter = isAppearanceSet) BOOL appearanceSet;
 
 @property (nonatomic, strong) SWLongPressGestureRecognizer *longPressGestureRecognizer;
 @property (nonatomic, strong) UITapGestureRecognizer *tapGestureRecognizer;
@@ -135,6 +134,7 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
     }
     
     self.highlighted = NO;
+    _appearanceSet = NO;
 }
 
 - (void)setContainingTableView:(UITableView *)containingTableView
@@ -412,11 +412,9 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
     {
         appearanceBlock();
     }
-    else
-    {
-        dispatch_once(&onceToken, ^{
-            appearanceBlock();
-        });
+    else if (!self.isAppearanceSet) {
+        appearanceBlock();
+        self.appearanceSet = YES;
     }
 }
 
