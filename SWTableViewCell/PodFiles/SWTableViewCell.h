@@ -12,15 +12,15 @@
 #import "SWLongPressGestureRecognizer.h"
 #import "SWUtilityButtonTapGestureRecognizer.h"
 #import "NSMutableArray+SWUtilityButtons.h"
-#import "SWConstants.h"
 
 @class SWTableViewCell;
 
-typedef enum {
+typedef NS_ENUM(NSInteger, SWCellState)
+{
     kCellStateCenter,
     kCellStateLeft,
-    kCellStateRight
-} SWCellState;
+    kCellStateRight,
+};
 
 @protocol SWTableViewCellDelegate <NSObject>
 
@@ -33,19 +33,14 @@ typedef enum {
 
 @end
 
-@interface SWTableViewCell : UITableViewCell <UIGestureRecognizerDelegate>
+@interface SWTableViewCell : UITableViewCell
 
-@property (nonatomic, strong) NSArray *leftUtilityButtons;
-@property (nonatomic, strong) NSArray *rightUtilityButtons;
+@property (nonatomic, copy) NSArray *leftUtilityButtons;
+@property (nonatomic, copy) NSArray *rightUtilityButtons;
 @property (nonatomic, weak) id <SWTableViewCellDelegate> delegate;
-@property (nonatomic, strong) SWCellScrollView *cellScrollView;
-@property (nonatomic, weak) UITableView *containingTableView;
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier containingTableView:(UITableView *)containingTableView leftUtilityButtons:(NSArray *)leftUtilityButtons rightUtilityButtons:(NSArray *)rightUtilityButtons;
 
-- (void)setCellHeight:(CGFloat)height;
-- (void)setBackgroundColor:(UIColor *)backgroundColor;
 - (void)hideUtilityButtonsAnimated:(BOOL)animated;
-- (void)setAppearanceWithBlock:(void (^) ())appearanceBlock force:(BOOL)force;
 
 @end

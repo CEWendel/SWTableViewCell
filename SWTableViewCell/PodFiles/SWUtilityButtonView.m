@@ -8,7 +8,13 @@
 
 #import "SWUtilityButtonView.h"
 #import "SWUtilityButtonTapGestureRecognizer.h"
-#import "SWConstants.h"
+
+@interface SWUtilityButtonView()
+
+@property (nonatomic, strong) NSLayoutConstraint *widthConstraint;
+@property (nonatomic, strong) NSMutableArray *buttonBackgroundColors;
+
+@end
 
 @implementation SWUtilityButtonView
 
@@ -16,14 +22,7 @@
 
 - (id)initWithUtilityButtons:(NSArray *)utilityButtons parentCell:(SWTableViewCell *)parentCell utilityButtonSelector:(SEL)utilityButtonSelector
 {
-    self = [super init];
-    
-    if (self) {
-        self.utilityButtons = utilityButtons;
-        self.utilityButtonWidth = [self calculateUtilityButtonWidth];
-        self.parentCell = parentCell;
-        self.utilityButtonSelector = utilityButtonSelector;
-    }
+    self = [self initWithFrame:CGRectZero utilityButtons:utilityButtons parentCell:parentCell utilityButtonSelector:utilityButtonSelector];
     
     return self;
 }
@@ -33,10 +32,21 @@
     self = [super initWithFrame:frame];
     
     if (self) {
-        self.utilityButtons = utilityButtons;
-        self.utilityButtonWidth = [self calculateUtilityButtonWidth];
-        self.parentCell = parentCell;
+        self.translatesAutoresizingMaskIntoConstraints = NO;
+
+        self.widthConstraint = [NSLayoutConstraint constraintWithItem:self
+                                                            attribute:NSLayoutAttributeWidth
+                                                            relatedBy:NSLayoutRelationEqual
+                                                               toItem:nil
+                                                            attribute:NSLayoutAttributeNotAnAttribute
+                                                           multiplier:1.0
+                                                             constant:0.0]; // constant will be adjusted dynamically in -setUtilityButtons:.
+        self.widthConstraint.priority = UILayoutPriorityDefaultHigh;
+        [self addConstraint:self.widthConstraint];
+        
+        _parentCell = parentCell;
         self.utilityButtonSelector = utilityButtonSelector;
+        self.utilityButtons = utilityButtons;
     }
     
     return self;
@@ -44,48 +54,94 @@
 
 #pragma mark Populating utility buttons
 
-- (CGFloat)calculateUtilityButtonWidth
+- (void)setUtilityButtons:(NSArray *)utilityButtons
 {
-    CGFloat buttonWidth = kUtilityButtonWidthDefault;
-    if (buttonWidth * _utilityButtons.count > kUtilityButtonsWidthMax)
+    for (UIButton *button in _utilityButtons)
     {
-        CGFloat buffer = (buttonWidth * _utilityButtons.count) - kUtilityButtonsWidthMax;
-        buttonWidth -= (buffer / _utilityButtons.count);
+        [button removeFromSuperview];
     }
-    return buttonWidth;
+    
+    _utilityButtons = [utilityButtons copy];
+
+    if (utilityButtons.count)
+    {
+        NSUInteger utilityButtonsCounter = 0;
+        UIView *precedingView = nil;
+        
+        for (UIButton *button in _utilityButtons)
+        {
+            [self addSubview:button];
+            button.translatesAutoresizingMaskIntoConstraints = NO;
+
+            if (!precedingView)
+            {
+                // First button; pin it to the left edge.
+                [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[button]"
+                                                                             options:0L
+                                                                             metrics:nil
+                                                                               views:NSDictionaryOfVariableBindings(button)]];
+            }
+            else
+            {
+                // Subsequent button; pin it to the right edge of the preceding one, with equal width.
+                [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:[precedingView][button(==precedingView)]"
+                                                                             options:0L
+                                                                             metrics:nil
+                                                                               views:NSDictionaryOfVariableBindings(precedingView, button)]];
+            }
+            
+            [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[button]|"
+                                                                         options:0L
+                                                                         metrics:nil
+                                                                           views:NSDictionaryOfVariableBindings(button)]];
+            
+
+            SWUtilityButtonTapGestureRecognizer *utilityButtonTapGestureRecognizer = [[SWUtilityButtonTapGestureRecognizer alloc] initWithTarget:_parentCell
+                                                                                                                                          action:_utilityButtonSelector];
+            utilityButtonTapGestureRecognizer.buttonIndex = utilityButtonsCounter;
+            [button addGestureRecognizer:utilityButtonTapGestureRecognizer];
+
+            utilityButtonsCounter++;
+            precedingView = button;
+        }
+
+        // Pin the last button to the right edge.
+        [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"[precedingView]|"
+                                                                     options:0L
+                                                                     metrics:nil
+                                                                       views:NSDictionaryOfVariableBindings(precedingView)]];
+    }
+
+    self.widthConstraint.constant = (kUtilityButtonWidthDefault * utilityButtons.count);
+    
+    [self setNeedsLayout];
+
+    return;
 }
 
-- (CGFloat)utilityButtonsWidth
-{
-    return (_utilityButtons.count * _utilityButtonWidth);
-}
+#pragma mark -
 
-- (void)populateUtilityButtons
+- (void)pushBackgroundColors
 {
-    NSUInteger utilityButtonsCounter = 0;
-    for (UIButton *utilityButton in _utilityButtons)
+    self.buttonBackgroundColors = [[NSMutableArray alloc] init];
+    
+    for (UIButton *button in self.utilityButtons)
     {
-        CGFloat utilityButtonXCord = 0;
-        if (utilityButtonsCounter >= 1) utilityButtonXCord = _utilityButtonWidth * utilityButtonsCounter;
-        [utilityButton setFrame:CGRectMake(utilityButtonXCord, 0, _utilityButtonWidth, CGRectGetHeight(self.bounds))];
-        SWUtilityButtonTapGestureRecognizer *utilityButtonTapGestureRecognizer = [[SWUtilityButtonTapGestureRecognizer alloc] initWithTarget:_parentCell
-                                                                                                                                      action:_utilityButtonSelector];
-        utilityButtonTapGestureRecognizer.buttonIndex = utilityButtonsCounter;
-        [utilityButton addGestureRecognizer:utilityButtonTapGestureRecognizer];
-        [self addSubview: utilityButton];
-        utilityButtonsCounter++;
+        [self.buttonBackgroundColors addObject:button.backgroundColor];
     }
 }
 
-- (void)setHeight:(CGFloat)height
+- (void)popBackgroundColors
 {
-    for (NSUInteger utilityButtonsCounter = 0; utilityButtonsCounter < _utilityButtons.count; utilityButtonsCounter++)
+    NSEnumerator *e = self.utilityButtons.objectEnumerator;
+    
+    for (UIColor *color in self.buttonBackgroundColors)
     {
-        UIButton *utilityButton = (UIButton *)_utilityButtons[utilityButtonsCounter];
-        CGFloat utilityButtonXCord = 0;
-        if (utilityButtonsCounter >= 1) utilityButtonXCord = _utilityButtonWidth * utilityButtonsCounter;
-        [utilityButton setFrame:CGRectMake(utilityButtonXCord, 0, _utilityButtonWidth, height)];
+        UIButton *button = [e nextObject];
+        button.backgroundColor = color;
     }
+    
+    self.buttonBackgroundColors = nil;
 }
 
 @end

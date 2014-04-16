@@ -72,7 +72,7 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    NSLog(@"cell selected at index path %d:%d", indexPath.section, indexPath.row);
+    NSLog(@"cell selected at index path %ld:%ld", (long)indexPath.section, (long)indexPath.row);
     NSLog(@"selected cell index path is %@", [self.tableView indexPathForSelectedRow]);
     
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
@@ -116,21 +116,13 @@
     
     if (self.useCustomCells)
     {
-        
         UMTableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:@"UMCell" forIndexPath:indexPath];
         
-        UMTableViewCell __weak *weakCell = cell;
-                
-        [cell setAppearanceWithBlock:^{
-            weakCell.leftUtilityButtons = [self leftButtons];
-            weakCell.rightUtilityButtons = [self rightButtons];
-            weakCell.delegate = self;
-            weakCell.containingTableView = tableView;
-        } force:NO];
+        cell.leftUtilityButtons = [self leftButtons];
+        cell.rightUtilityButtons = [self rightButtons];
+        cell.delegate = self;
         
-        [cell setCellHeight:cell.frame.size.height];
-
-        cell.label.text = [NSString stringWithFormat:@"Section: %d, Seat: %d", indexPath.section, indexPath.row];
+        cell.label.text = [NSString stringWithFormat:@"Section: %ld, Seat: %ld", (long)indexPath.section, (long)indexPath.row];
         
         return cell;
     }
@@ -142,11 +134,9 @@
         
         if (cell == nil) {
             
-            cell = [[SWTableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle
-                                          reuseIdentifier:cellIdentifier
-                                      containingTableView:_tableView // Used for row height and selection
-                                       leftUtilityButtons:[self leftButtons]
-                                      rightUtilityButtons:[self rightButtons]];
+            cell = [[SWTableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:cellIdentifier];
+            cell.leftUtilityButtons = [self leftButtons];
+            cell.rightUtilityButtons = [self rightButtons];
             cell.delegate = self;
         }
         

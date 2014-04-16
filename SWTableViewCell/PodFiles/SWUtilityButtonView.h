@@ -9,19 +9,18 @@
 #import <UIKit/UIKit.h>
 @class SWTableViewCell;
 
+#define kUtilityButtonWidthDefault 90
+
 @interface SWUtilityButtonView : UIView
 
-@property (nonatomic, strong) NSArray *utilityButtons;
-@property (nonatomic) CGFloat utilityButtonWidth;
-@property (nonatomic, weak) SWTableViewCell *parentCell;
-@property (nonatomic) SEL utilityButtonSelector;
-@property (nonatomic) CGFloat height;
-
 - (id)initWithUtilityButtons:(NSArray *)utilityButtons parentCell:(SWTableViewCell *)parentCell utilityButtonSelector:(SEL)utilityButtonSelector;
-
 - (id)initWithFrame:(CGRect)frame utilityButtons:(NSArray *)utilityButtons parentCell:(SWTableViewCell *)parentCell utilityButtonSelector:(SEL)utilityButtonSelector;
 
-- (void)populateUtilityButtons;
-- (CGFloat)utilityButtonsWidth;
+@property (nonatomic, weak, readonly) SWTableViewCell *parentCell;
+@property (nonatomic, copy) NSArray *utilityButtons;
+@property (nonatomic, assign) SEL utilityButtonSelector;
+
+- (void)pushBackgroundColors;
+- (void)popBackgroundColors;
 
 @end
