@@ -550,6 +550,14 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
     }
 }
 
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
+{
+    if (decelerate == NO)
+    {
+        [self updateCellStateAndEnableGestures];
+    }
+}
+
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
     self.tapGestureRecognizer.enabled = NO;
@@ -609,15 +617,20 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
 {
-    [self setCellState];
-    
-    self.tapGestureRecognizer.enabled = YES;
+    [self updateCellStateAndEnableGestures];
 }
 
 - (void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView
 {
+    [self updateCellStateAndEnableGestures];
+}
+
+#pragma mark - Cell State
+
+- (void) updateCellStateAndEnableGestures
+{
     [self setCellState];
-    
+
     // Called when setContentOffset in hideUtilityButtonsAnimated: is done
     self.tapGestureRecognizer.enabled = YES;
     if (_cellState == kCellStateCenter)
@@ -625,8 +638,6 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
         self.longPressGestureRecognizer.enabled = YES;
     }
 }
-
-#pragma mark - Cell State
 
 - (void)setCellState
 {
