@@ -363,7 +363,7 @@
         
         if (cellIndexPath)
         {
-            [self.containingTableView deselectRowAtIndexPath:cellIndexPath animated:YES];
+            [self.containingTableView deselectRowAtIndexPath:cellIndexPath animated:NO];
             
             if ([self.containingTableView.delegate respondsToSelector:@selector(tableView:didDeselectRowAtIndexPath:)])
             {
