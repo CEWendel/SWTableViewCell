@@ -34,6 +34,7 @@
 
 - (CGPoint)contentOffsetForCellState:(SWCellState)state;
 - (void)updateCellState;
+- (void)finishScrollingToCellState:(SWCellState)targetState;
 
 - (BOOL)shouldHighlight;
 
@@ -198,6 +199,8 @@
     }
 }
 
+#pragma mark - Public API
+
 - (void)setLeftUtilityButtons:(NSArray *)leftUtilityButtons
 {
     _leftUtilityButtons = leftUtilityButtons;
@@ -214,6 +217,24 @@
     self.rightUtilityButtonsView.utilityButtons = rightUtilityButtons;
     
     [self layoutIfNeeded];
+}
+
+- (void)showLeftUtilityButtonsAnimated:(BOOL)animated
+{
+    [self.cellScrollView setContentOffset:[self contentOffsetForCellState:kCellStateLeft] animated:animated];
+    [self finishScrollingToCellState:kCellStateLeft];
+}
+
+- (void)showRightUtilityButtonsAnimated:(BOOL)animated
+{
+    [self.cellScrollView setContentOffset:[self contentOffsetForCellState:kCellStateRight] animated:animated];
+    [self finishScrollingToCellState:kCellStateRight];
+}
+
+- (void)hideUtilityButtonsAnimated:(BOOL)animated
+{
+    [self.cellScrollView setContentOffset:[self contentOffsetForCellState:kCellStateCenter] animated:animated];
+    [self finishScrollingToCellState:kCellStateCenter];
 }
 
 #pragma mark - UITableViewCell overrides
@@ -395,19 +416,30 @@
     }
 }
 
-- (void)hideUtilityButtonsAnimated:(BOOL)animated
+- (void)finishScrollingToCellState:(SWCellState)targetState
 {
-    if (_cellState != kCellStateCenter)
+    if (_cellState != targetState)
     {
-        [self.cellScrollView setContentOffset:[self contentOffsetForCellState:kCellStateCenter] animated:YES];
-        
         if ([self.delegate respondsToSelector:@selector(swipeableTableViewCell:scrollingToState:)])
         {
-            [self.delegate swipeableTableViewCell:self scrollingToState:kCellStateCenter];
+            [self.delegate swipeableTableViewCell:self scrollingToState:targetState];
+        }
+
+        if (targetState != kCellStateCenter)
+        {
+            if ([self.delegate respondsToSelector:@selector(swipeableTableViewCellShouldHideUtilityButtonsOnSwipe:)])
+            {
+                for (SWTableViewCell *cell in self.containingTableView.visibleCells)
+                {
+                    if (cell != self && [cell isKindOfClass:[SWTableViewCell class]] && [self.delegate swipeableTableViewCellShouldHideUtilityButtonsOnSwipe:cell])
+                    {
+                        [cell hideUtilityButtonsAnimated:YES];
+                    }
+                }
+            }
         }
     }
 }
-
 
 #pragma mark - Geometry helpers
 
@@ -490,26 +522,28 @@
 
 - (void)scrollViewWillEndDragging:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset
 {
+    SWCellState targetState;
+    
     if (velocity.x >= 0.5f)
     {
         if (_cellState == kCellStateLeft)
         {
-            _cellState = kCellStateCenter;
+            targetState = kCellStateCenter;
         }
         else
         {
-            _cellState = kCellStateRight;
+            targetState = kCellStateRight;
         }
     }
     else if (velocity.x <= -0.5f)
     {
         if (_cellState == kCellStateRight)
         {
-            _cellState = kCellStateCenter;
+            targetState = kCellStateCenter;
         }
         else
         {
-            _cellState = kCellStateLeft;
+            targetState = kCellStateLeft;
         }
     }
     else
@@ -519,36 +553,22 @@
         
         if (targetContentOffset->x > rightThreshold)
         {
-            _cellState = kCellStateRight;
+            targetState = kCellStateRight;
         }
         else if (targetContentOffset->x < leftThreshold)
         {
-            _cellState = kCellStateLeft;
+            targetState = kCellStateLeft;
         }
         else
         {
-            _cellState = kCellStateCenter;
+            targetState = kCellStateCenter;
         }
     }
-    
-    if ([self.delegate respondsToSelector:@selector(swipeableTableViewCell:scrollingToState:)])
-    {
-        [self.delegate swipeableTableViewCell:self scrollingToState:_cellState];
-    }
-    
-    if (_cellState != kCellStateCenter)
-    {
-        if ([self.delegate respondsToSelector:@selector(swipeableTableViewCellShouldHideUtilityButtonsOnSwipe:)])
-        {
-            for (SWTableViewCell *cell in [self.containingTableView visibleCells]) {
-                if (cell != self && [cell isKindOfClass:[SWTableViewCell class]] && [self.delegate swipeableTableViewCellShouldHideUtilityButtonsOnSwipe:cell]) {
-                    [cell hideUtilityButtonsAnimated:YES];
-                }
-            }
-        }
-    }
-    
-    *targetContentOffset = [self contentOffsetForCellState:_cellState];
+
+    *targetContentOffset = [self contentOffsetForCellState:targetState];
+
+    // Fire the delegate messages and hide other open buttons if required.
+    [self finishScrollingToCellState:targetState];
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
