@@ -16,8 +16,14 @@
 }
 
 @property (nonatomic, weak) IBOutlet UITableView *tableView;
+@property (nonatomic, weak) IBOutlet UISwitch *tapToRevealSwitch;
 @property (nonatomic) BOOL useCustomCells;
 @property (nonatomic, weak) UIRefreshControl *refreshControl;
+
+- (IBAction)toggleCells:(id)sender;
+
+- (NSArray *)leftButtons;
+- (NSArray *)rightButtons;
 
 @end
 
@@ -61,38 +67,42 @@
     }
 }
 
-#pragma mark UITableViewDataSource
+#pragma mark -
 
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return _testArray.count;
-}
-
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return [_testArray[section] count];
-}
-
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    NSLog(@"cell selected at index path %ld:%ld", (long)indexPath.section, (long)indexPath.row);
-    NSLog(@"selected cell index path is %@", [self.tableView indexPathForSelectedRow]);
+- (NSArray *)rightButtons
+{
+    NSMutableArray *rightUtilityButtons = [NSMutableArray new];
+    [rightUtilityButtons sw_addUtilityButtonWithColor:
+     [UIColor colorWithRed:0.78f green:0.78f blue:0.8f alpha:1.0]
+                                                title:@"More"];
+    [rightUtilityButtons sw_addUtilityButtonWithColor:
+     [UIColor colorWithRed:1.0f green:0.231f blue:0.188 alpha:1.0f]
+                                                title:@"Delete"];
     
-    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    return rightUtilityButtons;
 }
 
-- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-    return _sections[section];
+- (NSArray *)leftButtons
+{
+    NSMutableArray *leftUtilityButtons = [NSMutableArray new];
+    
+    [leftUtilityButtons sw_addUtilityButtonWithColor:
+     [UIColor colorWithRed:0.07 green:0.75f blue:0.16f alpha:1.0]
+                                                icon:[UIImage imageNamed:@"check.png"]];
+    [leftUtilityButtons sw_addUtilityButtonWithColor:
+     [UIColor colorWithRed:1.0f green:1.0f blue:0.35f alpha:1.0]
+                                                icon:[UIImage imageNamed:@"clock.png"]];
+    [leftUtilityButtons sw_addUtilityButtonWithColor:
+     [UIColor colorWithRed:1.0f green:0.231f blue:0.188f alpha:1.0]
+                                                icon:[UIImage imageNamed:@"cross.png"]];
+    [leftUtilityButtons sw_addUtilityButtonWithColor:
+     [UIColor colorWithRed:0.55f green:0.27f blue:0.07f alpha:1.0]
+                                                icon:[UIImage imageNamed:@"list.png"]];
+    
+    return leftUtilityButtons;
 }
 
-// Show index titles
-
-//- (NSArray *)sectionIndexTitlesForTableView:(UITableView *)tableView {
-//    return [[UILocalizedIndexedCollation currentCollation] sectionIndexTitles];
-//}
-//
-//- (NSInteger)tableView:(UITableView *)tableView sectionForSectionIndexTitle:(NSString *)title atIndex:(NSInteger)index {
-//    return [[UILocalizedIndexedCollation currentCollation] sectionForSectionIndexTitleAtIndex:index];
-//}
-
-#pragma mark - UIRefreshControl Selector
+#pragma mark - IBActions
 
 - (void)toggleCells:(UIRefreshControl*)refreshControl
 {
@@ -110,7 +120,19 @@
     [refreshControl endRefreshing];
 }
 
-#pragma mark - UIScrollViewDelegate
+#pragma mark - UITableViewDataSource
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    return _testArray.count;
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    return [_testArray[section] count];
+}
+
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
+    return _sections[section];
+}
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
@@ -145,58 +167,35 @@
         cell.textLabel.backgroundColor = [UIColor whiteColor];
         cell.detailTextLabel.backgroundColor = [UIColor whiteColor];
         cell.detailTextLabel.text = @"Some detail text";
-
+        
         return cell;
     }
-    
 }
 
-- (NSArray *)rightButtons
+#pragma mark - UITableViewDelegate
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSMutableArray *rightUtilityButtons = [NSMutableArray new];
-    [rightUtilityButtons sw_addUtilityButtonWithColor:
-     [UIColor colorWithRed:0.78f green:0.78f blue:0.8f alpha:1.0]
-                                                title:@"More"];
-    [rightUtilityButtons sw_addUtilityButtonWithColor:
-     [UIColor colorWithRed:1.0f green:0.231f blue:0.188 alpha:1.0f]
-                                                title:@"Delete"];
+    NSLog(@"cell selected at index path %ld:%ld", (long)indexPath.section, (long)indexPath.row);
+    NSLog(@"selected cell index path is %@", [self.tableView indexPathForSelectedRow]);
 
-    return rightUtilityButtons;
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+
+    if (self.tapToRevealSwitch.isOn)
+    {
+        SWTableViewCell *cell = (SWTableViewCell *)[tableView cellForRowAtIndexPath:indexPath];
+        
+        if (arc4random() % 2)
+        {
+            [cell showLeftUtilityButtonsAnimated:YES];
+        }
+        else
+        {
+            [cell showRightUtilityButtonsAnimated:YES];
+        }
+    }
 }
 
-- (NSArray *)leftButtons
-{
-    NSMutableArray *leftUtilityButtons = [NSMutableArray new];
-    
-    [leftUtilityButtons sw_addUtilityButtonWithColor:
-     [UIColor colorWithRed:0.07 green:0.75f blue:0.16f alpha:1.0]
-                                                icon:[UIImage imageNamed:@"check.png"]];
-    [leftUtilityButtons sw_addUtilityButtonWithColor:
-     [UIColor colorWithRed:1.0f green:1.0f blue:0.35f alpha:1.0]
-                                                icon:[UIImage imageNamed:@"clock.png"]];
-    [leftUtilityButtons sw_addUtilityButtonWithColor:
-     [UIColor colorWithRed:1.0f green:0.231f blue:0.188f alpha:1.0]
-                                                icon:[UIImage imageNamed:@"cross.png"]];
-    [leftUtilityButtons sw_addUtilityButtonWithColor:
-     [UIColor colorWithRed:0.55f green:0.27f blue:0.07f alpha:1.0]
-                                                icon:[UIImage imageNamed:@"list.png"]];
-    
-    return leftUtilityButtons;
-}
-
-// Set row height on an individual basis
-
-//- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-//    return [self rowHeightForIndexPath:indexPath];
-//}
-//
-//- (CGFloat)rowHeightForIndexPath:(NSIndexPath *)indexPath {
-//    return ([indexPath row] * 10) + 60;
-//}
-
-- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
-    // Set background color of cell here if you don't want default white
-}
 
 #pragma mark - SWTableViewDelegate
 

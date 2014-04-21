@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="4510" systemVersion="13A603" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="83C-Dj-EBZ">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="5056" systemVersion="13C64" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="83C-Dj-EBZ">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3742"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3733"/>
     </dependencies>
     <scenes>
         <!--View Controller-->
         <scene sceneID="5">
             <objects>
-                <viewController id="2" customClass="ViewController" sceneMemberID="viewController">
+                <viewController automaticallyAdjustsScrollViewInsets="NO" id="2" customClass="ViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="Mej-Fk-HmF"/>
                         <viewControllerLayoutGuide type="bottom" id="est-Me-ffQ"/>
@@ -17,11 +17,11 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="96" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="shh-7H-rgh">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                                <rect key="frame" x="0.0" y="111" width="320" height="457"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="UMCell" rowHeight="96" id="vTX-oE-r0p" customClass="UMTableViewCell">
-                                        <rect key="frame" x="0.0" y="86" width="320" height="96"/>
+                                        <rect key="frame" x="0.0" y="22" width="320" height="96"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="vTX-oE-r0p" id="hRJ-5q-aRK">
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="95"/>
@@ -48,18 +48,36 @@
                                 </prototypes>
                                 <sections/>
                             </tableView>
+                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="svS-la-NvT">
+                                <rect key="frame" x="20" y="72" width="51" height="31"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="onTintColor" red="0.21105806529521942" green="0.27399325370788574" blue="0.42618444561958313" alpha="1" colorSpace="calibratedRGB"/>
+                            </switch>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Tapping reveals buttons" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Fep-aV-Mxc">
+                                <rect key="frame" x="77" y="79" width="154" height="17"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="shh-7H-rgh" firstAttribute="bottom" secondItem="3" secondAttribute="bottom" id="0r9-i7-2lc"/>
                             <constraint firstItem="shh-7H-rgh" firstAttribute="trailing" secondItem="3" secondAttribute="trailing" id="1Be-2i-mrQ"/>
-                            <constraint firstItem="shh-7H-rgh" firstAttribute="top" secondItem="3" secondAttribute="top" id="cXm-ke-rzA"/>
+                            <constraint firstItem="svS-la-NvT" firstAttribute="leading" secondItem="3" secondAttribute="leading" constant="20" symbolic="YES" id="QMr-G0-elO"/>
+                            <constraint firstItem="Fep-aV-Mxc" firstAttribute="centerY" secondItem="svS-la-NvT" secondAttribute="centerY" id="RAp-lI-q9O"/>
                             <constraint firstItem="shh-7H-rgh" firstAttribute="leading" secondItem="3" secondAttribute="leading" id="gfj-bI-atS"/>
+                            <constraint firstItem="shh-7H-rgh" firstAttribute="top" secondItem="svS-la-NvT" secondAttribute="bottom" constant="8" symbolic="YES" id="k3P-28-633"/>
+                            <constraint firstItem="svS-la-NvT" firstAttribute="top" secondItem="Mej-Fk-HmF" secondAttribute="bottom" constant="20" symbolic="YES" id="w0y-HA-16K"/>
+                            <constraint firstItem="Fep-aV-Mxc" firstAttribute="leading" secondItem="svS-la-NvT" secondAttribute="trailing" constant="8" symbolic="YES" id="xoW-ux-Gpa"/>
                         </constraints>
                     </view>
+                    <extendedEdge key="edgesForExtendedLayout" top="YES"/>
                     <navigationItem key="navigationItem" id="dXX-uI-tJC"/>
                     <connections>
                         <outlet property="tableView" destination="shh-7H-rgh" id="WX3-04-A96"/>
+                        <outlet property="tapToRevealSwitch" destination="svS-la-NvT" id="mDg-Sd-PwS"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4" sceneMemberID="firstResponder"/>
