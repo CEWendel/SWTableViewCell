@@ -399,7 +399,7 @@
 {
     if (_cellState != kCellStateCenter)
     {
-        [self.cellScrollView setContentOffset:[self contentOffsetForCellState:kCellStateCenter] animated:YES];
+        [self.cellScrollView setContentOffset:[self contentOffsetForCellState:kCellStateCenter] animated:animated];
         
         if ([self.delegate respondsToSelector:@selector(swipeableTableViewCell:scrollingToState:)])
         {
