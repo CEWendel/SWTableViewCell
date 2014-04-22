@@ -41,6 +41,6 @@ typedef NS_ENUM(NSInteger, SWCellState)
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier containingTableView:(UITableView *)containingTableView leftUtilityButtons:(NSArray *)leftUtilityButtons rightUtilityButtons:(NSArray *)rightUtilityButtons;
 
-- (void)hideUtilityButtonsAnimated:(BOOL)animated;
+- (void)hideUtilityButtons;
 
 @end

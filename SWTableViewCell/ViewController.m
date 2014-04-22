@@ -226,7 +226,7 @@
             UIAlertView *alertTest = [[UIAlertView alloc] initWithTitle:@"Hello" message:@"More more more" delegate:nil cancelButtonTitle:@"cancel" otherButtonTitles: nil];
             [alertTest show];
         
-            [cell hideUtilityButtonsAnimated:YES];
+            [cell hideUtilityButtons];
             break;
         }
         case 1:
