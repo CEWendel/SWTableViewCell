@@ -10,6 +10,16 @@
 
 @implementation SWCellScrollView
 
+- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer
+{
+    if (gestureRecognizer == self.panGestureRecognizer) {
+        CGPoint translation = [(UIPanGestureRecognizer*)gestureRecognizer translationInView:gestureRecognizer.view];
+        return fabs(translation.y) <= fabs(translation.x);
+    } else {
+        return YES;
+    }
+}
+
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
     // Find out if the user is actively scrolling the tableView of which this is a member.
     // If they are, return NO, and don't let the gesture recognizers work simultaneously.
