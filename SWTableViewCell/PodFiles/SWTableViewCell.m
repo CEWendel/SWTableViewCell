@@ -12,6 +12,7 @@
 
 #define kSectionIndexWidth 15
 #define kLongPressMinimumDuration 0.16f
+#define kUtilityButtonsAnimationDuration 0.6
 
 @interface SWTableViewCell () <UIScrollViewDelegate,  UIGestureRecognizerDelegate>
 
@@ -323,7 +324,7 @@
     else
     {
         // Scroll back to center
-        [self hideUtilityButtonsAnimated:YES];
+        [self hideUtilityButtons];
     }
 }
 
@@ -395,19 +396,40 @@
     }
 }
 
-- (void)hideUtilityButtonsAnimated:(BOOL)animated
+- (void)hideUtilityButtons
 {
-    if (_cellState != kCellStateCenter)
-    {
-        [self.cellScrollView setContentOffset:[self contentOffsetForCellState:kCellStateCenter] animated:YES];
-        
-        if ([self.delegate respondsToSelector:@selector(swipeableTableViewCell:scrollingToState:)])
-        {
-            [self.delegate swipeableTableViewCell:self scrollingToState:kCellStateCenter];
-        }
+    if (_cellState != kCellStateCenter) {
+        [self _hideUtilityButtons];
     }
 }
 
+- (void)_hideUtilityButtons
+{
+    [UIView animateWithDuration:kUtilityButtonsAnimationDuration
+                          delay:0.0
+         usingSpringWithDamping:1.f
+          initialSpringVelocity:0.f
+                        options:UIViewAnimationOptionAllowUserInteraction | UIViewAnimationOptionCurveEaseOut
+                     animations:^{
+                         [self.cellScrollView setContentOffset:[self contentOffsetForCellState:kCellStateCenter]];
+                         [self layoutIfNeeded];
+                     } completion:nil];
+}
+
+- (void)showUtilityButtons
+{
+    if (_cellState != kCellStateCenter) {
+        [UIView animateWithDuration:kUtilityButtonsAnimationDuration
+                              delay:0.0
+             usingSpringWithDamping:1.f
+              initialSpringVelocity:0.f
+                            options:UIViewAnimationOptionAllowUserInteraction | UIViewAnimationOptionCurveEaseOut
+                         animations:^{
+                             [self.cellScrollView setContentOffset:[self contentOffsetForCellState:_cellState]];
+                             [self layoutIfNeeded];
+                         } completion:nil];
+    }
+}
 
 #pragma mark - Geometry helpers
 
@@ -471,18 +493,6 @@
     self.leftUtilityClipConstraint.constant = MAX(0, CGRectGetMinX(frame) - CGRectGetMinX(self.frame));
     self.rightUtilityClipConstraint.constant = MIN(0, CGRectGetMaxX(frame) - CGRectGetMaxX(self.frame));
 
-    // Enable or disable the gesture recognizers according to the current mode.
-    if (!self.cellScrollView.isDragging && !self.cellScrollView.isDecelerating)
-    {
-        self.tapGestureRecognizer.enabled = YES;
-        self.longPressGestureRecognizer.enabled = (_cellState == kCellStateCenter);
-    }
-    else
-    {
-        self.tapGestureRecognizer.enabled = NO;
-        self.longPressGestureRecognizer.enabled = NO;
-    }
-
     self.cellScrollView.scrollEnabled = !self.isEditing;
 }
 
@@ -536,13 +546,19 @@
         [self.delegate swipeableTableViewCell:self scrollingToState:_cellState];
     }
     
-    if (_cellState != kCellStateCenter)
+    if (_cellState == kCellStateCenter)
     {
+        [self _hideUtilityButtons];
+    }
+    else
+    {
+        [self showUtilityButtons];
+        
         if ([self.delegate respondsToSelector:@selector(swipeableTableViewCellShouldHideUtilityButtonsOnSwipe:)])
         {
             for (SWTableViewCell *cell in [self.containingTableView visibleCells]) {
                 if (cell != self && [cell isKindOfClass:[SWTableViewCell class]] && [self.delegate swipeableTableViewCellShouldHideUtilityButtonsOnSwipe:cell]) {
-                    [cell hideUtilityButtonsAnimated:YES];
+                    [cell hideUtilityButtons];
                 }
             }
         }
@@ -593,16 +609,6 @@
         }
     }
     
-    [self updateCellState];
-}
-
-- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
-{
-    [self updateCellState];
-}
-
-- (void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView
-{
     [self updateCellState];
 }
 
