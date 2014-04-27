@@ -179,8 +179,22 @@
     }
 }
 
+static NSString * const kTableViewPanState = @"panGestureRecognizer.state";
+
+- (void)removeOldTableViewPanObserver
+{
+    [_containingTableView removeObserver:self forKeyPath:kTableViewPanState];
+}
+
+- (void)dealloc
+{
+    [self removeOldTableViewPanObserver];
+}
+
 - (void)setContainingTableView:(UITableView *)containingTableView
 {
+    [self removeOldTableViewPanObserver];
+    
     _containingTableView = containingTableView;
     
     if (containingTableView)
@@ -195,6 +209,32 @@
         _containingTableView.directionalLockEnabled = YES;
         
         [self.tapGestureRecognizer requireGestureRecognizerToFail:_containingTableView.panGestureRecognizer];
+        
+        [_containingTableView addObserver:self forKeyPath:kTableViewPanState options:0 context:nil];
+    }
+}
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
+{
+    if([keyPath isEqualToString:kTableViewPanState] && object == _containingTableView)
+    {
+        UIPanGestureRecognizer *panGesture = _containingTableView.panGestureRecognizer;
+        if(panGesture.state == UIGestureRecognizerStateBegan)
+        {
+            CGPoint locationInTableView = [panGesture locationInView:_containingTableView];
+            
+            BOOL inCurrentCell = CGRectContainsPoint(self.frame, locationInTableView);
+            if(!inCurrentCell && _cellState != kCellStateCenter)
+            {
+                if ([self.delegate respondsToSelector:@selector(swipeableTableViewCellShouldHideUtilityButtonsOnSwipe:)])
+                {
+                    if([self.delegate swipeableTableViewCellShouldHideUtilityButtonsOnSwipe:self])
+                    {
+                        [self hideUtilityButtonsAnimated:YES];
+                    }
+                }
+            }
+        }
     }
 }
 
