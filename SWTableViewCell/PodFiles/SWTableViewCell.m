@@ -7,7 +7,6 @@
 //
 
 #import "SWTableViewCell.h"
-#import <UIKit/UIGestureRecognizerSubclass.h>
 #import "SWUtilityButtonView.h"
 
 #define kSectionIndexWidth 15
@@ -39,7 +38,9 @@
 
 @end
 
-@implementation SWTableViewCell
+@implementation SWTableViewCell {
+    UIView *_contentCellView;
+}
 
 #pragma mark Initializers
 
@@ -113,7 +114,9 @@
                            ]];
     
     // Move the UITableViewCell de facto contentView into our scroll view.
-    [self.cellScrollView addSubview:self.contentView];
+    _contentCellView = [[UIView alloc] init];
+    [_contentCellView addSubview:self.contentView];
+    [self.cellScrollView addSubview:_contentCellView];
     
     self.tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(scrollViewTapped:)];
     self.tapGestureRecognizer.cancelsTouchesInView = NO;
@@ -174,7 +177,7 @@
                                [NSLayoutConstraint constraintWithItem:buttonView attribute:alignmentAttribute relatedBy:NSLayoutRelationEqual toItem:clipView attribute:alignmentAttribute multiplier:1.0 constant:0.0],
                                
                                // Constrain the maximum button width so that at least a button's worth of contentView is left visible. (The button view will shrink accordingly.)
-                               [NSLayoutConstraint constraintWithItem:buttonView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationLessThanOrEqual toItem:self.contentView attribute:NSLayoutAttributeWidth multiplier:1.0 constant:-kUtilityButtonWidthDefault],
+                               [NSLayoutConstraint constraintWithItem:buttonView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationLessThanOrEqual toItem:self attribute:NSLayoutAttributeWidth multiplier:1.0 constant:-kUtilityButtonWidthDefault],
                                ]];
     }
 }
@@ -238,10 +241,10 @@
     
     // Offset the contentView origin so that it appears correctly w/rt the enclosing scroll view (to which we moved it).
     CGRect frame = self.contentView.frame;
-    frame.origin.x = self.leftUtilityButtonsView.frame.size.width;
-    self.contentView.frame = frame;
+    frame.origin.x = [self leftUtilityButtonsWidth];
+    _contentCellView.frame = frame;
     
-    self.cellScrollView.contentSize = CGSizeMake(self.frame.size.width + [self utilityButtonsPadding], self.frame.size.height);
+    self.cellScrollView.contentSize = CGSizeMake(CGRectGetWidth(self.frame) + [self utilityButtonsPadding], CGRectGetHeight(self.frame));
     
     if (!self.cellScrollView.isTracking && !self.cellScrollView.isDecelerating)
     {
@@ -413,12 +416,12 @@
 
 - (CGFloat)leftUtilityButtonsWidth
 {
-    return self.leftUtilityButtonsView.frame.size.width;
+    return CGRectGetWidth(self.leftUtilityButtonsView.frame);
 }
 
 - (CGFloat)rightUtilityButtonsWidth
 {
-    return self.rightUtilityButtonsView.frame.size.width + self.additionalRightPadding;
+    return CGRectGetWidth(self.rightUtilityButtonsView.frame) + self.additionalRightPadding;
 }
 
 - (CGFloat)utilityButtonsPadding
@@ -434,10 +437,6 @@
     {
         case kCellStateCenter:
             scrollPt.x = [self leftUtilityButtonsWidth];
-            break;
-            
-        case kCellStateLeft:
-            scrollPt.x = 0;
             break;
             
         case kCellStateRight:
@@ -470,6 +469,12 @@
     CGRect frame = [self.contentView.superview convertRect:self.contentView.frame toView:self];
     self.leftUtilityClipConstraint.constant = MAX(0, CGRectGetMinX(frame) - CGRectGetMinX(self.frame));
     self.rightUtilityClipConstraint.constant = MIN(0, CGRectGetMaxX(frame) - CGRectGetMaxX(self.frame));
+
+    if (self.isEditing) {
+        self.leftUtilityClipConstraint.constant = 0;
+        self.cellScrollView.contentOffset = CGPointMake([self leftUtilityButtonsWidth], 0);
+        _cellState = kCellStateCenter;
+    }
 
     // Enable or disable the gesture recognizers according to the current mode.
     if (!self.cellScrollView.isDragging && !self.cellScrollView.isDecelerating)
