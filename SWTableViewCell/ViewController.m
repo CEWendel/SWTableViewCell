@@ -26,8 +26,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    self.tableView.delegate = self;
-    self.tableView.dataSource = self;
+    self.navigationItem.leftBarButtonItem = self.editButtonItem;
     self.tableView.rowHeight = 90;
     
     self.navigationItem.title = @"Pull to Toggle Cell Type";
