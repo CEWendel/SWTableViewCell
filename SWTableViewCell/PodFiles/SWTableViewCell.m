@@ -177,7 +177,7 @@
                                [NSLayoutConstraint constraintWithItem:buttonView attribute:alignmentAttribute relatedBy:NSLayoutRelationEqual toItem:clipView attribute:alignmentAttribute multiplier:1.0 constant:0.0],
                                
                                // Constrain the maximum button width so that at least a button's worth of contentView is left visible. (The button view will shrink accordingly.)
-                               [NSLayoutConstraint constraintWithItem:buttonView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationLessThanOrEqual toItem:self attribute:NSLayoutAttributeWidth multiplier:1.0 constant:-kUtilityButtonWidthDefault],
+                               [NSLayoutConstraint constraintWithItem:buttonView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationLessThanOrEqual toItem:_contentCellView attribute:NSLayoutAttributeWidth multiplier:1.0 constant:-kUtilityButtonWidthDefault],
                                ]];
     }
 }
@@ -475,6 +475,9 @@
         self.cellScrollView.contentOffset = CGPointMake([self leftUtilityButtonsWidth], 0);
         _cellState = kCellStateCenter;
     }
+    
+    self.leftUtilityClipView.hidden = (self.leftUtilityClipConstraint.constant == 0);
+    self.rightUtilityClipView.hidden = (self.rightUtilityClipConstraint.constant == 0);
 
     // Enable or disable the gesture recognizers according to the current mode.
     if (!self.cellScrollView.isDragging && !self.cellScrollView.isDecelerating)
