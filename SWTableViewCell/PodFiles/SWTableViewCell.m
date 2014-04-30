@@ -68,18 +68,6 @@
     return self;
 }
 
-- (instancetype)init
-{
-    self = [super init];
-    
-    if (self)
-    {
-        [self initializer];
-    }
-    
-    return self;
-}
-
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
