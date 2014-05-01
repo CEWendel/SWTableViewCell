@@ -43,19 +43,6 @@
 
 #pragma mark Initializers
 
-- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier containingTableView:(UITableView *)containingTableView leftUtilityButtons:(NSArray *)leftUtilityButtons rightUtilityButtons:(NSArray *)rightUtilityButtons
-{
-    self = [self initWithStyle:style reuseIdentifier:reuseIdentifier];
-    if (self)
-    {
-        self.containingTableView = containingTableView;
-        self.rightUtilityButtons = rightUtilityButtons;
-        self.leftUtilityButtons = leftUtilityButtons;
-    }
-    
-    return self;
-}
-
 - (instancetype)initWithCoder:(NSCoder *)aDecoder
 {
     self = [super initWithCoder:aDecoder];
