@@ -274,6 +274,14 @@
     [self.rightUtilityButtonsView popBackgroundColors];
 }
 
+- (void)didTransitionToState:(UITableViewCellStateMask)state {
+    [super didTransitionToState:state];
+
+    if (state == UITableViewCellStateDefaultMask) {
+        [self layoutSubviews];
+    }
+}
+
 #pragma mark - Selection handling
 
 - (BOOL)shouldHighlight
