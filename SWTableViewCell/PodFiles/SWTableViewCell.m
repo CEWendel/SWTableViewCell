@@ -467,6 +467,8 @@
 
     // Update the clipping on the utility button views according to the current position.
     CGRect frame = [self.contentView.superview convertRect:self.contentView.frame toView:self];
+    frame.size.width = CGRectGetWidth(self.frame);
+    
     self.leftUtilityClipConstraint.constant = MAX(0, CGRectGetMinX(frame) - CGRectGetMinX(self.frame));
     self.rightUtilityClipConstraint.constant = MIN(0, CGRectGetMaxX(frame) - CGRectGetMaxX(self.frame));
 
