@@ -467,7 +467,7 @@
 {
     if (velocity.x >= 0.5f)
     {
-        if (_cellState == kCellStateLeft)
+        if (_cellState == kCellStateLeft || !self.rightUtilityButtons || self.rightUtilityButtonsWidth == 0.0)
         {
             _cellState = kCellStateCenter;
         }
@@ -478,7 +478,7 @@
     }
     else if (velocity.x <= -0.5f)
     {
-        if (_cellState == kCellStateRight)
+        if (_cellState == kCellStateRight || !self.leftUtilityButtons || self.leftUtilityButtonsWidth == 0.0)
         {
             _cellState = kCellStateCenter;
         }
@@ -579,6 +579,15 @@
 - (void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView
 {
     [self updateCellState];
+}
+
+-(void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
+{
+    if (!decelerate)
+    {
+        self.tapGestureRecognizer.enabled = YES;
+    }
+    
 }
 
 #pragma mark - UIGestureRecognizerDelegate
