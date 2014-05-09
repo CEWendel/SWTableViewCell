@@ -298,7 +298,7 @@ static NSString * const kTableViewPanState = @"state";
 {
     [super prepareForReuse];
     
-    _cellState = kCellStateCenter;
+    [self hideUtilityButtonsAnimated:NO];
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated
