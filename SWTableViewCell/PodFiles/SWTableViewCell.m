@@ -17,8 +17,8 @@
 
 @property (nonatomic, weak) UITableView *containingTableView;
 
-@property (nonatomic, assign) SWCellState cellState; // The state of the cell within the scroll view, can be left, right or middle
 @property (nonatomic, assign) CGFloat additionalRightPadding;
+@property (nonatomic, assign) SWCellState cellState; // The state of the cell within the scroll view, can be left, right or middle
 
 @property (nonatomic, strong) UIScrollView *cellScrollView;
 @property (nonatomic, strong) SWUtilityButtonView *leftUtilityButtonsView, *rightUtilityButtonsView;
@@ -380,6 +380,16 @@
         {
             [self.delegate swipeableTableViewCell:self scrollingToState:kCellStateCenter];
         }
+    }
+}
+
+- (void)updateUtilityButtonsAnimated:(SWCellState)state animated:(BOOL)animated
+{
+    [self.cellScrollView setContentOffset:[self contentOffsetForCellState:state] animated:animated];
+    
+    if ([self.delegate respondsToSelector:@selector(swipeableTableViewCell:scrollingToState:)])
+    {
+        [self.delegate swipeableTableViewCell:self scrollingToState:state];
     }
 }
 
