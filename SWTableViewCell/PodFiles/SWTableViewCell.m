@@ -452,6 +452,9 @@
         case kCellStateRight:
             scrollPt.x = [self utilityButtonsPadding];
             break;
+        case kCellStateLeft:
+            /* no-op */
+            break;
     }
     
     return scrollPt;
