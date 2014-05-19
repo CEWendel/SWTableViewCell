@@ -10,6 +10,7 @@
 #import "SWUtilityButtonView.h"
 
 #define kSectionIndexWidth 15
+#define kAccessoryTrailingSpace 15
 #define kLongPressMinimumDuration 0.16f
 
 @interface SWTableViewCell () <UIScrollViewDelegate,  UIGestureRecognizerDelegate>
@@ -178,7 +179,7 @@
                                [NSLayoutConstraint constraintWithItem:buttonView attribute:alignmentAttribute relatedBy:NSLayoutRelationEqual toItem:clipView attribute:alignmentAttribute multiplier:1.0 constant:0.0],
                                
                                // Constrain the maximum button width so that at least a button's worth of contentView is left visible. (The button view will shrink accordingly.)
-                               [NSLayoutConstraint constraintWithItem:buttonView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationLessThanOrEqual toItem:_contentCellView attribute:NSLayoutAttributeWidth multiplier:1.0 constant:-kUtilityButtonWidthDefault],
+                               [NSLayoutConstraint constraintWithItem:buttonView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationLessThanOrEqual toItem:self.contentView attribute:NSLayoutAttributeWidth multiplier:1.0 constant:-kUtilityButtonWidthDefault],
                                ]];
     }
 }
@@ -273,6 +274,14 @@
     
     [self.leftUtilityButtonsView popBackgroundColors];
     [self.rightUtilityButtonsView popBackgroundColors];
+}
+
+- (void)didTransitionToState:(UITableViewCellStateMask)state {
+    [super didTransitionToState:state];
+
+    if (state == UITableViewCellStateDefaultMask) {
+        [self layoutSubviews];
+    }
 }
 
 #pragma mark - Selection handling
@@ -468,6 +477,8 @@
 
     // Update the clipping on the utility button views according to the current position.
     CGRect frame = [self.contentView.superview convertRect:self.contentView.frame toView:self];
+    frame.size.width = CGRectGetWidth(self.frame);
+    
     self.leftUtilityClipConstraint.constant = MAX(0, CGRectGetMinX(frame) - CGRectGetMinX(self.frame));
     self.rightUtilityClipConstraint.constant = MIN(0, CGRectGetMaxX(frame) - CGRectGetMaxX(self.frame));
 
@@ -479,6 +490,14 @@
     
     self.leftUtilityClipView.hidden = (self.leftUtilityClipConstraint.constant == 0);
     self.rightUtilityClipView.hidden = (self.rightUtilityClipConstraint.constant == 0);
+
+    if (self.accessoryType != UITableViewCellAccessoryNone && !self.editing) {
+        UIView *accessory = [self.cellScrollView.superview.subviews lastObject];
+        
+        CGRect accessoryFrame = accessory.frame;
+        accessoryFrame.origin.x = CGRectGetWidth(frame) - CGRectGetWidth(accessoryFrame) - kAccessoryTrailingSpace + CGRectGetMinX(frame);
+        accessory.frame = accessoryFrame;
+    }
 
     // Enable or disable the gesture recognizers according to the current mode.
     if (!self.cellScrollView.isDragging && !self.cellScrollView.isDecelerating)
