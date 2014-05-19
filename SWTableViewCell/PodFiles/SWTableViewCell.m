@@ -7,10 +7,10 @@
 //
 
 #import "SWTableViewCell.h"
+#import <UIKit/UIGestureRecognizerSubclass.h>
 #import "SWUtilityButtonView.h"
 
 #define kSectionIndexWidth 15
-#define kAccessoryTrailingSpace 15
 #define kLongPressMinimumDuration 0.16f
 
 @interface SWTableViewCell () <UIScrollViewDelegate,  UIGestureRecognizerDelegate>
@@ -39,9 +39,7 @@
 
 @end
 
-@implementation SWTableViewCell {
-    UIView *_contentCellView;
-}
+@implementation SWTableViewCell
 
 #pragma mark Initializers
 
@@ -89,9 +87,7 @@
                            ]];
     
     // Move the UITableViewCell de facto contentView into our scroll view.
-    _contentCellView = [[UIView alloc] init];
-    [_contentCellView addSubview:self.contentView];
-    [self.cellScrollView addSubview:_contentCellView];
+    [self.cellScrollView addSubview:self.contentView];
     
     self.tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(scrollViewTapped:)];
     self.tapGestureRecognizer.cancelsTouchesInView = NO;
@@ -217,10 +213,10 @@
     
     // Offset the contentView origin so that it appears correctly w/rt the enclosing scroll view (to which we moved it).
     CGRect frame = self.contentView.frame;
-    frame.origin.x = [self leftUtilityButtonsWidth];
-    _contentCellView.frame = frame;
+    frame.origin.x = self.leftUtilityButtonsView.frame.size.width;
+    self.contentView.frame = frame;
     
-    self.cellScrollView.contentSize = CGSizeMake(CGRectGetWidth(self.frame) + [self utilityButtonsPadding], CGRectGetHeight(self.frame));
+    self.cellScrollView.contentSize = CGSizeMake(self.frame.size.width + [self utilityButtonsPadding], self.frame.size.height);
     
     if (!self.cellScrollView.isTracking && !self.cellScrollView.isDecelerating)
     {
@@ -248,14 +244,6 @@
     
     [self.leftUtilityButtonsView popBackgroundColors];
     [self.rightUtilityButtonsView popBackgroundColors];
-}
-
-- (void)didTransitionToState:(UITableViewCellStateMask)state {
-    [super didTransitionToState:state];
-
-    if (state == UITableViewCellStateDefaultMask) {
-        [self layoutSubviews];
-    }
 }
 
 #pragma mark - Selection handling
@@ -400,12 +388,12 @@
 
 - (CGFloat)leftUtilityButtonsWidth
 {
-    return CGRectGetWidth(self.leftUtilityButtonsView.frame);
+    return self.leftUtilityButtonsView.frame.size.width;
 }
 
 - (CGFloat)rightUtilityButtonsWidth
 {
-    return CGRectGetWidth(self.rightUtilityButtonsView.frame) + self.additionalRightPadding;
+    return self.rightUtilityButtonsView.frame.size.width + self.additionalRightPadding;
 }
 
 - (CGFloat)utilityButtonsPadding
@@ -423,11 +411,12 @@
             scrollPt.x = [self leftUtilityButtonsWidth];
             break;
             
+        case kCellStateLeft:
+            scrollPt.x = 0;
+            break;
+            
         case kCellStateRight:
             scrollPt.x = [self utilityButtonsPadding];
-            break;
-        case kCellStateLeft:
-            /* no-op */
             break;
     }
     
@@ -454,27 +443,8 @@
 
     // Update the clipping on the utility button views according to the current position.
     CGRect frame = [self.contentView.superview convertRect:self.contentView.frame toView:self];
-    frame.size.width = CGRectGetWidth(self.frame);
-    
     self.leftUtilityClipConstraint.constant = MAX(0, CGRectGetMinX(frame) - CGRectGetMinX(self.frame));
     self.rightUtilityClipConstraint.constant = MIN(0, CGRectGetMaxX(frame) - CGRectGetMaxX(self.frame));
-
-    if (self.isEditing) {
-        self.leftUtilityClipConstraint.constant = 0;
-        self.cellScrollView.contentOffset = CGPointMake([self leftUtilityButtonsWidth], 0);
-        _cellState = kCellStateCenter;
-    }
-    
-    self.leftUtilityClipView.hidden = (self.leftUtilityClipConstraint.constant == 0);
-    self.rightUtilityClipView.hidden = (self.rightUtilityClipConstraint.constant == 0);
-
-    if (self.accessoryType != UITableViewCellAccessoryNone && !self.editing) {
-        UIView *accessory = [self.cellScrollView.superview.subviews lastObject];
-        
-        CGRect accessoryFrame = accessory.frame;
-        accessoryFrame.origin.x = CGRectGetWidth(frame) - CGRectGetWidth(accessoryFrame) - kAccessoryTrailingSpace + CGRectGetMinX(frame);
-        accessory.frame = accessoryFrame;
-    }
 
     // Enable or disable the gesture recognizers according to the current mode.
     if (!self.cellScrollView.isDragging && !self.cellScrollView.isDecelerating)
