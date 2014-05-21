@@ -9,6 +9,7 @@
 #import "SWTableViewCell.h"
 #import <UIKit/UIGestureRecognizerSubclass.h>
 #import "SWUtilityButtonView.h"
+#import "UITableViewCell+FixUITableViewCellAutolayout.h"
 
 #define kSectionIndexWidth 15
 #define kLongPressMinimumDuration 0.16f
@@ -209,7 +210,6 @@
 
 - (void)layoutSubviews
 {
-    [super layoutSubviews];
     
     // Offset the contentView origin so that it appears correctly w/rt the enclosing scroll view (to which we moved it).
     CGRect frame = self.contentView.frame;
@@ -224,6 +224,8 @@
     }
 
     [self updateCellState];
+    [super layoutSubviews];
+
 }
 
 - (void)prepareForReuse
