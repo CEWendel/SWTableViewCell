@@ -10,6 +10,8 @@
 #import <objc/message.h>
 #import "UITableViewCell+FixUITableViewCellAutolayout.h"
 
+// See http://stackoverflow.com/questions/12610783/auto-layout-still-required-after-executing-layoutsubviews-with-uitableviewcel
+
 @implementation UITableViewCell (FixUITableViewCellAutolayout)
 
 + (void)load
