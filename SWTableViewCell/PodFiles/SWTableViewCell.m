@@ -395,6 +395,34 @@
     }
 }
 
+- (void)showLeftUtilityButtonsAnimated:(BOOL)animated {
+    if (_cellState != kCellStateLeft)
+    {
+        [self.cellScrollView setContentOffset:[self contentOffsetForCellState:kCellStateLeft] animated:animated];
+        
+        if ([self.delegate respondsToSelector:@selector(swipeableTableViewCell:scrollingToState:)])
+        {
+            [self.delegate swipeableTableViewCell:self scrollingToState:kCellStateLeft];
+        }
+    }
+}
+
+- (void)showRightUtilityButtonsAnimated:(BOOL)animated {
+    if (_cellState != kCellStateRight)
+    {
+        [self.cellScrollView setContentOffset:[self contentOffsetForCellState:kCellStateRight] animated:animated];
+        
+        if ([self.delegate respondsToSelector:@selector(swipeableTableViewCell:scrollingToState:)])
+        {
+            [self.delegate swipeableTableViewCell:self scrollingToState:kCellStateRight];
+        }
+    }
+}
+
+- (BOOL)isUtilityButtonsHidden {
+    return _cellState == kCellStateCenter;
+}
+
 
 #pragma mark - Geometry helpers
 
