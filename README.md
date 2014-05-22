@@ -150,11 +150,23 @@ Then, in the `tableView:cellForRowAtIndexPath:` method of your `UITableViewDeleg
 
 ###Delegate
 
-The delegate `SWTableViewCellDelegate` is used by the developer to find out which button was pressed. There are two methods:
+The delegate `SWTableViewCellDelegate` is used by the developer to find out which button was pressed. There are five methods:
 
 ```objc
+// click event on left utility button
 - (void)swipeableTableViewCell:(SWTableViewCell *)cell didTriggerLeftUtilityButtonWithIndex:(NSInteger)index;
+
+// click event on right utility button
 - (void)swipeableTableViewCell:(SWTableViewCell *)cell didTriggerRightUtilityButtonWithIndex:(NSInteger)index;
+
+// utility button open/close event
+- (void)swipeableTableViewCell:(SWTableViewCell *)cell scrollingToState:(SWCellState)state;
+
+// prevent multiple cells from showing utilty buttons simultaneously
+- (BOOL)swipeableTableViewCellShouldHideUtilityButtonsOnSwipe:(SWTableViewCell *)cell;
+
+// prevent cell(s) from displaying left/right utility buttons
+- (BOOL)swipeableTableViewCell:(SWTableViewCell *)cell canSwipeToState:(SWCellState)state;
 ```
 
 The index signifies which utility button the user pressed, for each side the button indices are ordered from right to left 0...n
