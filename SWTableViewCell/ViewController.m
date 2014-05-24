@@ -119,8 +119,9 @@
     {
         UMTableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:@"UMCell" forIndexPath:indexPath];
         
-        cell.leftUtilityButtons = [self leftButtons];
-        cell.rightUtilityButtons = [self rightButtons];
+        // optionally specify a width that each set of utility buttons will share
+        [cell setLeftUtilityButtons:[self leftButtons] WithButtonWidth:32.0f];
+        [cell setRightUtilityButtons:[self rightButtons] WithButtonWidth:58.0f];
         cell.delegate = self;
         
         cell.label.text = [NSString stringWithFormat:@"Section: %ld, Seat: %ld", (long)indexPath.section, (long)indexPath.row];
@@ -136,6 +137,7 @@
         if (cell == nil) {
             
             cell = [[SWTableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:cellIdentifier];
+            
             cell.leftUtilityButtons = [self leftButtons];
             cell.rightUtilityButtons = [self rightButtons];
             cell.delegate = self;

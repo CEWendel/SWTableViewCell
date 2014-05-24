@@ -186,11 +186,29 @@
     [self layoutIfNeeded];
 }
 
+- (void)setLeftUtilityButtons:(NSArray *)leftUtilityButtons WithButtonWidth:(CGFloat) width
+{
+    _leftUtilityButtons = leftUtilityButtons;
+    
+    [self.leftUtilityButtonsView setUtilityButtons:leftUtilityButtons WithButtonWidth:width];
+    
+    [self layoutIfNeeded];
+}
+
 - (void)setRightUtilityButtons:(NSArray *)rightUtilityButtons
 {
     _rightUtilityButtons = rightUtilityButtons;
     
     self.rightUtilityButtonsView.utilityButtons = rightUtilityButtons;
+    
+    [self layoutIfNeeded];
+}
+
+- (void)setRightUtilityButtons:(NSArray *)rightUtilityButtons WithButtonWidth:(CGFloat) width
+{
+    _rightUtilityButtons = rightUtilityButtons;
+    
+    [self.rightUtilityButtonsView setUtilityButtons:rightUtilityButtons WithButtonWidth:width];
     
     [self layoutIfNeeded];
 }
@@ -226,7 +244,7 @@
     {
         self.cellScrollView.contentOffset = [self contentOffsetForCellState:_cellState];
     }
-
+    
     [self updateCellState];
 }
 
@@ -252,7 +270,7 @@
 
 - (void)didTransitionToState:(UITableViewCellStateMask)state {
     [super didTransitionToState:state];
-
+    
     if (state == UITableViewCellStateDefaultMask) {
         [self layoutSubviews];
     }
@@ -267,10 +285,10 @@
     if ([self.containingTableView.delegate respondsToSelector:@selector(tableView:shouldHighlightRowAtIndexPath:)])
     {
         NSIndexPath *cellIndexPath = [self.containingTableView indexPathForCell:self];
-
+        
         shouldHighlight = [self.containingTableView.delegate tableView:self.containingTableView shouldHighlightRowAtIndexPath:cellIndexPath];
     }
-
+    
     return shouldHighlight;
 }
 
@@ -280,14 +298,14 @@
     {
         [self setHighlighted:YES animated:NO];
     }
-
+    
     else if (gestureRecognizer.state == UIGestureRecognizerStateEnded)
     {
         // Cell is already highlighted; clearing it temporarily seems to address visual anomaly.
         [self setHighlighted:NO animated:NO];
         [self scrollViewTapped:gestureRecognizer];
     }
-
+    
     else if (gestureRecognizer.state == UIGestureRecognizerStateCancelled)
     {
         [self setHighlighted:NO animated:NO];
@@ -480,14 +498,14 @@
             break;
         }
     }
-
+    
     // Update the clipping on the utility button views according to the current position.
     CGRect frame = [self.contentView.superview convertRect:self.contentView.frame toView:self];
     frame.size.width = CGRectGetWidth(self.frame);
     
     self.leftUtilityClipConstraint.constant = MAX(0, CGRectGetMinX(frame) - CGRectGetMinX(self.frame));
     self.rightUtilityClipConstraint.constant = MIN(0, CGRectGetMaxX(frame) - CGRectGetMaxX(self.frame));
-
+    
     if (self.isEditing) {
         self.leftUtilityClipConstraint.constant = 0;
         self.cellScrollView.contentOffset = CGPointMake([self leftUtilityButtonsWidth], 0);
@@ -496,7 +514,7 @@
     
     self.leftUtilityClipView.hidden = (self.leftUtilityClipConstraint.constant == 0);
     self.rightUtilityClipView.hidden = (self.rightUtilityClipConstraint.constant == 0);
-
+    
     if (self.accessoryType != UITableViewCellAccessoryNone && !self.editing) {
         UIView *accessory = [self.cellScrollView.superview.subviews lastObject];
         
@@ -504,7 +522,7 @@
         accessoryFrame.origin.x = CGRectGetWidth(frame) - CGRectGetWidth(accessoryFrame) - kAccessoryTrailingSpace + CGRectGetMinX(frame);
         accessory.frame = accessoryFrame;
     }
-
+    
     // Enable or disable the gesture recognizers according to the current mode.
     if (!self.cellScrollView.isDragging && !self.cellScrollView.isDecelerating)
     {
@@ -516,7 +534,7 @@
         self.tapGestureRecognizer.enabled = NO;
         self.longPressGestureRecognizer.enabled = NO;
     }
-
+    
     self.cellScrollView.scrollEnabled = !self.isEditing;
 }
 
