@@ -17,6 +17,8 @@
 
 @property (nonatomic, weak) UITableView *containingTableView;
 
+@property (nonatomic, strong) UIPanGestureRecognizer *tableViewPanGestureRecognizer;
+
 @property (nonatomic, assign) SWCellState cellState; // The state of the cell within the scroll view, can be left, right or middle
 @property (nonatomic, assign) CGFloat additionalRightPadding;
 
@@ -158,8 +160,24 @@
     }
 }
 
+static NSString * const kTableViewPanState = @"state";
+
+- (void)removeOldTableViewPanObserver
+{
+    [_tableViewPanGestureRecognizer removeObserver:self forKeyPath:kTableViewPanState];
+}
+
+- (void)dealloc
+{
+    [self removeOldTableViewPanObserver];
+}
+
 - (void)setContainingTableView:(UITableView *)containingTableView
 {
+    [self removeOldTableViewPanObserver];
+    
+    _tableViewPanGestureRecognizer = containingTableView.panGestureRecognizer;
+    
     _containingTableView = containingTableView;
     
     if (containingTableView)
@@ -174,6 +192,31 @@
         _containingTableView.directionalLockEnabled = YES;
         
         [self.tapGestureRecognizer requireGestureRecognizerToFail:_containingTableView.panGestureRecognizer];
+        
+        [_tableViewPanGestureRecognizer addObserver:self forKeyPath:kTableViewPanState options:0 context:nil];
+    }
+}
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
+{
+    if([keyPath isEqualToString:kTableViewPanState] && object == _tableViewPanGestureRecognizer)
+    {
+        if(_tableViewPanGestureRecognizer.state == UIGestureRecognizerStateBegan)
+        {
+            CGPoint locationInTableView = [_tableViewPanGestureRecognizer locationInView:_containingTableView];
+            
+            BOOL inCurrentCell = CGRectContainsPoint(self.frame, locationInTableView);
+            if(!inCurrentCell && _cellState != kCellStateCenter)
+            {
+                if ([self.delegate respondsToSelector:@selector(swipeableTableViewCellShouldHideUtilityButtonsOnSwipe:)])
+                {
+                    if([self.delegate swipeableTableViewCellShouldHideUtilityButtonsOnSwipe:self])
+                    {
+                        [self hideUtilityButtonsAnimated:YES];
+                    }
+                }
+            }
+        }
     }
 }
 
@@ -226,7 +269,7 @@
     {
         self.cellScrollView.contentOffset = [self contentOffsetForCellState:_cellState];
     }
-
+    
     [self updateCellState];
 }
 
@@ -234,7 +277,7 @@
 {
     [super prepareForReuse];
     
-    _cellState = kCellStateCenter;
+    [self hideUtilityButtonsAnimated:NO];
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated
@@ -267,10 +310,10 @@
     if ([self.containingTableView.delegate respondsToSelector:@selector(tableView:shouldHighlightRowAtIndexPath:)])
     {
         NSIndexPath *cellIndexPath = [self.containingTableView indexPathForCell:self];
-
+        
         shouldHighlight = [self.containingTableView.delegate tableView:self.containingTableView shouldHighlightRowAtIndexPath:cellIndexPath];
     }
-
+    
     return shouldHighlight;
 }
 
@@ -280,14 +323,14 @@
     {
         [self setHighlighted:YES animated:NO];
     }
-
+    
     else if (gestureRecognizer.state == UIGestureRecognizerStateEnded)
     {
         // Cell is already highlighted; clearing it temporarily seems to address visual anomaly.
         [self setHighlighted:NO animated:NO];
         [self scrollViewTapped:gestureRecognizer];
     }
-
+    
     else if (gestureRecognizer.state == UIGestureRecognizerStateCancelled)
     {
         [self setHighlighted:NO animated:NO];
@@ -480,7 +523,7 @@
             break;
         }
     }
-
+    
     // Update the clipping on the utility button views according to the current position.
     CGRect frame = [self.contentView.superview convertRect:self.contentView.frame toView:self];
     frame.size.width = CGRectGetWidth(self.frame);
@@ -516,7 +559,7 @@
         self.tapGestureRecognizer.enabled = NO;
         self.longPressGestureRecognizer.enabled = NO;
     }
-
+    
     self.cellScrollView.scrollEnabled = !self.isEditing;
 }
 
