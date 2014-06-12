@@ -258,6 +258,8 @@ static NSString * const kTableViewPanState = @"state";
 {
     [super layoutSubviews];
     
+    SWCellState currentCellState = _cellState;
+    
     // Offset the contentView origin so that it appears correctly w/rt the enclosing scroll view (to which we moved it).
     CGRect frame = self.contentView.frame;
     frame.origin.x = [self leftUtilityButtonsWidth];
@@ -271,6 +273,10 @@ static NSString * const kTableViewPanState = @"state";
     }
     
     [self updateCellState];
+    
+    if (currentCellState != _cellState) {
+        [self switchUIToCellState:currentCellState];
+    }
 }
 
 - (void)prepareForReuse
@@ -464,6 +470,23 @@ static NSString * const kTableViewPanState = @"state";
 
 - (BOOL)isUtilityButtonsHidden {
     return _cellState == kCellStateCenter;
+}
+
+- (void)switchUIToCellState:(SWCellState)cellState {
+    
+    switch (cellState) {
+        case kCellStateCenter:
+            [self hideUtilityButtonsAnimated:YES];
+            break;
+        case kCellStateLeft:
+            [self showLeftUtilityButtonsAnimated:YES];
+            break;
+        case kCellStateRight:
+            [self showRightUtilityButtonsAnimated:YES];
+            break;
+        default:
+            break;
+    }
 }
 
 
