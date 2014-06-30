@@ -175,20 +175,24 @@
 
 - (void)setLeftUtilityButtons:(NSArray *)leftUtilityButtons
 {
-    _leftUtilityButtons = leftUtilityButtons;
-    
-    self.leftUtilityButtonsView.utilityButtons = leftUtilityButtons;
-    
-    [self layoutIfNeeded];
+    if (![_leftUtilityButtons sw_isEqualToButtons:leftUtilityButtons]) {
+        _leftUtilityButtons = leftUtilityButtons;
+        
+        self.leftUtilityButtonsView.utilityButtons = leftUtilityButtons;
+        
+        [self layoutIfNeeded];
+    }
 }
 
 - (void)setRightUtilityButtons:(NSArray *)rightUtilityButtons
 {
-    _rightUtilityButtons = rightUtilityButtons;
-    
-    self.rightUtilityButtonsView.utilityButtons = rightUtilityButtons;
-    
-    [self layoutIfNeeded];
+    if (![_rightUtilityButtons sw_isEqualToButtons:rightUtilityButtons]) {
+        _rightUtilityButtons = rightUtilityButtons;
+        
+        self.rightUtilityButtonsView.utilityButtons = rightUtilityButtons;
+        
+        [self layoutIfNeeded];
+    }
 }
 
 #pragma mark - UITableViewCell overrides
