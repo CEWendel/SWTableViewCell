@@ -20,6 +20,7 @@
 @property (nonatomic, copy) NSArray *utilityButtons;
 @property (nonatomic, assign) SEL utilityButtonSelector;
 
+- (void)setUtilityButtons:(NSArray *)utilityButtons WithButtonWidth:(CGFloat)width;
 - (void)pushBackgroundColors;
 - (void)popBackgroundColors;
 
