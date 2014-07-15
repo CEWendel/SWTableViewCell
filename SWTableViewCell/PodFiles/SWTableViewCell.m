@@ -587,7 +587,7 @@ static NSString * const kTableViewPanState = @"state";
 }
 
 #pragma mark - UIScrollViewDelegate
-//important  cell 滑动效果检测
+//important  cell滑动效果检测
 - (void)scrollViewWillEndDragging:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset
 {
     if (velocity.x >= 0.5f)
@@ -637,10 +637,11 @@ static NSString * const kTableViewPanState = @"state";
         [self.delegate swipeableTableViewCell:self scrollingToState:_cellState];
     }
     
-    if ([self.delegate respondsToSelector:@selector(swipeableTableViewCellShouldHideUtilityButtonsOnSwipe:)])
+    if (_cellState != kCellStateCenter)
     {
-        if ([self.delegate swipeableTableViewCellShouldHideUtilityButtonsOnSwipe:self]){
-            if (_cellState != kCellStateCenter)
+        if ([self.delegate respondsToSelector:@selector(swipeableTableViewCellShouldHideUtilityButtonsOnSwipe:)])
+        {
+            if ([self.delegate swipeableTableViewCellShouldHideUtilityButtonsOnSwipe:self])
             {
                 for (SWTableViewCell *cell in [self.containingTableView visibleCells]) {
                     if (cell != self && [cell isKindOfClass:[SWTableViewCell class]] && [self.delegate swipeableTableViewCellShouldHideUtilityButtonsOnSwipe:cell] && cell.cellState != kCellStateCenter) {
