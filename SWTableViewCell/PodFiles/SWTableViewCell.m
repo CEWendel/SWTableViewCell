@@ -287,6 +287,7 @@ static NSString * const kTableViewPanState = @"state";
     
     self.cellScrollView.contentSize = CGSizeMake(CGRectGetWidth(self.frame) + [self utilityButtonsPadding], CGRectGetHeight(self.frame));
     
+    //偏移量
     if (!self.cellScrollView.isTracking && !self.cellScrollView.isDecelerating)
     {
         self.cellScrollView.contentOffset = [self contentOffsetForCellState:_cellState];
@@ -426,7 +427,6 @@ static NSString * const kTableViewPanState = @"state";
 }
 
 #pragma mark - Utility buttons handling
-
 - (void)rightUtilityButtonHandler:(id)sender
 {
     SWUtilityButtonTapGestureRecognizer *utilityButtonTapGestureRecognizer = (SWUtilityButtonTapGestureRecognizer *)sender;
@@ -447,12 +447,15 @@ static NSString * const kTableViewPanState = @"state";
     }
 }
 
+#pragma mark - 设置cell按钮的状态
 - (void)hideUtilityButtonsAnimated:(BOOL)animated
 {
     if (_cellState != kCellStateCenter)
     {
+        //设置cell位置
         [self.cellScrollView setContentOffset:[self contentOffsetForCellState:kCellStateCenter] animated:animated];
         
+        //执行完后显示cell位置状态,并且执行相应设置的动作
         if ([self.delegate respondsToSelector:@selector(swipeableTableViewCell:scrollingToState:)])
         {
             [self.delegate swipeableTableViewCell:self scrollingToState:kCellStateCenter];
@@ -488,9 +491,7 @@ static NSString * const kTableViewPanState = @"state";
     return _cellState == kCellStateCenter;
 }
 
-
 #pragma mark - Geometry helpers
-
 - (CGFloat)leftUtilityButtonsWidth
 {
     return CGRectGetWidth(self.leftUtilityButtonsView.frame);
@@ -586,7 +587,7 @@ static NSString * const kTableViewPanState = @"state";
 }
 
 #pragma mark - UIScrollViewDelegate
-
+//important  cell滑动效果检测
 - (void)scrollViewWillEndDragging:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset
 {
     if (velocity.x >= 0.5f)
@@ -630,6 +631,7 @@ static NSString * const kTableViewPanState = @"state";
         }
     }
     
+    //首先根据滑动的加速度和滑动的距离判定应该属于的_cellState,然后根据应该显示的_cellState进行滑动操作
     if ([self.delegate respondsToSelector:@selector(swipeableTableViewCell:scrollingToState:)])
     {
         [self.delegate swipeableTableViewCell:self scrollingToState:_cellState];
@@ -639,14 +641,17 @@ static NSString * const kTableViewPanState = @"state";
     {
         if ([self.delegate respondsToSelector:@selector(swipeableTableViewCellShouldHideUtilityButtonsOnSwipe:)])
         {
-            for (SWTableViewCell *cell in [self.containingTableView visibleCells]) {
-                if (cell != self && [cell isKindOfClass:[SWTableViewCell class]] && [self.delegate swipeableTableViewCellShouldHideUtilityButtonsOnSwipe:cell]) {
-                    [cell hideUtilityButtonsAnimated:YES];
+            if ([self.delegate swipeableTableViewCellShouldHideUtilityButtonsOnSwipe:self])
+            {
+                for (SWTableViewCell *cell in [self.containingTableView visibleCells]) {
+                    if (cell != self && [cell isKindOfClass:[SWTableViewCell class]] && [self.delegate swipeableTableViewCellShouldHideUtilityButtonsOnSwipe:cell] && cell.cellState != kCellStateCenter) {
+                        [cell hideUtilityButtonsAnimated:YES];
+                        break;
+                    }
                 }
             }
         }
     }
-    
     *targetContentOffset = [self contentOffsetForCellState:_cellState];
 }
 

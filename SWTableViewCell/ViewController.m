@@ -27,7 +27,7 @@
     [super viewDidLoad];
     
     self.navigationItem.leftBarButtonItem = self.editButtonItem;
-    self.tableView.rowHeight = 90;
+    self.tableView.rowHeight = 90;//you must set the rowHeight of tableView like this.Not in tableViewDelegate
     
     self.navigationItem.title = @"Pull to Toggle Cell Type";
     
@@ -163,7 +163,6 @@
     [rightUtilityButtons sw_addUtilityButtonWithColor:
      [UIColor colorWithRed:1.0f green:0.231f blue:0.188 alpha:1.0f]
                                                 title:@"Delete"];
-    
     return rightUtilityButtons;
 }
 
@@ -202,7 +201,6 @@
 }
 
 #pragma mark - SWTableViewDelegate
-
 - (void)swipeableTableViewCell:(SWTableViewCell *)cell scrollingToState:(SWCellState)state
 {
     switch (state) {
