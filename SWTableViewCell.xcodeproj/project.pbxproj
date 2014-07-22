@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3B955789197EC6E800461F4C /* NSObject+PerformSelector.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B955788197EC6E800461F4C /* NSObject+PerformSelector.m */; };
 		810308911846579B00C378F0 /* NSMutableArray+SWUtilityButtons.m in Sources */ = {isa = PBXBuildFile; fileRef = 810308861846579B00C378F0 /* NSMutableArray+SWUtilityButtons.m */; };
 		810308921846579B00C378F0 /* SWCellScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 810308881846579B00C378F0 /* SWCellScrollView.m */; };
 		810308931846579B00C378F0 /* SWLongPressGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 8103088A1846579B00C378F0 /* SWLongPressGestureRecognizer.m */; };
@@ -34,6 +35,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		3B955787197EC6E800461F4C /* NSObject+PerformSelector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+PerformSelector.h"; sourceTree = "<group>"; };
+		3B955788197EC6E800461F4C /* NSObject+PerformSelector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+PerformSelector.m"; sourceTree = "<group>"; };
 		810308851846579B00C378F0 /* NSMutableArray+SWUtilityButtons.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableArray+SWUtilityButtons.h"; sourceTree = "<group>"; };
 		810308861846579B00C378F0 /* NSMutableArray+SWUtilityButtons.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableArray+SWUtilityButtons.m"; sourceTree = "<group>"; };
 		810308871846579B00C378F0 /* SWCellScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWCellScrollView.h; sourceTree = "<group>"; };
@@ -92,6 +95,8 @@
 			children = (
 				810308851846579B00C378F0 /* NSMutableArray+SWUtilityButtons.h */,
 				810308861846579B00C378F0 /* NSMutableArray+SWUtilityButtons.m */,
+				3B955787197EC6E800461F4C /* NSObject+PerformSelector.h */,
+				3B955788197EC6E800461F4C /* NSObject+PerformSelector.m */,
 				810308871846579B00C378F0 /* SWCellScrollView.h */,
 				810308881846579B00C378F0 /* SWCellScrollView.m */,
 				810308891846579B00C378F0 /* SWLongPressGestureRecognizer.h */,
@@ -242,6 +247,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3B955789197EC6E800461F4C /* NSObject+PerformSelector.m in Sources */,
 				AF34B77517DEE2B400BD9082 /* main.m in Sources */,
 				AF34B77917DEE2B400BD9082 /* AppDelegate.m in Sources */,
 				810308921846579B00C378F0 /* SWCellScrollView.m in Sources */,
