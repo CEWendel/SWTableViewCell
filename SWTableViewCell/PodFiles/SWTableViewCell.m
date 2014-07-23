@@ -150,7 +150,9 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
         clipView.translatesAutoresizingMaskIntoConstraints = NO;
         clipView.clipsToBounds = YES;
         
-        [self.cellScrollView insertSubview:clipView belowSubview:_contentCellView];
+//        [self.cellScrollView insertSubview:clipView belowSubview:_contentCellView];
+        [self.cellScrollView addSubview:clipView];
+//        [self addSubview:clipView];
         [self addConstraints:@[
                                // Pin the clipping view to the appropriate outer edges of the cell.
                                [NSLayoutConstraint constraintWithItem:clipView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeTop multiplier:1.0 constant:0.0],
