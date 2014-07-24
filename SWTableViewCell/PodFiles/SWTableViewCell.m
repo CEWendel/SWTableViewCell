@@ -149,6 +149,8 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
         UIView *buttonView = buttonViews[i];
         NSLayoutAttribute alignmentAttribute = alignmentAttributes[i];
         
+        clipConstraint.priority = UILayoutPriorityDefaultHigh;
+        
         clipView.translatesAutoresizingMaskIntoConstraints = NO;
         clipView.clipsToBounds = YES;
         
