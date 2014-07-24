@@ -30,6 +30,7 @@ typedef NS_ENUM(NSInteger, SWCellState)
 - (void)swipeableTableViewCell:(SWTableViewCell *)cell scrollingToState:(SWCellState)state;
 - (BOOL)swipeableTableViewCellShouldHideUtilityButtonsOnSwipe:(SWTableViewCell *)cell;
 - (BOOL)swipeableTableViewCell:(SWTableViewCell *)cell canSwipeToState:(SWCellState)state;
+- (void)swipeableTableViewCellDidEndScrolling:(SWTableViewCell *)cell;
 
 @end
 
