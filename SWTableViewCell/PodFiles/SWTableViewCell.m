@@ -9,6 +9,8 @@
 #import "SWTableViewCell.h"
 #import "SWUtilityButtonView.h"
 
+static NSString * const kTableViewCellContentView = @"UITableViewCellContentView";
+
 #define kSectionIndexWidth 15
 #define kAccessoryTrailingSpace 15
 #define kLongPressMinimumDuration 0.16f
@@ -80,7 +82,25 @@
     self.cellScrollView.showsHorizontalScrollIndicator = NO;
     self.cellScrollView.scrollsToTop = NO;
     self.cellScrollView.scrollEnabled = YES;
-    [self addSubview:self.cellScrollView]; // in fact inserts into first subview, which is a private UITableViewCellScrollView.
+    
+    _contentCellView = [[UIView alloc] init];
+    [self.cellScrollView addSubview:_contentCellView];
+    
+    // Add the cell scroll view to the cell
+    UIView *contentViewParent = self;
+    UIView *clipViewParent = self.cellScrollView;
+    if (![NSStringFromClass([[self.subviews objectAtIndex:0] class]) isEqualToString:kTableViewCellContentView])
+    {
+        // iOS 7
+        contentViewParent = [self.subviews objectAtIndex:0];
+        clipViewParent = self;
+    }
+    NSArray *cellSubviews = [contentViewParent subviews];
+    [self insertSubview:self.cellScrollView atIndex:0];
+    for (UIView *subview in cellSubviews)
+    {
+        [_contentCellView addSubview:subview];
+    }
     
     // Set scroll view to perpetually have same frame as self. Specifying relative to superview doesn't work, since the latter UITableViewCellScrollView has different behaviour.
     [self addConstraints:@[
@@ -90,43 +110,37 @@
                            [NSLayoutConstraint constraintWithItem:self.cellScrollView attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeRight multiplier:1.0 constant:0.0],
                            ]];
     
-    // Move the UITableViewCell de facto contentView into our scroll view.
-    _contentCellView = [[UIView alloc] init];
-    [_contentCellView addSubview:self.contentView];
-    [self.cellScrollView addSubview:_contentCellView];
-    
     self.tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(scrollViewTapped:)];
     self.tapGestureRecognizer.cancelsTouchesInView = NO;
     self.tapGestureRecognizer.delegate             = self;
     [self.cellScrollView addGestureRecognizer:self.tapGestureRecognizer];
-    
+
     self.longPressGestureRecognizer = [[SWLongPressGestureRecognizer alloc] initWithTarget:self action:@selector(scrollViewPressed:)];
     self.longPressGestureRecognizer.cancelsTouchesInView = NO;
     self.longPressGestureRecognizer.minimumPressDuration = kLongPressMinimumDuration;
     self.longPressGestureRecognizer.delegate = self;
     [self.cellScrollView addGestureRecognizer:self.longPressGestureRecognizer];
-    
+
     // Create the left and right utility button views, as well as vanilla UIViews in which to embed them.  We can manipulate the latter in order to effect clipping according to scroll position.
     // Such an approach is necessary in order for the utility views to sit on top to get taps, as well as allow the backgroundColor (and private UITableViewCellBackgroundView) to work properly.
-    
+
     self.leftUtilityClipView = [[UIView alloc] init];
     self.leftUtilityClipConstraint = [NSLayoutConstraint constraintWithItem:self.leftUtilityClipView attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeLeft multiplier:1.0 constant:0.0];
     self.leftUtilityButtonsView = [[SWUtilityButtonView alloc] initWithUtilityButtons:nil
                                                                            parentCell:self
                                                                 utilityButtonSelector:@selector(leftUtilityButtonHandler:)];
-    
-    self.rightUtilityClipView = [[UIView alloc] init];
+
+    self.rightUtilityClipView = [[UIView alloc] initWithFrame:self.bounds];
     self.rightUtilityClipConstraint = [NSLayoutConstraint constraintWithItem:self.rightUtilityClipView attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeRight multiplier:1.0 constant:0.0];
     self.rightUtilityButtonsView = [[SWUtilityButtonView alloc] initWithUtilityButtons:nil
                                                                             parentCell:self
                                                                  utilityButtonSelector:@selector(rightUtilityButtonHandler:)];
+
     
-    // Perform common configuration on both sets of utility items (left and right).
-    
-    UIView *clipViews[] = { self.leftUtilityClipView, self.rightUtilityClipView };
-    NSLayoutConstraint *clipConstraints[] = { self.leftUtilityClipConstraint, self.rightUtilityClipConstraint };
-    UIView *buttonViews[] = { self.leftUtilityButtonsView, self.rightUtilityButtonsView };
-    NSLayoutAttribute alignmentAttributes[] = { NSLayoutAttributeLeft, NSLayoutAttributeRight };
+    UIView *clipViews[] = { self.rightUtilityClipView, self.leftUtilityClipView };
+    NSLayoutConstraint *clipConstraints[] = { self.rightUtilityClipConstraint, self.leftUtilityClipConstraint };
+    UIView *buttonViews[] = { self.rightUtilityButtonsView, self.leftUtilityButtonsView };
+    NSLayoutAttribute alignmentAttributes[] = { NSLayoutAttributeRight, NSLayoutAttributeLeft };
     
     for (NSUInteger i = 0; i < 2; ++i)
     {
@@ -135,10 +149,12 @@
         UIView *buttonView = buttonViews[i];
         NSLayoutAttribute alignmentAttribute = alignmentAttributes[i];
         
+        clipConstraint.priority = UILayoutPriorityDefaultHigh;
+        
         clipView.translatesAutoresizingMaskIntoConstraints = NO;
         clipView.clipsToBounds = YES;
         
-        [self addSubview:clipView];
+        [clipViewParent addSubview:clipView];
         [self addConstraints:@[
                                // Pin the clipping view to the appropriate outer edges of the cell.
                                [NSLayoutConstraint constraintWithItem:clipView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeTop multiplier:1.0 constant:0.0],
