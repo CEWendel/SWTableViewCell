@@ -12,10 +12,15 @@
 
 - (void)sw_addUtilityButtonWithColor:(UIColor *)color title:(NSString *)title
 {
+    [self sw_addUtilityButtonWithButtonColor:color title:title titleColor:[UIColor whiteColor]];
+}
+
+- (void)sw_addUtilityButtonWithButtonColor:(UIColor *)buttonColor title:(NSString *)title titleColor:(UIColor *)titleColor
+{
     UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
-    button.backgroundColor = color;
+    button.backgroundColor = buttonColor;
     [button setTitle:title forState:UIControlStateNormal];
-    [button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [button setTitleColor:titleColor forState:UIControlStateNormal];
     [self addObject:button];
 }
 
