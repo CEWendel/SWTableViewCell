@@ -114,28 +114,28 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
     self.tapGestureRecognizer.cancelsTouchesInView = NO;
     self.tapGestureRecognizer.delegate             = self;
     [self.cellScrollView addGestureRecognizer:self.tapGestureRecognizer];
-
+    
     self.longPressGestureRecognizer = [[SWLongPressGestureRecognizer alloc] initWithTarget:self action:@selector(scrollViewPressed:)];
     self.longPressGestureRecognizer.cancelsTouchesInView = NO;
     self.longPressGestureRecognizer.minimumPressDuration = kLongPressMinimumDuration;
     self.longPressGestureRecognizer.delegate = self;
     [self.cellScrollView addGestureRecognizer:self.longPressGestureRecognizer];
-
+    
     // Create the left and right utility button views, as well as vanilla UIViews in which to embed them.  We can manipulate the latter in order to effect clipping according to scroll position.
     // Such an approach is necessary in order for the utility views to sit on top to get taps, as well as allow the backgroundColor (and private UITableViewCellBackgroundView) to work properly.
-
+    
     self.leftUtilityClipView = [[UIView alloc] init];
     self.leftUtilityClipConstraint = [NSLayoutConstraint constraintWithItem:self.leftUtilityClipView attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeLeft multiplier:1.0 constant:0.0];
     self.leftUtilityButtonsView = [[SWUtilityButtonView alloc] initWithUtilityButtons:nil
                                                                            parentCell:self
                                                                 utilityButtonSelector:@selector(leftUtilityButtonHandler:)];
-
+    
     self.rightUtilityClipView = [[UIView alloc] initWithFrame:self.bounds];
     self.rightUtilityClipConstraint = [NSLayoutConstraint constraintWithItem:self.rightUtilityClipView attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeRight multiplier:1.0 constant:0.0];
     self.rightUtilityButtonsView = [[SWUtilityButtonView alloc] initWithUtilityButtons:nil
                                                                             parentCell:self
                                                                  utilityButtonSelector:@selector(rightUtilityButtonHandler:)];
-
+    
     
     UIView *clipViews[] = { self.rightUtilityClipView, self.leftUtilityClipView };
     NSLayoutConstraint *clipConstraints[] = { self.rightUtilityClipConstraint, self.leftUtilityClipConstraint };
@@ -287,6 +287,7 @@ static NSString * const kTableViewPanState = @"state";
         if ([view isKindOfClass:[UITableView class]])
         {
             self.containingTableView = (UITableView *)view;
+            [self.longPressGestureRecognizer requireGestureRecognizerToFail:self.containingTableView.panGestureRecognizer];
             break;
         }
     } while ((view = view.superview));
@@ -485,6 +486,15 @@ static NSString * const kTableViewPanState = @"state";
         {
             [self.delegate swipeableTableViewCell:self scrollingToState:kCellStateLeft];
         }
+        
+        if ([self.delegate respondsToSelector:@selector(swipeableTableViewCellShouldHideUtilityButtonsOnSwipe:)])
+        {
+            for (SWTableViewCell *cell in [self.containingTableView visibleCells]) {
+                if (cell != self && [cell isKindOfClass:[SWTableViewCell class]] && [self.delegate swipeableTableViewCellShouldHideUtilityButtonsOnSwipe:cell]) {
+                    [cell hideUtilityButtonsAnimated:YES];
+                }
+            }
+        }
     }
 }
 
@@ -496,6 +506,15 @@ static NSString * const kTableViewPanState = @"state";
         if ([self.delegate respondsToSelector:@selector(swipeableTableViewCell:scrollingToState:)])
         {
             [self.delegate swipeableTableViewCell:self scrollingToState:kCellStateRight];
+        }
+        
+        if ([self.delegate respondsToSelector:@selector(swipeableTableViewCellShouldHideUtilityButtonsOnSwipe:)])
+        {
+            for (SWTableViewCell *cell in [self.containingTableView visibleCells]) {
+                if (cell != self && [cell isKindOfClass:[SWTableViewCell class]] && [self.delegate swipeableTableViewCellShouldHideUtilityButtonsOnSwipe:cell]) {
+                    [cell hideUtilityButtonsAnimated:YES];
+                }
+            }
         }
     }
 }
@@ -714,7 +733,7 @@ static NSString * const kTableViewPanState = @"state";
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
 {
     [self updateCellState];
-
+    
     if (self.delegate && [self.delegate respondsToSelector:@selector(swipeableTableViewCellDidEndScrolling:)]) {
         [self.delegate swipeableTableViewCellDidEndScrolling:self];
     }
@@ -723,7 +742,7 @@ static NSString * const kTableViewPanState = @"state";
 - (void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView
 {
     [self updateCellState];
-
+    
     if (self.delegate && [self.delegate respondsToSelector:@selector(swipeableTableViewCellDidEndScrolling:)]) {
         [self.delegate swipeableTableViewCellDidEndScrolling:self];
     }
