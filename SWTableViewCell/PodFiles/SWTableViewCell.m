@@ -476,6 +476,23 @@ static NSString * const kTableViewPanState = @"state";
     }
 }
 
+- (void)hideUtilityButtons:(UITableView *)tableView exceptForCell:(SWTableViewCell *)cell animated:(BOOL)animated
+{
+	NSArray *paths = [tableView indexPathsForVisibleRows];
+    
+    NSMutableSet *visibleCells = [[NSMutableSet alloc] init];
+    
+    for (NSIndexPath *path in paths) {
+        [visibleCells addObject:[tableView cellForRowAtIndexPath:path]];
+    }
+    
+    for (SWBaseCell *checkCell in visibleCells) {
+        if (checkCell != cell) {
+            [checkCell hideUtilityButtonsAnimated:animated];
+        }
+    }
+}
+
 - (void)showLeftUtilityButtonsAnimated:(BOOL)animated {
     if (_cellState != kCellStateLeft)
     {
