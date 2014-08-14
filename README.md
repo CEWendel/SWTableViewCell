@@ -227,8 +227,6 @@ The index signifies which utility button the user pressed, for each side the but
 ##Contributing
 Use [Github issues](https://github.com/cewendel/SWTableViewCell/issues) to track bugs and feature requests.
 
-I'm really busy in college and not actively working on this, so pull requests would be greatly appreciated.
-
 ##Contact
 
 Chris Wendel
