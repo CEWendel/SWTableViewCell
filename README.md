@@ -219,10 +219,6 @@ The index signifies which utility button the user pressed, for each side the but
 
 ###Gotchas
 
-#### Custom `UITableViewCell` content
-* Accessing view of the cell object or managing the predefined content still works fine. So for example if you change the cell's `imageView` or `backgroundView`, `SWTableViewCell` will still work as expected
-* Don't use accessory views in your cell, because they live above the `contentView` and will stay in place when the cell scrolls.
-
 #### Seperator Insets
 * If you have left utility button on iOS 7, I recommend changing your Table View's seperatorInset so the seperator stretches the length of the screen
 <pre> tableView.separatorInset = UIEdgeInsetsMake(0, 0, 0, 0); </pre>
@@ -230,8 +226,6 @@ The index signifies which utility button the user pressed, for each side the but
 
 ##Contributing
 Use [Github issues](https://github.com/cewendel/SWTableViewCell/issues) to track bugs and feature requests.
-
-I'm really busy in college and not actively working on this, so pull requests would be greatly appreciated.
 
 ##Contact
 

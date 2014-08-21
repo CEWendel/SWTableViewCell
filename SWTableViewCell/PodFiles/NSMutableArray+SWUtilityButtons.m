@@ -16,6 +16,7 @@
     button.backgroundColor = color;
     [button setTitle:title forState:UIControlStateNormal];
     [button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [button.titleLabel setAdjustsFontSizeToFitWidth:YES];
     [self addObject:button];
 }
 
