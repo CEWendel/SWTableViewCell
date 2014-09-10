@@ -1,33 +1,33 @@
 //
-//  SWUtilityButtonView.m
-//  SWTableViewCell
+//  JerrysUtilityButtonView.m
+//  JerrysTableViewCell
 //
 //  Created by Matt Bowman on 11/27/13.
 //  Copyright (c) 2013 Chris Wendel. All rights reserved.
 //
 
-#import "SWUtilityButtonView.h"
-#import "SWUtilityButtonTapGestureRecognizer.h"
+#import "JerrysUtilityButtonView.h"
+#import "JerrysUtilityButtonTapGestureRecognizer.h"
 
-@interface SWUtilityButtonView()
+@interface JerrysUtilityButtonView()
 
 @property (nonatomic, strong) NSLayoutConstraint *widthConstraint;
 @property (nonatomic, strong) NSMutableArray *buttonBackgroundColors;
 
 @end
 
-@implementation SWUtilityButtonView
+@implementation JerrysUtilityButtonView
 
-#pragma mark - SWUtilityButonView initializers
+#pragma mark - JerrysUtilityButonView initializers
 
-- (id)initWithUtilityButtons:(NSArray *)utilityButtons parentCell:(SWTableViewCell *)parentCell utilityButtonSelector:(SEL)utilityButtonSelector
+- (id)initWithUtilityButtons:(NSArray *)utilityButtons parentCell:(JerrysTableViewCell *)parentCell utilityButtonSelector:(SEL)utilityButtonSelector
 {
     self = [self initWithFrame:CGRectZero utilityButtons:utilityButtons parentCell:parentCell utilityButtonSelector:utilityButtonSelector];
     
     return self;
 }
 
-- (id)initWithFrame:(CGRect)frame utilityButtons:(NSArray *)utilityButtons parentCell:(SWTableViewCell *)parentCell utilityButtonSelector:(SEL)utilityButtonSelector
+- (id)initWithFrame:(CGRect)frame utilityButtons:(NSArray *)utilityButtons parentCell:(JerrysTableViewCell *)parentCell utilityButtonSelector:(SEL)utilityButtonSelector
 {
     self = [super initWithFrame:frame];
     
@@ -102,7 +102,7 @@
                                                                            views:NSDictionaryOfVariableBindings(button)]];
             
             
-            SWUtilityButtonTapGestureRecognizer *utilityButtonTapGestureRecognizer = [[SWUtilityButtonTapGestureRecognizer alloc] initWithTarget:_parentCell action:_utilityButtonSelector];
+            JerrysUtilityButtonTapGestureRecognizer *utilityButtonTapGestureRecognizer = [[JerrysUtilityButtonTapGestureRecognizer alloc] initWithTarget:_parentCell action:_utilityButtonSelector];
             utilityButtonTapGestureRecognizer.buttonIndex = utilityButtonsCounter;
             [button addGestureRecognizer:utilityButtonTapGestureRecognizer];
             

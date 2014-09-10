@@ -1,4 +1,4 @@
-SWTableViewCell
+JerrysTableViewCell
 ===============
 
 <p align="center"><img src="http://i.imgur.com/njKCjK8.gif"/></p>
@@ -28,16 +28,16 @@ So the cell will not be considered selected when the user touches the cell while
 
 ###Standard Table View Cells
 
-In your `tableView:cellForRowAtIndexPath:` method you set up the SWTableView cell and add an arbitrary amount of utility buttons to it using the included `NSMutableArray+SWUtilityButtons` category.
+In your `tableView:cellForRowAtIndexPath:` method you set up the JerrysTableView cell and add an arbitrary amount of utility buttons to it using the included `NSMutableArray+JerrysUtilityButtons` category.
 
 ```objc
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     static NSString *cellIdentifier = @"Cell";
     
-    SWTableViewCell *cell = (SWTableViewCell *)[tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+    JerrysTableViewCell *cell = (JerrysTableViewCell *)[tableView dequeueReusableCellWithIdentifier:cellIdentifier];
     
     if (cell == nil) {
-        cell = [[SWTableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:cellIdentifier];
+        cell = [[JerrysTableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:cellIdentifier];
         cell.leftUtilityButtons = [self leftButtons];
         cell.rightUtilityButtons = [self rightButtons];
         cell.delegate = self;
@@ -86,7 +86,7 @@ In your `tableView:cellForRowAtIndexPath:` method you set up the SWTableView cel
 
 ###Custom Table View Cells
 
-Thanks to [Matt Bowman](https://github.com/MattCBowman) you can now create custom table view cells using Interface Builder that have the capabilities of an SWTableViewCell
+Thanks to [Matt Bowman](https://github.com/MattCBowman) you can now create custom table view cells using Interface Builder that have the capabilities of an JerrysTableViewCell
 
 The first step is to design your cell either in a standalone nib or inside of a
 table view using prototype cells. Make sure to set the custom class on the 
@@ -99,13 +99,13 @@ Then set the cell reuse identifier:
 <p align="center"><img src="http://i.imgur.com/dlmArZ1.png"/></p>
 
 When writing your custom table view cell's code, make sure your cell is a
-subclass of SWTableViewCell:
+subclass of JerrysTableViewCell:
 
 ```objc
 
-#import <SWTableViewCell.h>
+#import <JerrysTableViewCell.h>
 
-@interface MyCustomTableViewCell : SWTableViewCell
+@interface MyCustomTableViewCell : JerrysTableViewCell
 
 @property (weak, nonatomic) UILabel *customLabel;
 @property (weak, nonatomic) UIImageView *customImageView;
@@ -150,23 +150,23 @@ Then, in the `tableView:cellForRowAtIndexPath:` method of your `UITableViewDeleg
 
 ###Delegate
 
-The delegate `SWTableViewCellDelegate` is used by the developer to find out which button was pressed. There are five methods:
+The delegate `JerrysTableViewCellDelegate` is used by the developer to find out which button was pressed. There are five methods:
 
 ```objc
 // click event on left utility button
-- (void)swipeableTableViewCell:(SWTableViewCell *)cell didTriggerLeftUtilityButtonWithIndex:(NSInteger)index;
+- (void)swipeableTableViewCell:(JerrysTableViewCell *)cell didTriggerLeftUtilityButtonWithIndex:(NSInteger)index;
 
 // click event on right utility button
-- (void)swipeableTableViewCell:(SWTableViewCell *)cell didTriggerRightUtilityButtonWithIndex:(NSInteger)index;
+- (void)swipeableTableViewCell:(JerrysTableViewCell *)cell didTriggerRightUtilityButtonWithIndex:(NSInteger)index;
 
 // utility button open/close event
-- (void)swipeableTableViewCell:(SWTableViewCell *)cell scrollingToState:(SWCellState)state;
+- (void)swipeableTableViewCell:(JerrysTableViewCell *)cell scrollingToState:(JerrysCellState)state;
 
 // prevent multiple cells from showing utilty buttons simultaneously
-- (BOOL)swipeableTableViewCellShouldHideUtilityButtonsOnSwipe:(SWTableViewCell *)cell;
+- (BOOL)swipeableTableViewCellShouldHideUtilityButtonsOnSwipe:(JerrysTableViewCell *)cell;
 
 // prevent cell(s) from displaying left/right utility buttons
-- (BOOL)swipeableTableViewCell:(SWTableViewCell *)cell canSwipeToState:(SWCellState)state;
+- (BOOL)swipeableTableViewCell:(JerrysTableViewCell *)cell canSwipeToState:(JerrysCellState)state;
 ```
 
 The index signifies which utility button the user pressed, for each side the button indices are ordered from right to left 0...n
@@ -174,9 +174,9 @@ The index signifies which utility button the user pressed, for each side the but
 ####Example
 
 ```objc
-#pragma mark - SWTableViewDelegate
+#pragma mark - JerrysTableViewDelegate
 
-- (void)swipeableTableViewCell:(SWTableViewCell *)cell didTriggerLeftUtilityButtonWithIndex:(NSInteger)index {
+- (void)swipeableTableViewCell:(JerrysTableViewCell *)cell didTriggerLeftUtilityButtonWithIndex:(NSInteger)index {
     switch (index) {
         case 0:
             NSLog(@"check button was pressed");
@@ -194,7 +194,7 @@ The index signifies which utility button the user pressed, for each side the but
     }
 }
 
-- (void)swipeableTableViewCell:(SWTableViewCell *)cell didTriggerRightUtilityButtonWithIndex:(NSInteger)index {
+- (void)swipeableTableViewCell:(JerrysTableViewCell *)cell didTriggerRightUtilityButtonWithIndex:(NSInteger)index {
     switch (index) {
         case 0:
             NSLog(@"More button was pressed");
@@ -225,7 +225,7 @@ The index signifies which utility button the user pressed, for each side the but
 
 
 ##Contributing
-Use [Github issues](https://github.com/cewendel/SWTableViewCell/issues) to track bugs and feature requests.
+Use [Github issues](https://github.com/cewendel/JerrysTableViewCell/issues) to track bugs and feature requests.
 
 ##Contact
 

@@ -1,14 +1,14 @@
 //
-//  NSMutableArray+SWUtilityButtons.m
-//  SWTableViewCell
+//  NSMutableArray+JerrysUtilityButtons.m
+//  JerrysTableViewCell
 //
 //  Created by Matt Bowman on 11/27/13.
 //  Copyright (c) 2013 Chris Wendel. All rights reserved.
 //
 
-#import "NSMutableArray+SWUtilityButtons.h"
+#import "NSMutableArray+JerrysUtilityButtons.h"
 
-@implementation NSMutableArray (SWUtilityButtons)
+@implementation NSMutableArray (JerrysUtilityButtons)
 
 - (void)sw_addUtilityButtonWithColor:(UIColor *)color title:(NSString *)title
 {
@@ -49,7 +49,7 @@
 @end
 
 
-@implementation NSArray (SWUtilityButtons)
+@implementation NSArray (JerrysUtilityButtons)
 
 - (BOOL)sw_isEqualToButtons:(NSArray *)buttons
 {
