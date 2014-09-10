@@ -1,13 +1,13 @@
 //
 //  ViewController.m
-//  SWTableViewCell
+//  JerrysTableViewCell
 //
 //  Created by Chris Wendel on 9/10/13.
 //  Copyright (c) 2013 Chris Wendel. All rights reserved.
 //
 
 #import "ViewController.h"
-#import "SWTableViewCell.h"
+#import "JerrysTableViewCell.h"
 #import "UMTableViewCell.h"
 
 @interface ViewController () {
@@ -132,11 +132,11 @@
     {
         static NSString *cellIdentifier = @"Cell";
         
-        SWTableViewCell *cell = (SWTableViewCell *)[tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+        JerrysTableViewCell *cell = (JerrysTableViewCell *)[tableView dequeueReusableCellWithIdentifier:cellIdentifier];
         
         if (cell == nil) {
             
-            cell = [[SWTableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:cellIdentifier];
+            cell = [[JerrysTableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:cellIdentifier];
             
             cell.leftUtilityButtons = [self leftButtons];
             cell.rightUtilityButtons = [self rightButtons];
@@ -201,9 +201,9 @@
     // Set background color of cell here if you don't want default white
 }
 
-#pragma mark - SWTableViewDelegate
+#pragma mark - JerrysTableViewDelegate
 
-- (void)swipeableTableViewCell:(SWTableViewCell *)cell scrollingToState:(SWCellState)state
+- (void)swipeableTableViewCell:(JerrysTableViewCell *)cell scrollingToState:(JerrysCellState)state
 {
     switch (state) {
         case 0:
@@ -220,7 +220,7 @@
     }
 }
 
-- (void)swipeableTableViewCell:(SWTableViewCell *)cell didTriggerLeftUtilityButtonWithIndex:(NSInteger)index
+- (void)swipeableTableViewCell:(JerrysTableViewCell *)cell didTriggerLeftUtilityButtonWithIndex:(NSInteger)index
 {
     switch (index) {
         case 0:
@@ -239,7 +239,7 @@
     }
 }
 
-- (void)swipeableTableViewCell:(SWTableViewCell *)cell didTriggerRightUtilityButtonWithIndex:(NSInteger)index
+- (void)swipeableTableViewCell:(JerrysTableViewCell *)cell didTriggerRightUtilityButtonWithIndex:(NSInteger)index
 {
     switch (index) {
         case 0:
@@ -265,13 +265,13 @@
     }
 }
 
-- (BOOL)swipeableTableViewCellShouldHideUtilityButtonsOnSwipe:(SWTableViewCell *)cell
+- (BOOL)swipeableTableViewCellShouldHideUtilityButtonsOnSwipe:(JerrysTableViewCell *)cell
 {
     // allow just one cell's utility button to be open at once
     return YES;
 }
 
-- (BOOL)swipeableTableViewCell:(SWTableViewCell *)cell canSwipeToState:(SWCellState)state
+- (BOOL)swipeableTableViewCell:(JerrysTableViewCell *)cell canSwipeToState:(JerrysCellState)state
 {
     switch (state) {
         case 1:
