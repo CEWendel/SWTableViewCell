@@ -150,11 +150,23 @@ Then, in the `tableView:cellForRowAtIndexPath:` method of your `UITableViewDeleg
 
 ###Delegate
 
-The delegate `SWTableViewCellDelegate` is used by the developer to find out which button was pressed. There are two methods:
+The delegate `SWTableViewCellDelegate` is used by the developer to find out which button was pressed. There are five methods:
 
 ```objc
+// click event on left utility button
 - (void)swipeableTableViewCell:(SWTableViewCell *)cell didTriggerLeftUtilityButtonWithIndex:(NSInteger)index;
+
+// click event on right utility button
 - (void)swipeableTableViewCell:(SWTableViewCell *)cell didTriggerRightUtilityButtonWithIndex:(NSInteger)index;
+
+// utility button open/close event
+- (void)swipeableTableViewCell:(SWTableViewCell *)cell scrollingToState:(SWCellState)state;
+
+// prevent multiple cells from showing utilty buttons simultaneously
+- (BOOL)swipeableTableViewCellShouldHideUtilityButtonsOnSwipe:(SWTableViewCell *)cell;
+
+// prevent cell(s) from displaying left/right utility buttons
+- (BOOL)swipeableTableViewCell:(SWTableViewCell *)cell canSwipeToState:(SWCellState)state;
 ```
 
 The index signifies which utility button the user pressed, for each side the button indices are ordered from right to left 0...n
@@ -207,10 +219,6 @@ The index signifies which utility button the user pressed, for each side the but
 
 ###Gotchas
 
-#### Custom `UITableViewCell` content
-* Accessing view of the cell object or managing the predefined content still works fine. So for example if you change the cell's `imageView` or `backgroundView`, `SWTableViewCell` will still work as expected
-* Don't use accessory views in your cell, because they live above the `contentView` and will stay in place when the cell scrolls.
-
 #### Seperator Insets
 * If you have left utility button on iOS 7, I recommend changing your Table View's seperatorInset so the seperator stretches the length of the screen
 <pre> tableView.separatorInset = UIEdgeInsetsMake(0, 0, 0, 0); </pre>
@@ -218,8 +226,6 @@ The index signifies which utility button the user pressed, for each side the but
 
 ##Contributing
 Use [Github issues](https://github.com/cewendel/SWTableViewCell/issues) to track bugs and feature requests.
-
-I'm really busy in college and not actively working on this, so pull requests would be greatly appreciated.
 
 ##Contact
 
