@@ -45,6 +45,7 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
 
 @implementation SWTableViewCell {
     UIView *_contentCellView;
+    BOOL updatesContentSize;
 }
 
 #pragma mark Initializers
@@ -305,7 +306,9 @@ static NSString * const kTableViewPanState = @"state";
     frame.origin.x = [self leftUtilityButtonsWidth];
     _contentCellView.frame = frame;
     
+    updatesContentSize = YES;
     self.cellScrollView.contentSize = CGSizeMake(CGRectGetWidth(self.frame) + [self utilityButtonsPadding], CGRectGetHeight(self.frame));
+    updatesContentSize = NO;
     
     if (!self.cellScrollView.isTracking && !self.cellScrollView.isDecelerating)
     {
@@ -672,6 +675,10 @@ static NSString * const kTableViewPanState = @"state";
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
+    if (updatesContentSize) {
+        return;
+    }
+    
     if (scrollView.contentOffset.x > [self leftUtilityButtonsWidth])
     {
         if ([self rightUtilityButtonsWidth] > 0)
