@@ -271,11 +271,6 @@
     return YES;
 }
 
-- (BOOL)swipeableTableViewCellShouldHideUtilityButtonsImmediatelyOnSwipe:(SWTableViewCell *)cell
-{
-    return NO;
-}
-
 - (BOOL)swipeableTableViewCell:(SWTableViewCell *)cell canSwipeToState:(SWCellState)state
 {
     switch (state) {

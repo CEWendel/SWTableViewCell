@@ -655,18 +655,6 @@ static NSString * const kTableViewPanState = @"state";
         [self.delegate swipeableTableViewCell:self scrollingToState:_cellState];
     }
     
-    if (_cellState != kCellStateCenter)
-    {
-        if ([self.delegate respondsToSelector:@selector(swipeableTableViewCellShouldHideUtilityButtonsOnSwipe:)])
-        {
-            for (SWTableViewCell *cell in [self.containingTableView visibleCells]) {
-                if (cell != self && [cell isKindOfClass:[SWTableViewCell class]] && [self.delegate swipeableTableViewCellShouldHideUtilityButtonsOnSwipe:cell]) {
-                    [cell hideUtilityButtonsAnimated:YES];
-                }
-            }
-        }
-    }
-    
     *targetContentOffset = [self contentOffsetForCellState:_cellState];
 }
 
@@ -744,10 +732,10 @@ static NSString * const kTableViewPanState = @"state";
 
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
 {
-    if ([self.delegate respondsToSelector:@selector(swipeableTableViewCellShouldHideUtilityButtonsImmediatelyOnSwipe:)])
+    if ([self.delegate respondsToSelector:@selector(swipeableTableViewCellShouldHideUtilityButtonsOnSwipe:)])
     {
         for (SWTableViewCell *cell in [self.containingTableView visibleCells]) {
-            if (cell != self && [cell isKindOfClass:[SWTableViewCell class]] && [self.delegate swipeableTableViewCellShouldHideUtilityButtonsImmediatelyOnSwipe:cell]) {
+            if (cell != self && [cell isKindOfClass:[SWTableViewCell class]] && [self.delegate swipeableTableViewCellShouldHideUtilityButtonsOnSwipe:cell]) {
                 [cell hideUtilityButtonsAnimated:YES];
             }
         }
