@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name     = 'SWTableViewCell'
-  s.version  = '0.3.4'
+  s.version  = '0.3.5'
   s.author   = { 'Chris Wendel' => 'chriwend@umich.edu' }
   s.homepage = 'https://github.com/CEWendel/SWTableViewCell'
   s.summary  = 'UITableViewCell subclass that implements a swipeable content view which exposes utility buttons.'
