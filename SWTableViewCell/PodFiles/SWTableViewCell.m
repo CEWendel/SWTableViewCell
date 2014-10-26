@@ -526,17 +526,29 @@ static NSString * const kTableViewPanState = @"state";
 
 - (CGFloat)leftUtilityButtonsWidth
 {
-    return CGRectGetWidth(self.leftUtilityButtonsView.frame);
+#if CGFLOAT_IS_DOUBLE
+    return round(CGRectGetWidth(self.leftUtilityButtonsView.frame));
+#else
+    return roundf(CGRectGetWidth(self.leftUtilityButtonsView.frame));
+#endif
 }
 
 - (CGFloat)rightUtilityButtonsWidth
 {
-    return CGRectGetWidth(self.rightUtilityButtonsView.frame) + self.additionalRightPadding;
+#if CGFLOAT_IS_DOUBLE
+    return round(CGRectGetWidth(self.rightUtilityButtonsView.frame) + self.additionalRightPadding);
+#else
+    return roundf(CGRectGetWidth(self.rightUtilityButtonsView.frame) + self.additionalRightPadding);
+#endif
 }
 
 - (CGFloat)utilityButtonsPadding
 {
-    return [self leftUtilityButtonsWidth] + [self rightUtilityButtonsWidth];
+#if CGFLOAT_IS_DOUBLE
+    return round([self leftUtilityButtonsWidth] + [self rightUtilityButtonsWidth]);
+#else
+    return roundf([self leftUtilityButtonsWidth] + [self rightUtilityButtonsWidth]);
+#endif
 }
 
 - (CGPoint)contentOffsetForCellState:(SWCellState)state
