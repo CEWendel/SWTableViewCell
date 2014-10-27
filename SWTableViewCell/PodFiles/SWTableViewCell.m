@@ -100,6 +100,14 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
     for (UIView *subview in cellSubviews)
     {
         [_contentCellView addSubview:subview];
+        if (subview.clipsToBounds) {
+            // iOS 8 layout bug
+            // clipsToBounds tells us it is a content cell view, hence we add 2 constraints for the top/left
+            [_contentCellView addConstraints:@[
+                                               [NSLayoutConstraint constraintWithItem:subview attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:_contentCellView attribute:NSLayoutAttributeTop multiplier:1.0 constant:0.0],
+                                               [NSLayoutConstraint constraintWithItem:subview attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:_contentCellView attribute:NSLayoutAttributeLeft multiplier:1.0 constant:0.0],
+                                               ]];
+        }
     }
     
     // Set scroll view to perpetually have same frame as self. Specifying relative to superview doesn't work, since the latter UITableViewCellScrollView has different behaviour.
