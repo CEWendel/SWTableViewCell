@@ -242,9 +242,6 @@ static NSString * const kTableViewPanState = @"state";
         _leftUtilityButtons = leftUtilityButtons;
         
         self.leftUtilityButtonsView.utilityButtons = leftUtilityButtons;
-
-        [self.leftUtilityButtonsView layoutIfNeeded];
-        [self layoutIfNeeded];
     }
 }
 
@@ -253,9 +250,6 @@ static NSString * const kTableViewPanState = @"state";
     _leftUtilityButtons = leftUtilityButtons;
     
     [self.leftUtilityButtonsView setUtilityButtons:leftUtilityButtons WithButtonWidth:width];
-
-    [self.leftUtilityButtonsView layoutIfNeeded];
-    [self layoutIfNeeded];
 }
 
 - (void)setRightUtilityButtons:(NSArray *)rightUtilityButtons
@@ -264,9 +258,6 @@ static NSString * const kTableViewPanState = @"state";
         _rightUtilityButtons = rightUtilityButtons;
         
         self.rightUtilityButtonsView.utilityButtons = rightUtilityButtons;
-
-        [self.rightUtilityButtonsView layoutIfNeeded];
-        [self layoutIfNeeded];
     }
 }
 
@@ -275,9 +266,6 @@ static NSString * const kTableViewPanState = @"state";
     _rightUtilityButtons = rightUtilityButtons;
     
     [self.rightUtilityButtonsView setUtilityButtons:rightUtilityButtons WithButtonWidth:width];
-
-    [self.rightUtilityButtonsView layoutIfNeeded];
-    [self layoutIfNeeded];
 }
 
 #pragma mark - UITableViewCell overrides
