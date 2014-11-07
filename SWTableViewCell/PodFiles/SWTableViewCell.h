@@ -34,7 +34,10 @@ typedef NS_ENUM(NSInteger, SWCellState)
 
 @end
 
+IB_DESIGNABLE
 @interface SWTableViewCell : UITableViewCell
+
+@property (nonatomic) IBInspectable BOOL removeInternalLongPressGestureRecognizer;
 
 @property (nonatomic, copy) NSArray *leftUtilityButtons;
 @property (nonatomic, copy) NSArray *rightUtilityButtons;
