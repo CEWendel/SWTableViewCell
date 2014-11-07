@@ -115,7 +115,7 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
     self.tapGestureRecognizer.delegate             = self;
     [self.cellScrollView addGestureRecognizer:self.tapGestureRecognizer];
 
-    if(self.removeInternalLongPressGestureRecognizer){
+    if(!self.removeInternalLongPressGestureRecognizer){
         self.longPressGestureRecognizer = [[SWLongPressGestureRecognizer alloc] initWithTarget:self action:@selector(scrollViewPressed:)];
         self.longPressGestureRecognizer.cancelsTouchesInView = NO;
         self.longPressGestureRecognizer.minimumPressDuration = kLongPressMinimumDuration;
