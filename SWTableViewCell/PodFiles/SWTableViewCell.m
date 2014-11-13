@@ -300,8 +300,6 @@ static NSString * const kTableViewPanState = @"state";
 {
     [super layoutSubviews];
     
-    SWCellState currentCellState = _cellState;
-    
     // Offset the contentView origin so that it appears correctly w/rt the enclosing scroll view (to which we moved it).
     CGRect frame = self.contentView.frame;
     frame.origin.x = [self leftUtilityButtonsWidth];
@@ -315,10 +313,6 @@ static NSString * const kTableViewPanState = @"state";
     }
     
     [self updateCellState];
-    
-    if (currentCellState != _cellState) {
-        [self switchUIToCellState:currentCellState];
-    }
 }
 
 - (void)setFrame:(CGRect)frame
@@ -328,10 +322,15 @@ static NSString * const kTableViewPanState = @"state";
     // We need to layout our subviews again when this changes so our constraints clip to the right width
     BOOL widthChanged = (self.frame.size.width != frame.size.width);
     
+    SWCellState currentCellState = _cellState;
     [super setFrame:frame];
     
-    if (widthChanged)
+    if (widthChanged) {
         [self layoutIfNeeded];
+        if (currentCellState != _cellState) {
+            [self switchUIToCellState:currentCellState];
+        }
+    }
 }
 
 - (void)prepareForReuse
