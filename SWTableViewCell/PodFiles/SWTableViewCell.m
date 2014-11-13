@@ -322,10 +322,15 @@ static NSString * const kTableViewPanState = @"state";
     // We need to layout our subviews again when this changes so our constraints clip to the right width
     BOOL widthChanged = (self.frame.size.width != frame.size.width);
     
+    SWCellState currentCellState = _cellState;
     [super setFrame:frame];
     
-    if (widthChanged)
+    if (widthChanged) {
         [self layoutIfNeeded];
+        if (currentCellState != _cellState) {
+            [self switchUIToCellState:currentCellState];
+        }
+    }
 }
 
 - (void)prepareForReuse
@@ -519,6 +524,23 @@ static NSString * const kTableViewPanState = @"state";
 
 - (BOOL)isUtilityButtonsHidden {
     return _cellState == kCellStateCenter;
+}
+
+- (void)switchUIToCellState:(SWCellState)cellState {
+    
+    switch (cellState) {
+        case kCellStateCenter:
+            [self hideUtilityButtonsAnimated:YES];
+            break;
+        case kCellStateLeft:
+            [self showLeftUtilityButtonsAnimated:YES];
+            break;
+        case kCellStateRight:
+            [self showRightUtilityButtonsAnimated:YES];
+            break;
+        default:
+            break;
+    }
 }
 
 
