@@ -5,6 +5,12 @@ SWTableViewCell
 
 An easy-to-use UITableViewCell subclass that implements a swipeable content view which exposes utility buttons (similar to iOS 7 Mail Application)
 
+##Usage
+In your Podfile:
+<pre>pod 'SWTableViewCell', '~> 0.3.6'</pre>
+
+Or just clone this repo and manually add source to project
+
 ##Functionality
 ###Right Utility Buttons
 Utility buttons that become visible on the right side of the Table View Cell when the user swipes left. This behavior is similar to that seen in the iOS apps Mail and Reminders.
@@ -219,10 +225,6 @@ The index signifies which utility button the user pressed, for each side the but
 
 ###Gotchas
 
-#### Custom `UITableViewCell` content
-* Accessing view of the cell object or managing the predefined content still works fine. So for example if you change the cell's `imageView` or `backgroundView`, `SWTableViewCell` will still work as expected
-* Don't use accessory views in your cell, because they live above the `contentView` and will stay in place when the cell scrolls.
-
 #### Seperator Insets
 * If you have left utility button on iOS 7, I recommend changing your Table View's seperatorInset so the seperator stretches the length of the screen
 <pre> tableView.separatorInset = UIEdgeInsetsMake(0, 0, 0, 0); </pre>
@@ -230,8 +232,6 @@ The index signifies which utility button the user pressed, for each side the but
 
 ##Contributing
 Use [Github issues](https://github.com/cewendel/SWTableViewCell/issues) to track bugs and feature requests.
-
-I'm really busy in college and not actively working on this, so pull requests would be greatly appreciated.
 
 ##Contact
 
