@@ -185,6 +185,7 @@ static NSString * const kTableViewPanState = @"state";
 
 - (void)dealloc
 {
+    self.cellScrollView.delegate = nil;
     [self removeOldTableViewPanObserver];
 }
 
