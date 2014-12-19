@@ -7,7 +7,7 @@ An easy-to-use UITableViewCell subclass that implements a swipeable content view
 
 ##Usage
 In your Podfile:
-<pre>pod 'SWTableViewCell', '~> 0.3.6'</pre>
+<pre>pod 'SWTableViewCell', '~> 0.3.7'</pre>
 
 Or just clone this repo and manually add source to project
 
