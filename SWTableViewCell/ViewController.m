@@ -35,8 +35,7 @@
     UIRefreshControl *refreshControl = [[UIRefreshControl alloc] init];
     [refreshControl addTarget:self action:@selector(toggleCells:) forControlEvents:UIControlEventValueChanged];
     refreshControl.tintColor = [UIColor blueColor];
-    
-    [self.tableView addSubview:refreshControl];
+
     self.refreshControl = refreshControl;
     
     // If you set the seperator inset on iOS 6 you get a NSInvalidArgumentException...weird
