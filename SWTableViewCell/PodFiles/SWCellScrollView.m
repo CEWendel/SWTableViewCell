@@ -7,6 +7,7 @@
 //
 
 #import "SWCellScrollView.h"
+#import "SWTableViewCell.h"
 
 @implementation SWCellScrollView
 
@@ -14,7 +15,15 @@
 {
     if (gestureRecognizer == self.panGestureRecognizer) {
         CGPoint translation = [(UIPanGestureRecognizer*)gestureRecognizer translationInView:gestureRecognizer.view];
-        return fabs(translation.y) <= fabs(translation.x);
+		if(fabs(translation.y) <= fabs(translation.x))
+		{
+			if ([self.cell.delegate respondsToSelector:@selector(swipeableTableViewCell:canSwipeToState:)])
+				return [self.cell.delegate swipeableTableViewCell:(SWTableViewCell *)self.superview canSwipeToState:(translation.x > 0 ? kCellStateLeft : kCellStateRight)];
+			else
+				return YES;
+		}
+		else
+			return NO;
     } else {
         return YES;
     }
@@ -36,6 +45,11 @@
         
     }
     return YES;
+}
+
+- (BOOL)touchesShouldCancelInContentView:(UIView *)view
+{
+	return YES;
 }
 
 @end

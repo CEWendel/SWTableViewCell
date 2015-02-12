@@ -24,7 +24,7 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
 @property (nonatomic, assign) SWCellState cellState; // The state of the cell within the scroll view, can be left, right or middle
 @property (nonatomic, assign) CGFloat additionalRightPadding;
 
-@property (nonatomic, strong) UIScrollView *cellScrollView;
+@property (nonatomic, strong) SWCellScrollView *cellScrollView;
 @property (nonatomic, strong) SWUtilityButtonView *leftUtilityButtonsView, *rightUtilityButtonsView;
 @property (nonatomic, strong) UIView *leftUtilityClipView, *rightUtilityClipView;
 @property (nonatomic, strong) NSLayoutConstraint *leftUtilityClipConstraint, *rightUtilityClipConstraint;
@@ -84,7 +84,7 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
     self.cellScrollView.showsHorizontalScrollIndicator = NO;
     self.cellScrollView.scrollsToTop = NO;
     self.cellScrollView.scrollEnabled = YES;
-    
+	self.cellScrollView.cell = self;
     _contentCellView = [[UIView alloc] init];
     [self.cellScrollView addSubview:_contentCellView];
     
@@ -164,7 +164,11 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
                                [NSLayoutConstraint constraintWithItem:clipView attribute:alignmentAttribute relatedBy:NSLayoutRelationEqual toItem:self attribute:alignmentAttribute multiplier:1.0 constant:0.0],
                                clipConstraint,
                                ]];
-        
+		
+		NSLayoutConstraint *cons = [NSLayoutConstraint constraintWithItem:buttonView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationLessThanOrEqual toItem:self.contentView attribute:NSLayoutAttributeWidth multiplier:1.0 constant:-kUtilityButtonWidthDefault];
+		
+		cons.priority = 900;
+		
         [clipView addSubview:buttonView];
         [self addConstraints:@[
                                // Pin the button view to the appropriate outer edges of its clipping view.
@@ -173,7 +177,7 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
                                [NSLayoutConstraint constraintWithItem:buttonView attribute:alignmentAttribute relatedBy:NSLayoutRelationEqual toItem:clipView attribute:alignmentAttribute multiplier:1.0 constant:0.0],
                                
                                // Constrain the maximum button width so that at least a button's worth of contentView is left visible. (The button view will shrink accordingly.)
-                               [NSLayoutConstraint constraintWithItem:buttonView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationLessThanOrEqual toItem:self.contentView attribute:NSLayoutAttributeWidth multiplier:1.0 constant:-kUtilityButtonWidthDefault],
+                               cons,
                                ]];
     }
 }
@@ -710,14 +714,14 @@ static NSString * const kTableViewPanState = @"state";
     {
         if ([self rightUtilityButtonsWidth] > 0)
         {
-            if (self.delegate && [self.delegate respondsToSelector:@selector(swipeableTableViewCell:canSwipeToState:)])
-            {
-                BOOL shouldScroll = [self.delegate swipeableTableViewCell:self canSwipeToState:kCellStateRight];
-                if (!shouldScroll)
-                {
-                    scrollView.contentOffset = CGPointMake([self leftUtilityButtonsWidth], 0);
-                }
-            }
+//            if (self.delegate && [self.delegate respondsToSelector:@selector(swipeableTableViewCell:canSwipeToState:)])
+//            {
+//                BOOL shouldScroll = [self.delegate swipeableTableViewCell:self canSwipeToState:kCellStateRight];
+//                if (!shouldScroll)
+//                {
+//                    scrollView.contentOffset = CGPointMake([self leftUtilityButtonsWidth], 0);
+//                }
+//            }
         }
         else
         {
@@ -730,14 +734,14 @@ static NSString * const kTableViewPanState = @"state";
         // Expose the left button view
         if ([self leftUtilityButtonsWidth] > 0)
         {
-            if (self.delegate && [self.delegate respondsToSelector:@selector(swipeableTableViewCell:canSwipeToState:)])
-            {
-                BOOL shouldScroll = [self.delegate swipeableTableViewCell:self canSwipeToState:kCellStateLeft];
-                if (!shouldScroll)
-                {
-                    scrollView.contentOffset = CGPointMake([self leftUtilityButtonsWidth], 0);
-                }
-            }
+//            if (self.delegate && [self.delegate respondsToSelector:@selector(swipeableTableViewCell:canSwipeToState:)])
+//            {
+//                BOOL shouldScroll = [self.delegate swipeableTableViewCell:self canSwipeToState:kCellStateLeft];
+//                if (!shouldScroll)
+//                {
+//                    scrollView.contentOffset = CGPointMake([self leftUtilityButtonsWidth], 0);
+//                }
+//            }
         }
         else
         {

@@ -7,7 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
+@class SWTableViewCell;
 
 @interface SWCellScrollView : UIScrollView <UIGestureRecognizerDelegate>
 
+@property (nonatomic, weak) SWTableViewCell *cell;
 @end
