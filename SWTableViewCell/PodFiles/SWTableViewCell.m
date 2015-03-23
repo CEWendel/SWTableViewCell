@@ -283,6 +283,12 @@ static NSString * const kTableViewPanState = @"state";
     [self layoutIfNeeded];
 }
 
+//LUQUAN: Set the background color which will effectively be the border color of utilityButtonView
+- (void)setBackgroundColorOfRightUtilityButtonView:(UIColor *)backgroundColor
+{
+    self.rightUtilityButtonsView.backgroundColor = backgroundColor;
+}
+
 #pragma mark - UITableViewCell overrides
 
 - (void)didMoveToSuperview
