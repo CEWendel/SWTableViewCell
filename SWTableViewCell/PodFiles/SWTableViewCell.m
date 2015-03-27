@@ -15,6 +15,8 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
 #define kAccessoryTrailingSpace 15
 #define kLongPressMinimumDuration 0.16f
 
+#define kLongSwipeVelocityThreshold 1.2 // if velocity when swiping is higher than this, we consider it a long swipe
+
 @interface SWTableViewCell () <UIScrollViewDelegate,  UIGestureRecognizerDelegate>
 
 @property (nonatomic, weak) UITableView *containingTableView;
@@ -178,6 +180,19 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
     }
 }
 
+- (void)setLongRightSwipeView:(UIView<SWTableViewCellLongSwipeView> *)rightSwipeView {
+    if (_longRightSwipeView)
+    {
+        [_longRightSwipeView removeFromSuperview];
+    }
+    _longRightSwipeView = rightSwipeView;
+    if (rightSwipeView)
+    {
+        [self.rightUtilityClipView addSubview:rightSwipeView];
+        [self setNeedsLayout];
+    }
+}
+
 static NSString * const kTableViewPanState = @"state";
 
 - (void)removeOldTableViewPanObserver
@@ -313,14 +328,19 @@ static NSString * const kTableViewPanState = @"state";
     CGRect frame = self.contentView.frame;
     frame.origin.x = [self leftUtilityButtonsWidth];
     _contentCellView.frame = frame;
-    
-    self.cellScrollView.contentSize = CGSizeMake(CGRectGetWidth(self.frame) + [self utilityButtonsPadding], CGRectGetHeight(self.frame));
+
+    CGFloat width = CGRectGetWidth(self.frame) + [self utilityButtonsPadding];
+    if (self.longRightSwipeView)
+    {
+        width = CGRectGetWidth(self.frame) * 2;
+    }
+    self.cellScrollView.contentSize = CGSizeMake(width, CGRectGetHeight(self.frame));
     
     if (!self.cellScrollView.isTracking && !self.cellScrollView.isDecelerating)
     {
         self.cellScrollView.contentOffset = [self contentOffsetForCellState:_cellState];
     }
-    
+
     [self updateCellState];
 }
 
@@ -581,9 +601,22 @@ static NSString * const kTableViewPanState = @"state";
         case kCellStateLeft:
             scrollPt.x = 0;
             break;
+        case kCellStateLongRightSwipe:
+            scrollPt.x = self.frame.size.width;
+            break;
     }
-    
+
     return scrollPt;
+}
+
+#pragma mark SWLongSwipeTableViewCell Convenience Methods
+
+- (CGFloat)offsetForRightLongSwipeHint {
+    return [self contentOffsetForCellState:kCellStateRight].x + self.longRightSwipeView.hintOffset;
+}
+
+- (CGFloat)offsetForRightLongSwipeTrigger {
+    return [self contentOffsetForCellState:kCellStateRight].x + self.longRightSwipeView.triggerOffset;
 }
 
 - (void)updateCellState
@@ -643,6 +676,23 @@ static NSString * const kTableViewPanState = @"state";
         }
         
         self.cellScrollView.scrollEnabled = !self.isEditing;
+
+        if (_cellState != kCellStateLongRightSwipe)
+        {
+            if (self.cellScrollView.contentOffset.x > [self offsetForRightLongSwipeTrigger])
+            {
+                [self.longRightSwipeView showLongSwipeAction];
+            }
+            else if (self.cellScrollView.contentOffset.x > [self offsetForRightLongSwipeHint])
+            {
+                [self.longRightSwipeView showLongSwipeHint];
+            }
+            else
+            {
+                [self.longRightSwipeView resetView];
+            }
+        }
+
     }
 }
 
@@ -658,7 +708,15 @@ static NSString * const kTableViewPanState = @"state";
         }
         else
         {
-            _cellState = kCellStateRight;
+            if (velocity.x > kLongSwipeVelocityThreshold)
+            {
+                _cellState = kCellStateLongRightSwipe;
+            }
+            else
+            {
+                _cellState = kCellStateRight;
+            }
+
         }
     }
     else if (velocity.x <= -0.5f)
@@ -676,8 +734,13 @@ static NSString * const kTableViewPanState = @"state";
     {
         CGFloat leftThreshold = [self contentOffsetForCellState:kCellStateLeft].x + (self.leftUtilityButtonsWidth / 2);
         CGFloat rightThreshold = [self contentOffsetForCellState:kCellStateRight].x - (self.rightUtilityButtonsWidth / 2);
-        
-        if (targetContentOffset->x > rightThreshold)
+        CGFloat rightLongSwipeTriggerThreshold = [self offsetForRightLongSwipeTrigger];
+
+        if (targetContentOffset->x > rightLongSwipeTriggerThreshold)
+        {
+            _cellState = kCellStateLongRightSwipe;
+        }
+        else if (targetContentOffset->x > rightThreshold)
         {
             _cellState = kCellStateRight;
         }
@@ -707,8 +770,14 @@ static NSString * const kTableViewPanState = @"state";
             }
         }
     }
-    
+
+    if (_cellState == kCellStateLongRightSwipe)
+    {
+        [self.longRightSwipeView showLongSwipeSuccess];
+    }
+
     *targetContentOffset = [self contentOffsetForCellState:_cellState];
+
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
@@ -767,6 +836,7 @@ static NSString * const kTableViewPanState = @"state";
     if (self.delegate && [self.delegate respondsToSelector:@selector(swipeableTableViewCellDidEndScrolling:)]) {
         [self.delegate swipeableTableViewCellDidEndScrolling:self];
     }
+    [self.longRightSwipeView resetView];
 }
 
 - (void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView
@@ -776,6 +846,7 @@ static NSString * const kTableViewPanState = @"state";
     if (self.delegate && [self.delegate respondsToSelector:@selector(swipeableTableViewCellDidEndScrolling:)]) {
         [self.delegate swipeableTableViewCellDidEndScrolling:self];
     }
+    [self.longRightSwipeView resetView];
 }
 
 -(void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate

@@ -20,7 +20,47 @@ typedef NS_ENUM(NSInteger, SWCellState)
     kCellStateCenter,
     kCellStateLeft,
     kCellStateRight,
+    kCellStateLongRightSwipe,
 };
+
+/**
+ When this is set, this view will show up on top of the buttons. Currently only implemented for swiping from the right.
+ */
+@protocol SWTableViewCellLongSwipeView <NSObject>
+
+/**
+ Show a hint one can keep swiping. For example, one can show the text: "Keep swiping to add...".
+ */
+- (void)showLongSwipeHint;
+
+/**
+ Show the long swipe action to let user's know that releasing right now will cause action to be triggered.
+ For example, one can show the text: "Release now to add"
+ */
+- (void)showLongSwipeAction;
+
+/**
+ Show an acknowledgement the action was successful. SWTableViewCell should send kCellStateLongRightSwipe
+ For example, one can show the text: "Added!"
+ */
+- (void)showLongSwipeSuccess;
+
+/**
+ Reset the views to the original state - this probably involves setting alpha to 0 or hiding.
+ */
+- (void)resetView;
+
+/**
+ Offset from buttons at which we wish to trigger showLongSwipeHint on the view.
+ */
+- (CGFloat)hintOffset;
+
+/**
+ Offset from buttons at which we wish to trigger showLongSwipe on the view. Should be larger than the hintOffset
+ */
+- (CGFloat)triggerOffset;
+
+@end
 
 @protocol SWTableViewCellDelegate <NSObject>
 
@@ -39,8 +79,10 @@ typedef NS_ENUM(NSInteger, SWCellState)
 
 @property (nonatomic, copy) NSArray *leftUtilityButtons;
 @property (nonatomic, copy) NSArray *rightUtilityButtons;
+@property (nonatomic, strong) UIView<SWTableViewCellLongSwipeView> *longRightSwipeView;
 
 @property (nonatomic, weak) id <SWTableViewCellDelegate> delegate;
+
 
 - (void)setRightUtilityButtons:(NSArray *)rightUtilityButtons WithButtonWidth:(CGFloat)width;
 - (void)setLeftUtilityButtons:(NSArray *)leftUtilityButtons WithButtonWidth:(CGFloat) width;
