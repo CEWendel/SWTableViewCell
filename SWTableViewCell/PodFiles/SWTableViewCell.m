@@ -708,7 +708,7 @@ static NSString * const kTableViewPanState = @"state";
         }
         else
         {
-            if (velocity.x > kLongSwipeVelocityThreshold)
+            if (velocity.x > kLongSwipeVelocityThreshold && self.longRightSwipeView)
             {
                 _cellState = kCellStateLongRightSwipe;
             }
