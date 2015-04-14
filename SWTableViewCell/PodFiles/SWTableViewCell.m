@@ -135,6 +135,7 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
                                                                 utilityButtonSelector:@selector(leftUtilityButtonHandler:)];
 
     self.rightUtilityClipView = [[UIView alloc] initWithFrame:self.bounds];
+    self.rightUtilityClipView.backgroundColor = [UIColor colorWithRed:23 / 255.0 green:25 / 255.0 blue:32 / 255.0 alpha:1.0]; //This is the borderColor for Chronability as rendered by Xcode
     self.rightUtilityClipConstraint = [NSLayoutConstraint constraintWithItem:self.rightUtilityClipView attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeRight multiplier:1.0 constant:0.0];
     self.rightUtilityButtonsView = [[SWUtilityButtonView alloc] initWithUtilityButtons:nil
                                                                             parentCell:self
