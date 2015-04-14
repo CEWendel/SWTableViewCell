@@ -334,6 +334,11 @@ static NSString * const kTableViewPanState = @"state";
     {
         width = CGRectGetWidth(self.frame) * 2;
     }
+    
+    CGRect rightSwipeFrame = self.longRightSwipeView.frame;
+    rightSwipeFrame.size.height = frame.size.height;
+    self.longRightSwipeView.frame = rightSwipeFrame;
+    
     self.cellScrollView.contentSize = CGSizeMake(width, CGRectGetHeight(self.frame));
     
     if (!self.cellScrollView.isTracking && !self.cellScrollView.isDecelerating)
