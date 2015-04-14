@@ -117,7 +117,7 @@ static CGFloat const kCBSwipeCellUtilityButtonConstraintPadding = 1.0;
                                                                 toItem:self
                                                              attribute:NSLayoutAttributeTop
                                                             multiplier:1.0
-                                                              constant:kCBSwipeCellUtilityButtonConstraintPadding]];
+                                                              constant:0.0]];
 
             [self addConstraint:[NSLayoutConstraint constraintWithItem:self
                                                              attribute:NSLayoutAttributeBottom
@@ -125,7 +125,7 @@ static CGFloat const kCBSwipeCellUtilityButtonConstraintPadding = 1.0;
                                                                 toItem:button
                                                              attribute:NSLayoutAttributeBottom
                                                             multiplier:1.0
-                                                              constant:kCBSwipeCellUtilityButtonConstraintPadding + 1]]; // +1 to account for the height of the seperator view
+                                                              constant:kCBSwipeCellUtilityButtonConstraintPadding]];
             
             SWUtilityButtonTapGestureRecognizer *utilityButtonTapGestureRecognizer = [[SWUtilityButtonTapGestureRecognizer alloc] initWithTarget:_parentCell action:_utilityButtonSelector];
             utilityButtonTapGestureRecognizer.buttonIndex = utilityButtonsCounter;
