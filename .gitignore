@@ -7,4 +7,5 @@ profile
 *.moved-aside
 xcuserdata/
 project.xcworkspace/
-xcshareddata/
+Podfile.lock
+Pods
