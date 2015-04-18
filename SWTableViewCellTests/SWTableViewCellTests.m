@@ -37,7 +37,7 @@ before(^{
      [UIColor colorWithRed:0.55f green:0.27f blue:0.07f alpha:1.0]
                                                 icon:[UIImage imageNamed:@"list.png"]];
     
-    leftButtons = leftButtons;
+    leftButtons = leftUtilityButtons;
     
 });
 
