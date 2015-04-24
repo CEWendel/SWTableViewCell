@@ -1,7 +1,7 @@
 language: objective-c
 before_install:
   - export LANG=en_US.UTF-8
-  - gem install cocoapods xcpretty --no-ri --no-rdoc
+  - gem install cocoapods xcpretty slather -N
   - pod install
   
 script:
