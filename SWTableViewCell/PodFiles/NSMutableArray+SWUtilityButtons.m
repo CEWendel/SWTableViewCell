@@ -29,21 +29,33 @@
     [self addObject:button];
 }
 
-- (void)sw_addUtilityButtonWithColor:(UIColor *)color icon:(UIImage *)icon
+- (void)sw_addUtilityButtonWithColor:(UIColor *)color icon:(UIImage *)icon accessibilityLabel:(NSString *)accessibilityLabel
 {
     UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
     button.backgroundColor = color;
     [button setImage:icon forState:UIControlStateNormal];
+    button.accessibilityLabel = accessibilityLabel;
     [self addObject:button];
 }
 
-- (void)sw_addUtilityButtonWithColor:(UIColor *)color normalIcon:(UIImage *)normalIcon selectedIcon:(UIImage *)selectedIcon {
+- (void)sw_addUtilityButtonWithColor:(UIColor *)color icon:(UIImage *)icon
+{
+    [self sw_addUtilityButtonWithColor:color icon:icon accessibilityLabel:nil];
+}
+
+- (void)sw_addUtilityButtonWithColor:(UIColor *)color normalIcon:(UIImage *)normalIcon selectedIcon:(UIImage *)selectedIcon accessibilityLabel:(NSString *)accessibilityLabel {
     UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
     button.backgroundColor = color;
     [button setImage:normalIcon forState:UIControlStateNormal];
     [button setImage:selectedIcon forState:UIControlStateHighlighted];
     [button setImage:selectedIcon forState:UIControlStateSelected];
+    button.accessibilityLabel = accessibilityLabel;
     [self addObject:button];
+}
+
+- (void)sw_addUtilityButtonWithColor:(UIColor *)color normalIcon:(UIImage *)normalIcon selectedIcon:(UIImage *)selectedIcon
+{
+    [self sw_addUtilityButtonWithColor:color normalIcon:normalIcon selectedIcon:selectedIcon accessibilityLabel:nil];
 }
 
 @end
