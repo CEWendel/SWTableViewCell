@@ -8,6 +8,7 @@
 
 #import "SWTableViewCell.h"
 #import "SWUtilityButtonView.h"
+#import "SWAccessibilityCustomAction.h"
 
 static NSString * const kTableViewCellContentView = @"UITableViewCellContentView";
 
@@ -40,6 +41,12 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
 - (void)updateCellState;
 
 - (BOOL)shouldHighlight;
+
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 80000
+- (NSArray *)accessibilityCustomActions;
+- (BOOL)_accessibilityActionActivated:(SWAccessibilityCustomAction *)action;
+- (SWAccessibilityCustomAction *)_accessibilityActionForIndex:(NSInteger)index right:(BOOL)right;
+#endif
 
 @end
 
@@ -801,5 +808,76 @@ static NSString * const kTableViewPanState = @"state";
 {
     return ![touch.view isKindOfClass:[UIControl class]];
 }
+
+#pragma mark - UIAccessibilityAction
+
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 80000
+
+- (NSArray*)accessibilityCustomActions
+{
+    if ([UIAccessibilityCustomAction class])
+    {
+        NSMutableArray *actions = [NSMutableArray arrayWithCapacity:_leftUtilityButtons.count + _rightUtilityButtons.count];
+
+        // add actions from right area first as they are usually more important
+        for (NSInteger index = 0; index < _rightUtilityButtons.count; ++index)
+        {
+            [actions addObject:[self _accessibilityActionForIndex:index right:YES]];
+        }
+
+        for (NSInteger index = 0; index < _leftUtilityButtons.count; ++index)
+        {
+            [actions addObject:[self _accessibilityActionForIndex:index right:NO]];
+        }
+
+        NSArray *ret = [NSArray arrayWithArray:actions];
+        return ret;
+    }
+
+    return @[];
+}
+
+- (BOOL)_accessibilityActionActivated:(SWAccessibilityCustomAction*)action
+{
+    if (action.right)
+    {
+        if ([self.delegate respondsToSelector:@selector(swipeableTableViewCell:didTriggerRightUtilityButtonWithIndex:)])
+        {
+            [self.delegate swipeableTableViewCell:self didTriggerRightUtilityButtonWithIndex:action.index];
+            return true;
+        }
+    }
+    else
+    {
+        if ([self.delegate respondsToSelector:@selector(swipeableTableViewCell:didTriggerLeftUtilityButtonWithIndex:)])
+        {
+            [self.delegate swipeableTableViewCell:self didTriggerLeftUtilityButtonWithIndex:action.index];
+            return true;
+        }
+    }
+
+    return false;
+}
+
+- (SWAccessibilityCustomAction *)_accessibilityActionForIndex:(NSInteger)index right:(BOOL)right
+{
+    NSArray *buttons = right ? [self rightUtilityButtons] : [self leftUtilityButtons];
+    UIButton *button = (UIButton *)[buttons objectAtIndex:index];
+
+    NSString *name = button.accessibilityLabel;
+    if (!name)
+    {
+        // UIKit throws exception when action name is nil and it was request by accessibility support; this cannot happen for icons loaded from file as they set accessibility label to the file name without suffix; so we would be setting it to the fallback name here only in the 0.01% cases where the icon is drawn in code using e.g. Core Graphics and has no inherent name
+        name = NSLocalizedString(@"Unnamed action", nil);
+    }
+
+    SWAccessibilityCustomAction *action = [[SWAccessibilityCustomAction alloc] initWithName:name target:self selector:@selector(_accessibilityActionActivated:)];
+    action.right = right;
+    action.index = index;
+
+    return action;
+}
+
+#endif
 
 @end
