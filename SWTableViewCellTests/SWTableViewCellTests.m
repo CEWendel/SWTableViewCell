@@ -57,7 +57,7 @@ describe(@"buttons", ^{
     __block SWTableViewCell *cell;
     
     before(^{
-        cell = [[SWTableViewCell alloc] init];
+        cell = [[SWTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
         [cell setRightUtilityButtons:rightButtons WithButtonWidth:44.0f];
         [cell setLeftUtilityButtons:leftButtons WithButtonWidth:44.0f];
     });

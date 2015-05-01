@@ -1,10 +1,10 @@
 language: objective-c
+cache: cocoapods
+xcode_workspace: SWTableViewCell.xcworkspace
+xcode_scheme: SWTableViewCell
+xcode_sdk: iphonesimulator
+
 before_install:
-  - export LANG=en_US.UTF-8
-  - gem install cocoapods xcpretty slather -N
-  - pod install
-  
-script:
-  - set -o pipefail && xcodebuild test -workspace SWTableViewCell.xcworkspace -scheme SWTableViewCell -sdk iphonesimulator ONLY_ACTIVE_ARCH=NO | xcpretty -c
+  - gem install cocoapods slather -N
 
 after_success: slather
