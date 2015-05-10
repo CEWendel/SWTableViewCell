@@ -133,7 +133,7 @@ If you are using a separate nib and not a prototype cell, you'll need to be sure
 
 ```
 
-Then, in the `tableView:cellForRowAtIndexPath:` method of your `UITableViewDelegate` (usually your view controller), initialize your custom cell:
+Then, in the `tableView:cellForRowAtIndexPath:` method of your `UITableViewDataSource` (usually your view controller), initialize your custom cell:
 
 ```objc
 - (UITableViewCell*)tableView:(UITableView*)tableView cellForRowAtIndexPath:(NSIndexPath*)indexPath
