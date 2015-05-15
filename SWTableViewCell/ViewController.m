@@ -172,16 +172,20 @@
     
     [leftUtilityButtons sw_addUtilityButtonWithColor:
      [UIColor colorWithRed:0.07 green:0.75f blue:0.16f alpha:1.0]
-                                                icon:[UIImage imageNamed:@"check.png"]];
+                                                icon:[UIImage imageNamed:@"check.png"] accessibilityLabel:@"Mark as done"];
+
+    UIImage *clockIcon = [UIImage imageNamed:@"clock.png"];
+    clockIcon.accessibilityLabel = @"Schedule";
     [leftUtilityButtons sw_addUtilityButtonWithColor:
      [UIColor colorWithRed:1.0f green:1.0f blue:0.35f alpha:1.0]
-                                                icon:[UIImage imageNamed:@"clock.png"]];
+                                                icon:clockIcon];
+
     [leftUtilityButtons sw_addUtilityButtonWithColor:
      [UIColor colorWithRed:1.0f green:0.231f blue:0.188f alpha:1.0]
                                                 icon:[UIImage imageNamed:@"cross.png"]];
     [leftUtilityButtons sw_addUtilityButtonWithColor:
      [UIColor colorWithRed:0.55f green:0.27f blue:0.07f alpha:1.0]
-                                                icon:[UIImage imageNamed:@"list.png"]];
+                                                icon:[UIImage imageNamed:@"list.png"] accessibilityLabel:@"Add to list"];
     
     return leftUtilityButtons;
 }
