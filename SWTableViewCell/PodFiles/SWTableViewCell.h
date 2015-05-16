@@ -41,7 +41,7 @@ typedef NS_ENUM(NSInteger, SWCellState)
 
 /**
  Show an acknowledgement the action was successful. SWTableViewCell should send kCellStateLongRightSwipe
- For example, one can show the text: "Added!"
+ For example, one can show the text: "Added!". Clients are responsible for calling resetView to reset the cell.
  */
 - (void)showLongSwipeSuccess;
 
