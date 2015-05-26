@@ -16,7 +16,8 @@
     button.backgroundColor = color;
     [button setTitle:title forState:UIControlStateNormal];
     [button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    [button.titleLabel setAdjustsFontSizeToFitWidth:YES];
+    [button.titleLabel setTextAlignment:NSTextAlignmentCenter];
+    [button.titleLabel setLineBreakMode:NSLineBreakByWordWrapping];
     [self addObject:button];
 }
 
