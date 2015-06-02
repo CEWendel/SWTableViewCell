@@ -45,6 +45,7 @@ typedef NS_ENUM(NSInteger, SWCellState)
 - (void)setRightUtilityButtons:(NSArray *)rightUtilityButtons WithButtonWidth:(CGFloat) width;
 - (void)setLeftUtilityButtons:(NSArray *)leftUtilityButtons WithButtonWidth:(CGFloat) width;
 - (void)hideUtilityButtonsAnimated:(BOOL)animated;
+- (void)hideUtilityButtons:(UITableView *)tableView exceptForCell:(SWTableViewCell *)cell animated:(BOOL)animated;
 - (void)showLeftUtilityButtonsAnimated:(BOOL)animated;
 - (void)showRightUtilityButtonsAnimated:(BOOL)animated;
 
