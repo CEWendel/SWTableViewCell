@@ -1,0 +1,10 @@
+language: objective-c
+cache: cocoapods
+xcode_workspace: SWTableViewCell.xcworkspace
+xcode_scheme: SWTableViewCell
+xcode_sdk: iphonesimulator
+
+before_install:
+  - gem install cocoapods slather -N
+
+after_success: slather

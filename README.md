@@ -1,6 +1,9 @@
 SWTableViewCell
 ===============
 
+[![Build Status](https://travis-ci.org/addoshi/SWTableViewCell.svg?branch=master)](https://travis-ci.org/addoshi/SWTableViewCell)
+[![Coverage Status](https://coveralls.io/repos/addoshi/SWTableViewCell/badge.svg)](https://coveralls.io/r/addoshi/SWTableViewCell)
+
 <p align="center"><img src="http://i.imgur.com/njKCjK8.gif"/></p>
 
 An easy-to-use UITableViewCell subclass that implements a swipeable content view which exposes utility buttons (similar to iOS 7 Mail Application)
