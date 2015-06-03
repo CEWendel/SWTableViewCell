@@ -297,6 +297,18 @@ static NSString * const kTableViewPanState = @"state";
             break;
         }
     } while ((view = view.superview));
+    
+    // Iterate all subviews of table view and setDelaysContentTouches
+    // Remove visual delay on utility buttons on taps
+    [self recursivelySetDelaysContentTouches:self.containingTableView];
+}
+
+- (void)recursivelySetDelaysContentTouches:(UIView *)view
+{
+    if ([view respondsToSelector:@selector(setDelaysContentTouches:)])
+        [view performSelector:@selector(setDelaysContentTouches:) withObject:@YES];
+    for (UIView* subview in view.subviews)
+        [self recursivelySetDelaysContentTouches:subview];
 }
 
 - (void)layoutSubviews
@@ -308,6 +320,7 @@ static NSString * const kTableViewPanState = @"state";
     frame.origin.x = [self leftUtilityButtonsWidth];
     _contentCellView.frame = frame;
     
+    self.cellScrollView.showsHorizontalScrollIndicator = NO;
     self.cellScrollView.contentSize = CGSizeMake(CGRectGetWidth(self.frame) + [self utilityButtonsPadding], CGRectGetHeight(self.frame));
     
     if (!self.cellScrollView.isTracking && !self.cellScrollView.isDecelerating)
@@ -412,10 +425,12 @@ static NSString * const kTableViewPanState = @"state";
             [self selectCell];
         }
     }
-    else
-    {
-        // Scroll back to center
-        [self hideUtilityButtonsAnimated:YES];
+
+    // Hide utility buttons when any cell is tapped
+    for (SWTableViewCell *cell in [self.containingTableView visibleCells]) {
+        if ([cell isKindOfClass:[SWTableViewCell class]] && [self.delegate swipeableTableViewCellShouldHideUtilityButtonsOnSwipe:cell]) {
+            [cell hideUtilityButtonsAnimated:YES];
+        }
     }
 }
 
