@@ -13,6 +13,9 @@
 - (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer
 {
     if (gestureRecognizer == self.panGestureRecognizer) {
+        if (self.panDisabled) {
+            return NO;
+        }
         CGPoint translation = [(UIPanGestureRecognizer*)gestureRecognizer translationInView:gestureRecognizer.view];
         return fabs(translation.y) <= fabs(translation.x);
     } else {
