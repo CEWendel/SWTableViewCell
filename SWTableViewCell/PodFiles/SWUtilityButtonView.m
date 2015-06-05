@@ -52,6 +52,13 @@
     return self;
 }
 
+-(void)layoutSubviews {
+    [super layoutSubviews];
+    if (self.utilityButtons && self.utilityButtons.count > 0) {
+        self.widthConstraint.constant = (CGRectGetWidth([[self.utilityButtons firstObject] frame]) * self.utilityButtons.count);
+    }
+}
+
 #pragma mark Populating utility buttons
 
 - (void)setUtilityButtons:(NSArray *)utilityButtons
