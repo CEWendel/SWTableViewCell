@@ -8,7 +8,7 @@
 
 #import "SWUtilityButtonView.h"
 #import "SWUtilityButtonTapGestureRecognizer.h"
-
+p
 @interface SWUtilityButtonView()
 
 @property (nonatomic, strong) NSLayoutConstraint *widthConstraint;
@@ -132,7 +132,10 @@
     
     for (UIButton *button in self.utilityButtons)
     {
-        [self.buttonBackgroundColors addObject:button.backgroundColor];
+		if (button.backgroundColor != nil)
+		{
+			[self.buttonBackgroundColors addObject:button.backgroundColor];
+		}
     }
 }
 
