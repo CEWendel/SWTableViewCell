@@ -19,10 +19,12 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
 
 @property (nonatomic, weak) UITableView *containingTableView;
 
+
 @property (nonatomic, strong) UIPanGestureRecognizer *tableViewPanGestureRecognizer;
 
 @property (nonatomic, assign) SWCellState cellState; // The state of the cell within the scroll view, can be left, right or middle
 @property (nonatomic, assign) CGFloat additionalRightPadding;
+@property (nonatomic, assign) SWCellState cellState; // The state of the cell within the scroll view, can be left, right or middle
 
 @property (nonatomic, strong) UIScrollView *cellScrollView;
 @property (nonatomic, strong) SWUtilityButtonView *leftUtilityButtonsView, *rightUtilityButtonsView;
@@ -499,6 +501,7 @@ static NSString * const kTableViewPanState = @"state";
         }
     }
 }
+
 
 - (void)showLeftUtilityButtonsAnimated:(BOOL)animated {
     if (_cellState != kCellStateLeft)

@@ -202,6 +202,7 @@
 
 #pragma mark - SWTableViewDelegate
 
+
 - (void)swipeableTableViewCell:(SWTableViewCell *)cell scrollingToState:(SWCellState)state
 {
     switch (state) {
@@ -237,6 +238,7 @@
             break;
     }
 }
+
 
 - (void)swipeableTableViewCell:(SWTableViewCell *)cell didTriggerRightUtilityButtonWithIndex:(NSInteger)index
 {

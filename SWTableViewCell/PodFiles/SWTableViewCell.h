@@ -25,8 +25,8 @@ typedef NS_ENUM(NSInteger, SWCellState)
 @protocol SWTableViewCellDelegate <NSObject>
 
 @optional
-- (void)swipeableTableViewCell:(SWTableViewCell *)cell didTriggerLeftUtilityButtonWithIndex:(NSInteger)index;
-- (void)swipeableTableViewCell:(SWTableViewCell *)cell didTriggerRightUtilityButtonWithIndex:(NSInteger)index;
+- (void)swipeableTableViewCell:(SWTableViewCell *)cell didTriggerLeftUtilityButtonWithIndex:(NSUInteger)index;
+- (void)swipeableTableViewCell:(SWTableViewCell *)cell didTriggerRightUtilityButtonWithIndex:(NSUInteger)index;
 - (void)swipeableTableViewCell:(SWTableViewCell *)cell scrollingToState:(SWCellState)state;
 - (BOOL)swipeableTableViewCellShouldHideUtilityButtonsOnSwipe:(SWTableViewCell *)cell;
 - (BOOL)swipeableTableViewCell:(SWTableViewCell *)cell canSwipeToState:(SWCellState)state;
@@ -41,10 +41,12 @@ typedef NS_ENUM(NSInteger, SWCellState)
 @property (nonatomic, copy) NSArray *rightUtilityButtons;
 
 @property (nonatomic, weak) id <SWTableViewCellDelegate> delegate;
+@property (nonatomic, assign,readonly) SWCellState cellState; // The state of the cell within the scroll view, can be left, right or middle
 
 - (void)setRightUtilityButtons:(NSArray *)rightUtilityButtons WithButtonWidth:(CGFloat) width;
 - (void)setLeftUtilityButtons:(NSArray *)leftUtilityButtons WithButtonWidth:(CGFloat) width;
 - (void)hideUtilityButtonsAnimated:(BOOL)animated;
+
 - (void)showLeftUtilityButtonsAnimated:(BOOL)animated;
 - (void)showRightUtilityButtonsAnimated:(BOOL)animated;
 
