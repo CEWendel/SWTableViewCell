@@ -8,7 +8,7 @@
 
 #import "SWUtilityButtonView.h"
 #import "SWUtilityButtonTapGestureRecognizer.h"
-p
+
 @interface SWUtilityButtonView()
 
 @property (nonatomic, strong) NSLayoutConstraint *widthConstraint;
