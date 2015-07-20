@@ -166,14 +166,22 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
                                ]];
         
         [clipView addSubview:buttonView];
+      
+        // Constrain the maximum button width so that at least a button's worth of contentView is left visible. (The button view will shrink accordingly.)
+        NSLayoutConstraint* maximumButtonWidth;
+        maximumButtonWidth = [NSLayoutConstraint constraintWithItem:buttonView
+                                                          attribute:NSLayoutAttributeWidth
+                                                          relatedBy:NSLayoutRelationLessThanOrEqual
+                                                             toItem:self.contentView
+                                                          attribute:NSLayoutAttributeWidth multiplier:1.0
+                                                           constant:-kUtilityButtonWidthDefault];
+        maximumButtonWidth.priority = 750.0f;//Fix to https://github.com/CEWendel/SWTableViewCell/issues/233
         [self addConstraints:@[
                                // Pin the button view to the appropriate outer edges of its clipping view.
                                [NSLayoutConstraint constraintWithItem:buttonView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:clipView attribute:NSLayoutAttributeTop multiplier:1.0 constant:0.0],
                                [NSLayoutConstraint constraintWithItem:buttonView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:clipView attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0.0],
                                [NSLayoutConstraint constraintWithItem:buttonView attribute:alignmentAttribute relatedBy:NSLayoutRelationEqual toItem:clipView attribute:alignmentAttribute multiplier:1.0 constant:0.0],
-                               
-                               // Constrain the maximum button width so that at least a button's worth of contentView is left visible. (The button view will shrink accordingly.)
-                               [NSLayoutConstraint constraintWithItem:buttonView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationLessThanOrEqual toItem:self.contentView attribute:NSLayoutAttributeWidth multiplier:1.0 constant:-kUtilityButtonWidthDefault],
+                               maximumButtonWidth,
                                ]];
     }
 }
