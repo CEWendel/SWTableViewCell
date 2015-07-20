@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
+#import <UIKit/UIKit.h>
+
 @interface NSMutableArray (SWUtilityButtons)
 
 - (void)sw_addUtilityButtonWithColor:(UIColor *)color title:(NSString *)title;
