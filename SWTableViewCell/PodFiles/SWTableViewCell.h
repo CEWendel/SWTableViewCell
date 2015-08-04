@@ -37,6 +37,7 @@ typedef NS_ENUM(NSInteger, SWCellState)
 
 @interface SWTableViewCell : UITableViewCell
 
+@property (nonatomic, assign) BOOL swipeDisabled;
 @property (nonatomic, copy) NSArray *leftUtilityButtons;
 @property (nonatomic, copy) NSArray *rightUtilityButtons;
 
