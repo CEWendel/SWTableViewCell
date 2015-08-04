@@ -536,6 +536,11 @@ static NSString * const kTableViewPanState = @"state";
     _cellScrollView.panDisabled = swipeDisabled;
 }
 
+- (BOOL)swipeDisabled
+{
+    return _cellScrollView.panDisabled;
+}
+
 - (CGFloat)leftUtilityButtonsWidth
 {
 #if CGFLOAT_IS_DOUBLE
