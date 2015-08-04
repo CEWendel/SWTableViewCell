@@ -24,7 +24,7 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
 @property (nonatomic, assign) SWCellState cellState; // The state of the cell within the scroll view, can be left, right or middle
 @property (nonatomic, assign) CGFloat additionalRightPadding;
 
-@property (nonatomic, strong) UIScrollView *cellScrollView;
+@property (nonatomic, strong) SWCellScrollView *cellScrollView;
 @property (nonatomic, strong) SWUtilityButtonView *leftUtilityButtonsView, *rightUtilityButtonsView;
 @property (nonatomic, strong) UIView *leftUtilityClipView, *rightUtilityClipView;
 @property (nonatomic, strong) NSLayoutConstraint *leftUtilityClipConstraint, *rightUtilityClipConstraint;
@@ -530,6 +530,11 @@ static NSString * const kTableViewPanState = @"state";
 
 
 #pragma mark - Geometry helpers
+
+- (void)setSwipeDisabled:(BOOL)swipeDisabled
+{
+    _cellScrollView.panDisabled = swipeDisabled;
+}
 
 - (CGFloat)leftUtilityButtonsWidth
 {

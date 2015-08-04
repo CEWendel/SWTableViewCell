@@ -9,5 +9,5 @@
 #import <UIKit/UIKit.h>
 
 @interface SWCellScrollView : UIScrollView <UIGestureRecognizerDelegate>
-
+@property (assign, nonatomic) BOOL panDisabled;
 @end
