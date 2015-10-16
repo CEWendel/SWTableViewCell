@@ -283,6 +283,16 @@ static NSString * const kTableViewPanState = @"state";
     [self layoutIfNeeded];
 }
 
+- (BOOL)bounces
+{
+    return self.cellScrollView.bounces;
+}
+
+- (void)setBounces:(BOOL)bounces
+{
+    self.cellScrollView.bounces = bounces;
+}
+
 #pragma mark - UITableViewCell overrides
 
 - (void)didMoveToSuperview
