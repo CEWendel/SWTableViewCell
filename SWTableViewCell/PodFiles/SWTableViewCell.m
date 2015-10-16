@@ -438,6 +438,8 @@ static NSString * const kTableViewPanState = @"state";
             {
                 [self.containingTableView.delegate tableView:self.containingTableView didSelectRowAtIndexPath:cellIndexPath];
             }
+            //            post notifi
+            [[NSNotificationCenter defaultCenter]postNotificationName:UITableViewSelectionDidChangeNotification object:self.containingTableView];
         }
     }
 }
@@ -461,6 +463,8 @@ static NSString * const kTableViewPanState = @"state";
             {
                 [self.containingTableView.delegate tableView:self.containingTableView didDeselectRowAtIndexPath:cellIndexPath];
             }
+            //            post notifi
+            [[NSNotificationCenter defaultCenter]postNotificationName:UITableViewSelectionDidChangeNotification object:self.containingTableView];
         }
     }
 }
