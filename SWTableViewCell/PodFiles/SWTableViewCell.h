@@ -40,6 +40,8 @@ typedef NS_ENUM(NSInteger, SWCellState)
 @property (nonatomic, copy) NSArray *leftUtilityButtons;
 @property (nonatomic, copy) NSArray *rightUtilityButtons;
 
+@property (nonatomic, assign) BOOL bounces;
+
 @property (nonatomic, weak) id <SWTableViewCellDelegate> delegate;
 
 - (void)setRightUtilityButtons:(NSArray *)rightUtilityButtons WithButtonWidth:(CGFloat) width;
