@@ -316,6 +316,9 @@ static NSString * const kTableViewPanState = @"state";
     }
     
     [self updateCellState];
+
+    [self.rightUtilityClipView.superview sendSubviewToBack:self.rightUtilityClipView];
+    [self.leftUtilityClipView.superview sendSubviewToBack:self.leftUtilityClipView];
 }
 
 - (void)setFrame:(CGRect)frame
