@@ -471,19 +471,34 @@ static NSString * const kTableViewPanState = @"state";
 {
     SWUtilityButtonTapGestureRecognizer *utilityButtonTapGestureRecognizer = (SWUtilityButtonTapGestureRecognizer *)sender;
     NSUInteger utilityButtonIndex = utilityButtonTapGestureRecognizer.buttonIndex;
-    if ([self.delegate respondsToSelector:@selector(swipeableTableViewCell:didTriggerRightUtilityButtonWithIndex:)])
-    {
-        [self.delegate swipeableTableViewCell:self didTriggerRightUtilityButtonWithIndex:utilityButtonIndex];
+    if (sender){
+        SWUtilityButtonTapGestureRecognizer*tap = (SWUtilityButtonTapGestureRecognizer *)sender;
+        UIButton *btn = (UIButton *)tap.view;
+        if (btn) {
+            if ([self.delegate respondsToSelector:@selector(swipeableTableViewCell:didTriggerRightUtilityButtonWithIndex:withButton:)])
+            {
+                [self.delegate swipeableTableViewCell:self didTriggerRightUtilityButtonWithIndex:utilityButtonIndex withButton:btn];
+            }
+        }
+        
     }
+    
 }
 
 - (void)leftUtilityButtonHandler:(id)sender
 {
     SWUtilityButtonTapGestureRecognizer *utilityButtonTapGestureRecognizer = (SWUtilityButtonTapGestureRecognizer *)sender;
     NSUInteger utilityButtonIndex = utilityButtonTapGestureRecognizer.buttonIndex;
-    if ([self.delegate respondsToSelector:@selector(swipeableTableViewCell:didTriggerLeftUtilityButtonWithIndex:)])
-    {
-        [self.delegate swipeableTableViewCell:self didTriggerLeftUtilityButtonWithIndex:utilityButtonIndex];
+    if (sender){
+        SWUtilityButtonTapGestureRecognizer*tap = (SWUtilityButtonTapGestureRecognizer *)sender;
+        UIButton *btn = (UIButton *)tap.view;
+        if (btn) {
+            
+            if ([self.delegate respondsToSelector:@selector(swipeableTableViewCell:didTriggerLeftUtilityButtonWithIndex:withButton:)])
+            {
+                [self.delegate swipeableTableViewCell:self didTriggerLeftUtilityButtonWithIndex:utilityButtonIndex withButton:btn];
+            }
+        }
     }
 }
 
