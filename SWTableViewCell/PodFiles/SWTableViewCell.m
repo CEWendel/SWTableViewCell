@@ -616,7 +616,7 @@ static NSString * const kTableViewPanState = @"state";
         self.leftUtilityClipView.hidden = (self.leftUtilityClipConstraint.constant == 0);
         self.rightUtilityClipView.hidden = (self.rightUtilityClipConstraint.constant == 0);
         
-        if (self.accessoryType != UITableViewCellAccessoryNone && !self.editing) {
+        if ((self.accessoryType != UITableViewCellAccessoryNone || self.accessoryView != nil) && !self.editing) {
             UIView *accessory = [self.cellScrollView.superview.subviews lastObject];
             
             CGRect accessoryFrame = accessory.frame;
