@@ -19,7 +19,12 @@
 {
     [super touchesMoved:touches withEvent:event];
     
-    self.state = UIGestureRecognizerStateFailed;
+    UITouch *touch = touches.anyObject;
+    if (CGPointEqualToPoint([touch locationInView:touch.view], [touch previousLocationInView:touch.view])) {
+        self.state = UIGestureRecognizerStateBegan;
+    } else {
+        self.state = UIGestureRecognizerStateCancelled;
+    }
 }
 
 -(void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
