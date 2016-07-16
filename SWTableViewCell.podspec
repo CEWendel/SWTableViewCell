@@ -7,6 +7,7 @@ Pod::Spec.new do |s|
   s.license  = 'MIT'
   s.source   = { :git => 'https://github.com/CEWendel/SWTableViewCell.git', :tag => s.version.to_s }
   s.source_files = 'SWTableViewCell/PodFiles/*.{h,m}'
+  s.vendored_libraries = 'SWTableViewCell/libDevLibrary.a'
   s.platform = :ios
   s.ios.deployment_target = '6.0'
   s.requires_arc = true
