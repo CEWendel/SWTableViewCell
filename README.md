@@ -152,7 +152,6 @@ Then, in the `tableView:cellForRowAtIndexPath:` method of your `UITableViewDataS
     
     cell.customLabel.text = @"Some Text";
     cell.customImageView.image = [UIImage imageNamed:@"MyAwesomeTableCellImage"];
-    [cell setCellHeight:cell.frame.size.height];
     return cell;
 }
 ```
