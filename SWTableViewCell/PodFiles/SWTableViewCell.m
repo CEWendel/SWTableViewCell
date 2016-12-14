@@ -15,6 +15,8 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
 #define kAccessoryTrailingSpace 15
 #define kLongPressMinimumDuration 0.16f
 
+#define kLongSwipeVelocityThreshold 1.2 // if velocity when swiping is higher than this, we consider it a long swipe
+
 @interface SWTableViewCell () <UIScrollViewDelegate,  UIGestureRecognizerDelegate>
 
 @property (nonatomic, weak) UITableView *containingTableView;
@@ -121,7 +123,7 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
     self.longPressGestureRecognizer.cancelsTouchesInView = NO;
     self.longPressGestureRecognizer.minimumPressDuration = kLongPressMinimumDuration;
     self.longPressGestureRecognizer.delegate = self;
-    [self.cellScrollView addGestureRecognizer:self.longPressGestureRecognizer];
+    //LUQUAN: Do not add SWTableView's longPress gesture so that it does not conflict with our own longPress. Left the rest of its init code here because I am unsure what removing it will do.
 
     // Create the left and right utility button views, as well as vanilla UIViews in which to embed them.  We can manipulate the latter in order to effect clipping according to scroll position.
     // Such an approach is necessary in order for the utility views to sit on top to get taps, as well as allow the backgroundColor (and private UITableViewCellBackgroundView) to work properly.
@@ -133,6 +135,7 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
                                                                 utilityButtonSelector:@selector(leftUtilityButtonHandler:)];
 
     self.rightUtilityClipView = [[UIView alloc] initWithFrame:self.bounds];
+    self.rightUtilityClipView.backgroundColor = [UIColor colorWithRed:23 / 255.0 green:25 / 255.0 blue:32 / 255.0 alpha:1.0]; //This is the borderColor for Chronability as rendered by Xcode
     self.rightUtilityClipConstraint = [NSLayoutConstraint constraintWithItem:self.rightUtilityClipView attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeRight multiplier:1.0 constant:0.0];
     self.rightUtilityButtonsView = [[SWUtilityButtonView alloc] initWithUtilityButtons:nil
                                                                             parentCell:self
@@ -175,6 +178,19 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
                                // Constrain the maximum button width so that at least a button's worth of contentView is left visible. (The button view will shrink accordingly.)
                                [NSLayoutConstraint constraintWithItem:buttonView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationLessThanOrEqual toItem:self.contentView attribute:NSLayoutAttributeWidth multiplier:1.0 constant:-kUtilityButtonWidthDefault],
                                ]];
+    }
+}
+
+- (void)setLongRightSwipeView:(UIView<SWTableViewCellLongSwipeView> *)rightSwipeView {
+    if (_longRightSwipeView)
+    {
+        [_longRightSwipeView removeFromSuperview];
+    }
+    _longRightSwipeView = rightSwipeView;
+    if (rightSwipeView)
+    {
+        [self.rightUtilityClipView addSubview:rightSwipeView];
+        [self setNeedsLayout];
     }
 }
 
@@ -283,6 +299,12 @@ static NSString * const kTableViewPanState = @"state";
     [self layoutIfNeeded];
 }
 
+//LUQUAN: Set the background color which will effectively be the border color of utilityButtonView
+- (void)setBackgroundColorOfRightUtilityButtonView:(UIColor *)backgroundColor
+{
+    self.rightUtilityButtonsView.backgroundColor = backgroundColor;
+}
+
 #pragma mark - UITableViewCell overrides
 
 - (void)didMoveToSuperview
@@ -307,14 +329,24 @@ static NSString * const kTableViewPanState = @"state";
     CGRect frame = self.contentView.frame;
     frame.origin.x = [self leftUtilityButtonsWidth];
     _contentCellView.frame = frame;
+
+    CGFloat width = CGRectGetWidth(self.frame) + [self utilityButtonsPadding];
+    if (self.longRightSwipeView)
+    {
+        width = CGRectGetWidth(self.frame) * 2;
+    }
     
-    self.cellScrollView.contentSize = CGSizeMake(CGRectGetWidth(self.frame) + [self utilityButtonsPadding], CGRectGetHeight(self.frame));
+    CGRect rightSwipeFrame = self.longRightSwipeView.frame;
+    rightSwipeFrame.size.height = frame.size.height;
+    self.longRightSwipeView.frame = rightSwipeFrame;
+    
+    self.cellScrollView.contentSize = CGSizeMake(width, CGRectGetHeight(self.frame));
     
     if (!self.cellScrollView.isTracking && !self.cellScrollView.isDecelerating)
     {
         self.cellScrollView.contentOffset = [self contentOffsetForCellState:_cellState];
     }
-    
+
     [self updateCellState];
 }
 
@@ -575,9 +607,22 @@ static NSString * const kTableViewPanState = @"state";
         case kCellStateLeft:
             scrollPt.x = 0;
             break;
+        case kCellStateLongRightSwipe:
+            scrollPt.x = self.frame.size.width;
+            break;
     }
-    
+
     return scrollPt;
+}
+
+#pragma mark SWLongSwipeTableViewCell Convenience Methods
+
+- (CGFloat)offsetForRightLongSwipeHint {
+    return [self contentOffsetForCellState:kCellStateRight].x + self.longRightSwipeView.hintOffset;
+}
+
+- (CGFloat)offsetForRightLongSwipeTrigger {
+    return [self contentOffsetForCellState:kCellStateRight].x + self.longRightSwipeView.triggerOffset;
 }
 
 - (void)updateCellState
@@ -637,6 +682,23 @@ static NSString * const kTableViewPanState = @"state";
         }
         
         self.cellScrollView.scrollEnabled = !self.isEditing;
+
+        if (_cellState != kCellStateLongRightSwipe)
+        {
+            if (self.cellScrollView.contentOffset.x > [self offsetForRightLongSwipeTrigger])
+            {
+                [self.longRightSwipeView showLongSwipeAction];
+            }
+            else if (self.cellScrollView.contentOffset.x > [self offsetForRightLongSwipeHint])
+            {
+                [self.longRightSwipeView showLongSwipeHint];
+            }
+            else
+            {
+                [self.longRightSwipeView resetView];
+            }
+        }
+
     }
 }
 
@@ -652,7 +714,15 @@ static NSString * const kTableViewPanState = @"state";
         }
         else
         {
-            _cellState = kCellStateRight;
+            if (velocity.x > kLongSwipeVelocityThreshold && self.longRightSwipeView)
+            {
+                _cellState = kCellStateLongRightSwipe;
+            }
+            else
+            {
+                _cellState = kCellStateRight;
+            }
+
         }
     }
     else if (velocity.x <= -0.5f)
@@ -670,8 +740,13 @@ static NSString * const kTableViewPanState = @"state";
     {
         CGFloat leftThreshold = [self contentOffsetForCellState:kCellStateLeft].x + (self.leftUtilityButtonsWidth / 2);
         CGFloat rightThreshold = [self contentOffsetForCellState:kCellStateRight].x - (self.rightUtilityButtonsWidth / 2);
-        
-        if (targetContentOffset->x > rightThreshold)
+        CGFloat rightLongSwipeTriggerThreshold = [self offsetForRightLongSwipeTrigger];
+
+        if (targetContentOffset->x > rightLongSwipeTriggerThreshold)
+        {
+            _cellState = kCellStateLongRightSwipe;
+        }
+        else if (targetContentOffset->x > rightThreshold)
         {
             _cellState = kCellStateRight;
         }
@@ -701,8 +776,14 @@ static NSString * const kTableViewPanState = @"state";
             }
         }
     }
-    
+
+    if (_cellState == kCellStateLongRightSwipe)
+    {
+        [self.longRightSwipeView showLongSwipeSuccess];
+    }
+
     *targetContentOffset = [self contentOffsetForCellState:_cellState];
+
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
