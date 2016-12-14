@@ -76,6 +76,34 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
 
 - (void)initializer
 {
+    if ( !self.contentView.superview ) {
+        NSArray * cnt = self.constraints;
+        [ self removeConstraints:self.constraints ];
+        
+        // reparent 
+        NSArray *cellSubviews = [ self subviews ];
+        [self insertSubview:self.contentView atIndex:0];
+        
+        for (UIView *subview in cellSubviews ) {
+            [ subview removeFromSuperview ];
+            [ self.contentView addSubview:subview ];
+        }
+        
+        // recreate constraints
+        for( NSLayoutConstraint * c in cnt ) {
+            id fi = c.firstItem == self ? self.contentView : c.firstItem;
+            id si = c.secondItem == self ? self.contentView : c.secondItem;
+            
+            [ self addConstraint:[ NSLayoutConstraint constraintWithItem:fi
+                                                              attribute:c.firstAttribute
+                                                              relatedBy:c.relation
+                                                                 toItem:si
+                                                              attribute:c.secondAttribute
+                                                             multiplier:c.multiplier
+                                                               constant:c.constant] ];
+        }
+    }
+        
     layoutUpdating = NO;
     // Set up scroll view that will host our cell content
     self.cellScrollView = [[SWCellScrollView alloc] init];
