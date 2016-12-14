@@ -9,6 +9,8 @@
 #import "SWUtilityButtonView.h"
 #import "SWUtilityButtonTapGestureRecognizer.h"
 
+static CGFloat const kCBSwipeCellUtilityButtonConstraintPadding = 1.0;
+
 @interface SWUtilityButtonView()
 
 @property (nonatomic, strong) NSLayoutConstraint *widthConstraint;
@@ -82,25 +84,48 @@
             if (!precedingView)
             {
                 // First button; pin it to the left edge.
-                [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[button]"
-                                                                             options:0L
-                                                                             metrics:nil
-                                                                               views:NSDictionaryOfVariableBindings(button)]];
+                [self addConstraint:[NSLayoutConstraint constraintWithItem:button
+                                                                 attribute:NSLayoutAttributeLeft
+                                                                 relatedBy:NSLayoutRelationEqual
+                                                                    toItem:self
+                                                                 attribute:NSLayoutAttributeLeft
+                                                                multiplier:1.0
+                                                                  constant:kCBSwipeCellUtilityButtonConstraintPadding]];
             }
             else
             {
                 // Subsequent button; pin it to the right edge of the preceding one, with equal width.
-                [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:[precedingView][button(==precedingView)]"
-                                                                             options:0L
-                                                                             metrics:nil
-                                                                               views:NSDictionaryOfVariableBindings(precedingView, button)]];
+                [self addConstraint:[NSLayoutConstraint constraintWithItem:button
+                                                                 attribute:NSLayoutAttributeWidth
+                                                                 relatedBy:NSLayoutRelationEqual
+                                                                    toItem:precedingView
+                                                                 attribute:NSLayoutAttributeWidth
+                                                                multiplier:1.0
+                                                                  constant:0.0]];
+                [self addConstraint:[NSLayoutConstraint constraintWithItem:button
+                                                                 attribute:NSLayoutAttributeLeft
+                                                                 relatedBy:NSLayoutRelationEqual
+                                                                    toItem:precedingView
+                                                                 attribute:NSLayoutAttributeRight
+                                                                multiplier:1.0
+                                                                  constant:kCBSwipeCellUtilityButtonConstraintPadding]];
             }
-            
-            [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[button]|"
-                                                                         options:0L
-                                                                         metrics:nil
-                                                                           views:NSDictionaryOfVariableBindings(button)]];
-            
+            //luquan: Changed to place a 1px vertical constraint on the top and bottom of each button
+            [self addConstraint:[NSLayoutConstraint constraintWithItem:button
+                                                             attribute:NSLayoutAttributeTop
+                                                             relatedBy:NSLayoutRelationEqual
+                                                                toItem:self
+                                                             attribute:NSLayoutAttributeTop
+                                                            multiplier:1.0
+                                                              constant:kCBSwipeCellUtilityButtonConstraintPadding]];
+
+            [self addConstraint:[NSLayoutConstraint constraintWithItem:self
+                                                             attribute:NSLayoutAttributeBottom
+                                                             relatedBy:NSLayoutRelationEqual
+                                                                toItem:button
+                                                             attribute:NSLayoutAttributeBottom
+                                                            multiplier:1.0
+                                                              constant:kCBSwipeCellUtilityButtonConstraintPadding + 1]]; // +1 to account for the height of the seperator view
             
             SWUtilityButtonTapGestureRecognizer *utilityButtonTapGestureRecognizer = [[SWUtilityButtonTapGestureRecognizer alloc] initWithTarget:_parentCell action:_utilityButtonSelector];
             utilityButtonTapGestureRecognizer.buttonIndex = utilityButtonsCounter;
@@ -111,10 +136,13 @@
         }
         
         // Pin the last button to the right edge.
-        [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"[precedingView]|"
-                                                                     options:0L
-                                                                     metrics:nil
-                                                                       views:NSDictionaryOfVariableBindings(precedingView)]];
+        [self addConstraint:[NSLayoutConstraint constraintWithItem:precedingView
+                                                         attribute:NSLayoutAttributeRight
+                                                         relatedBy:NSLayoutRelationEqual
+                                                            toItem:self
+                                                         attribute:NSLayoutAttributeRight
+                                                        multiplier:1.0
+                                                          constant:kCBSwipeCellUtilityButtonConstraintPadding]];
     }
     
     self.widthConstraint.constant = (width * utilityButtons.count);
