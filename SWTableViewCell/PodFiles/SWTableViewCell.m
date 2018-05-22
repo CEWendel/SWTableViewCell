@@ -757,6 +757,11 @@ static NSString * const kTableViewPanState = @"state";
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
 {
     [self updateCellState];
+    // if call "-(void)setRightUtilityButtons: WithButtonWidth:" to change the buttonWidth while scrollView is still scrolling, scrollView's contentOffset will be wrong.
+    CGPoint contentOffset = [self contentOffsetForCellState:_cellState];
+    if (!CGPointEqualToPoint(self.cellScrollView.contentOffset, contentOffset)) {
+        self.cellScrollView.contentOffset = contentOffset;
+    }
 
     if (self.delegate && [self.delegate respondsToSelector:@selector(swipeableTableViewCellDidEndScrolling:)]) {
         [self.delegate swipeableTableViewCellDidEndScrolling:self];
