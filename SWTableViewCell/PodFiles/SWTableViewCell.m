@@ -176,6 +176,17 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
                                [NSLayoutConstraint constraintWithItem:buttonView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationLessThanOrEqual toItem:self.contentView attribute:NSLayoutAttributeWidth multiplier:1.0 constant:-kUtilityButtonWidthDefault],
                                ]];
     }
+    
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapedInsideCell)];
+    tap.cancelsTouchesInView = NO;
+    [self.cellScrollView addGestureRecognizer:tap];
+}
+
+- (void) tapedInsideCell
+{
+    if ( _cellState == kCellStateCenter) {
+        [ _delegate swipeableTableViewCellDidSelected:self];
+    }
 }
 
 static NSString * const kTableViewPanState = @"state";
