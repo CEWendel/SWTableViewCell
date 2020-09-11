@@ -9,8 +9,6 @@
 #import "SWTableViewCell.h"
 #import "SWUtilityButtonView.h"
 
-static NSString * const kTableViewCellContentView = @"UITableViewCellContentView";
-
 #define kSectionIndexWidth 15
 #define kAccessoryTrailingSpace 15
 #define kLongPressMinimumDuration 0.16f
@@ -91,12 +89,7 @@ static NSString * const kTableViewCellContentView = @"UITableViewCellContentView
     // Add the cell scroll view to the cell
     UIView *contentViewParent = self;
     UIView *clipViewParent = self.cellScrollView;
-    if (![NSStringFromClass([[self.subviews objectAtIndex:0] class]) isEqualToString:kTableViewCellContentView])
-    {
-        // iOS 7
-        contentViewParent = [self.subviews objectAtIndex:0];
-        clipViewParent = self;
-    }
+
     NSArray *cellSubviews = [contentViewParent subviews];
     [self insertSubview:self.cellScrollView atIndex:0];
     for (UIView *subview in cellSubviews)
