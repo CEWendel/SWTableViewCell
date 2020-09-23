@@ -45,7 +45,7 @@
     UIView *_contentCellView;
     BOOL layoutUpdating;
 }
-
+@synthesize contentCellView = _contentCellView;
 #pragma mark Initializers
 
 - (instancetype)initWithCoder:(NSCoder *)aDecoder
@@ -87,21 +87,29 @@
     [self.cellScrollView addSubview:_contentCellView];
     
     // Add the cell scroll view to the cell
-    UIView *contentViewParent = self;
+    UIView *contentViewParent = _contentCellView;
     UIView *clipViewParent = self.cellScrollView;
+    
     NSArray *cellSubviews = [contentViewParent subviews];
-    [self insertSubview:self.cellScrollView atIndex:0];
+    [self.contentView insertSubview:self.cellScrollView atIndex:0];
     for (UIView *subview in cellSubviews)
     {
         [_contentCellView addSubview:subview];
     }
     
     // Set scroll view to perpetually have same frame as self. Specifying relative to superview doesn't work, since the latter UITableViewCellScrollView has different behaviour.
-    [self addConstraints:@[
-                           [NSLayoutConstraint constraintWithItem:self.cellScrollView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeTop multiplier:1.0 constant:0.0],
-                           [NSLayoutConstraint constraintWithItem:self.cellScrollView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0.0],
-                           [NSLayoutConstraint constraintWithItem:self.cellScrollView attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeLeft multiplier:1.0 constant:0.0],
-                           [NSLayoutConstraint constraintWithItem:self.cellScrollView attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeRight multiplier:1.0 constant:0.0],
+    [self.contentView addConstraints:@[
+                           [NSLayoutConstraint constraintWithItem:self.cellScrollView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.contentView attribute:NSLayoutAttributeTop multiplier:1.0 constant:0.0],
+                           [NSLayoutConstraint constraintWithItem:self.cellScrollView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self.contentView attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0.0],
+                           [NSLayoutConstraint constraintWithItem:self.cellScrollView attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self.contentView attribute:NSLayoutAttributeLeft multiplier:1.0 constant:0.0],
+                           [NSLayoutConstraint constraintWithItem:self.cellScrollView attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:self.contentView attribute:NSLayoutAttributeRight multiplier:1.0 constant:0.0],
+                           ]];
+    
+    [self.cellScrollView addConstraints:@[
+                           [NSLayoutConstraint constraintWithItem:_contentCellView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.cellScrollView attribute:NSLayoutAttributeTop multiplier:1.0 constant:0.0],
+                           [NSLayoutConstraint constraintWithItem:_contentCellView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self.cellScrollView attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0.0],
+                           [NSLayoutConstraint constraintWithItem:_contentCellView attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self.cellScrollView attribute:NSLayoutAttributeLeft multiplier:1.0 constant:0.0],
+                           [NSLayoutConstraint constraintWithItem:_contentCellView attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:self.cellScrollView attribute:NSLayoutAttributeRight multiplier:1.0 constant:0.0],
                            ]];
     
     self.tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(scrollViewTapped:)];
@@ -119,13 +127,13 @@
     // Such an approach is necessary in order for the utility views to sit on top to get taps, as well as allow the backgroundColor (and private UITableViewCellBackgroundView) to work properly.
 
     self.leftUtilityClipView = [[UIView alloc] init];
-    self.leftUtilityClipConstraint = [NSLayoutConstraint constraintWithItem:self.leftUtilityClipView attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeLeft multiplier:1.0 constant:0.0];
+    self.leftUtilityClipConstraint = [NSLayoutConstraint constraintWithItem:self.leftUtilityClipView attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:_cellScrollView attribute:NSLayoutAttributeLeft multiplier:1.0 constant:0.0];
     self.leftUtilityButtonsView = [[SWUtilityButtonView alloc] initWithUtilityButtons:nil
                                                                            parentCell:self
                                                                 utilityButtonSelector:@selector(leftUtilityButtonHandler:)];
 
     self.rightUtilityClipView = [[UIView alloc] initWithFrame:self.bounds];
-    self.rightUtilityClipConstraint = [NSLayoutConstraint constraintWithItem:self.rightUtilityClipView attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeRight multiplier:1.0 constant:0.0];
+    self.rightUtilityClipConstraint = [NSLayoutConstraint constraintWithItem:self.rightUtilityClipView attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self.contentView attribute:NSLayoutAttributeRight multiplier:1.0 constant:0.0];
     self.rightUtilityButtonsView = [[SWUtilityButtonView alloc] initWithUtilityButtons:nil
                                                                             parentCell:self
                                                                  utilityButtonSelector:@selector(rightUtilityButtonHandler:)];
@@ -149,23 +157,22 @@
         clipView.clipsToBounds = YES;
         
         [clipViewParent addSubview:clipView];
-        [self addConstraints:@[
+        [self.contentView addConstraints:@[
                                // Pin the clipping view to the appropriate outer edges of the cell.
-                               [NSLayoutConstraint constraintWithItem:clipView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeTop multiplier:1.0 constant:0.0],
-                               [NSLayoutConstraint constraintWithItem:clipView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0.0],
-                               [NSLayoutConstraint constraintWithItem:clipView attribute:alignmentAttribute relatedBy:NSLayoutRelationEqual toItem:self attribute:alignmentAttribute multiplier:1.0 constant:0.0],
+                               [NSLayoutConstraint constraintWithItem:clipView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.contentView attribute:NSLayoutAttributeTop multiplier:1.0 constant:0.0],
+                               [NSLayoutConstraint constraintWithItem:clipView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self.contentView attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0.0],
+                               [NSLayoutConstraint constraintWithItem:clipView attribute:alignmentAttribute relatedBy:NSLayoutRelationEqual toItem:self.contentView attribute:alignmentAttribute multiplier:1.0 constant:0.0],
                                clipConstraint,
                                ]];
         
         [clipView addSubview:buttonView];
-        [self addConstraints:@[
+        [clipView addConstraints:@[
                                // Pin the button view to the appropriate outer edges of its clipping view.
                                [NSLayoutConstraint constraintWithItem:buttonView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:clipView attribute:NSLayoutAttributeTop multiplier:1.0 constant:0.0],
                                [NSLayoutConstraint constraintWithItem:buttonView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:clipView attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0.0],
                                [NSLayoutConstraint constraintWithItem:buttonView attribute:alignmentAttribute relatedBy:NSLayoutRelationEqual toItem:clipView attribute:alignmentAttribute multiplier:1.0 constant:0.0],
                                
                                // Constrain the maximum button width so that at least a button's worth of contentView is left visible. (The button view will shrink accordingly.)
-                               [NSLayoutConstraint constraintWithItem:buttonView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationLessThanOrEqual toItem:self.contentView attribute:NSLayoutAttributeWidth multiplier:1.0 constant:-kUtilityButtonWidthDefault],
                                ]];
     }
 }
@@ -593,7 +600,7 @@ static NSString * const kTableViewPanState = @"state";
         }
         
         // Update the clipping on the utility button views according to the current position.
-        CGRect frame = [self.contentView.superview convertRect:self.contentView.frame toView:self];
+        CGRect frame = [_cellScrollView convertRect:_contentCellView.frame toView:self];
         frame.size.width = CGRectGetWidth(self.frame);
         
         self.leftUtilityClipConstraint.constant = MAX(0, CGRectGetMinX(frame) - CGRectGetMinX(self.frame));
